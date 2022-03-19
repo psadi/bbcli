@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "bb"
+version = "0.3.5"
+description = "CLI Utility that can manage bitbucket pull requests"
+authors = ["P S, Adithya <adithya3494@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "app" }
+]
+
+#[[tool.poetry.source]]
+#name = "your-custom-name"
+#url = "https://<your-custom>/pypi/simple"
+#default = true
+
+[tool.poetry.scripts]
+bb = "app.main:app"
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<4.0.0"
+typer = {extras = ["all"], version = "^0.4.0"}
+requests = "^2.27.1"
+rich = "^11.1.0"
+pyperclip = "^1.8.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
