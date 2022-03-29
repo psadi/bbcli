@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.scripts.create
 """
@@ -13,13 +13,15 @@ from app.utils import request
 from app.utils import api
 from app.utils import richprint
 
+
 def copy_to_clipboard(url: str) -> None:
     """Copy the pull request to user clipboard for convinience"""
     try:
         pc.copy(url)
         pc.paste()
-    except: # Dosent work on VM's so we skip the exception if not available
+    except:  # Dosent work on VM's so we skip the exception if not available
         pass
+
 
 def create_pull_request(target: str, yes: bool, diff: bool) -> None:
     """Create pull request"""
@@ -38,7 +40,9 @@ def create_pull_request(target: str, yes: bool, diff: bool) -> None:
 
     reviewers = []
     if repo_id is not None:
-        for dict_item in request.get_response(api.default_reviewers(bitbucket_host, project, repo_id, from_branch, target), username, token)[1]:
+        for dict_item in \
+        request.get_response(api.default_reviewers(bitbucket_host, project, repo_id, from_branch, target), username,
+                             token)[1]:
             for key in dict_item:
                 if key == 'name':
                     reviewers.append({"user": {"name": dict_item[key]}})
@@ -50,11 +54,11 @@ def create_pull_request(target: str, yes: bool, diff: bool) -> None:
 
     summary = {
         "Project": project,
-        "Repository" : repository,
-        "Repository ID" : repo_id,
-        "From Branch" : from_branch,
-        "To Branch" : target,
-        "Title & Description" : title_and_description
+        "Repository": repository,
+        "Repository ID": repo_id,
+        "From Branch": from_branch,
+        "To Branch": target,
+        "Title & Description": title_and_description
     }
 
     richprint.to_console(header, summary, True)
@@ -71,8 +75,11 @@ def create_pull_request(target: str, yes: bool, diff: bool) -> None:
             pull_request_number = pull_request[1]['links']['self'][0]['href'].split('/')[-1]
             copy_to_clipboard(pull_request[1]['links']['self'][0]['href'])
         elif pull_request[0] == 409:
-            richprint.to_console(header, {'\u26A1 existingPullRequest': pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href']}, False)
-            pull_request_number = pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href'].split('/')[-1]
+            richprint.to_console(header, {
+                '\u26A1 existingPullRequest': pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0][
+                    'href']}, False)
+            pull_request_number = \
+            pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href'].split('/')[-1]
             copy_to_clipboard(pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href'])
         else:
             request.http_response_definitions(pull_request[0])

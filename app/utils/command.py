@@ -1,9 +1,10 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.utils.command
 """
 import os
 import subprocess
+
 
 def subprocess_run(command: str) -> str:
     """
@@ -28,6 +29,7 @@ def is_git_repo() -> bool:
     except subprocess.CalledProcessError:
         return False
 
+
 def base_repo() -> list:
     """get the local git repository name"""
     cmd = subprocess_run('git remote -v')
@@ -37,9 +39,11 @@ def base_repo() -> list:
         repository = formatted_cmd.split('/')[-1].split('.')[0]
         return [project, repository]
 
+
 def title_and_description() -> str:
     """Set the latest commit message as title for pull request"""
     return subprocess_run('git log -1 --pretty=format:%s')
+
 
 def from_branch() -> str:
     """Get the current working branch"""

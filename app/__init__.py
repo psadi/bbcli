@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
     BBCLI: A CLI utility that can help you create pull requests
 """

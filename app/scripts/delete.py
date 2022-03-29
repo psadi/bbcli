@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.scripts.delete
 """
@@ -13,6 +13,7 @@ from app.utils import command
 from app.utils import request
 from app.utils import api
 from app.utils import richprint
+
 
 def delete_pull_request(target: list, yes: bool, diff: bool) -> None:
     """Delete pull requests by id"""
@@ -29,10 +30,10 @@ def delete_pull_request(target: list, yes: bool, diff: bool) -> None:
 
         summary = {
             "ID": pull_request_info[1]['id'],
-            "Description" : pull_request_info[1]['description'],
-            "From Branch" : pull_request_info[1]['fromRef']['displayId'],
-            "To Branch" : pull_request_info[1]['toRef']['displayId'],
-            "Url" : pull_request_info[1]['links']['self'][0]['href']
+            "Description": pull_request_info[1]['description'],
+            "From Branch": pull_request_info[1]['fromRef']['displayId'],
+            "To Branch": pull_request_info[1]['toRef']['displayId'],
+            "Url": pull_request_info[1]['links']['self'][0]['href']
         }
 
         richprint.to_console(header, summary, True)
@@ -48,7 +49,8 @@ def delete_pull_request(target: list, yes: bool, diff: bool) -> None:
             pull_request = request.delete_request(url, username, token, body)
 
             if pull_request == 204:
-                richprint.to_console(header, {'\u2705 PR Deleted': pull_request_info[1]['links']['self'][0]['href']}, False)
+                richprint.to_console(header, {'\u2705 PR Deleted': pull_request_info[1]['links']['self'][0]['href']},
+                                     False)
             else:
                 echo("\u274C Error deleting pull request")
                 raise Exit(code=1)

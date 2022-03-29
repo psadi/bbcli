@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.utils.iniparser
 """
@@ -12,6 +12,7 @@ from typer import echo
 
 altfile = os.path.expanduser('~') + '/.alt'
 
+
 def setup(bitbucket_host: str, username: str, token: str) -> None:
     defaut_config = """[default]
 bitbucket_host=https://bitbucket.<company>.com
@@ -24,10 +25,11 @@ token=xxxxxxxxxxx"""
     w_alt = Path(altfile)
     ini = configparser.ConfigParser()
     ini.read(altfile)
-    ini.set('default','bitbucket_host',bitbucket_host)
-    ini.set('default','username',username)
-    ini.set('default','token',token)
+    ini.set('default', 'bitbucket_host', bitbucket_host)
+    ini.set('default', 'username', username)
+    ini.set('default', 'token', token)
     ini.write(w_alt.open('w'))
+
 
 def parse() -> list:
     """Returns the configuration present in .alt file in home directory"""

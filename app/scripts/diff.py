@@ -1,10 +1,11 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.scripts.diff
 """
 from app.utils import request
 from app.utils import iniparser
 from app.utils import richprint
+
 
 def show_diff(url: str) -> None:
     """
@@ -23,6 +24,6 @@ def show_diff(url: str) -> None:
     value_args = {}
 
     for i in response:
-        value_args.update({i['type'] : i['path']['toString']})
+        value_args.update({i['type']: i['path']['toString']})
 
     richprint.to_console(header, value_args, True)

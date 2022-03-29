@@ -1,7 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from app import __version__
 from app.utils.richprint import markdown_to_console
+
 
 def alt():
     """.alt file configuration"""
@@ -18,6 +19,7 @@ token=thisisarandomwriteaccesstokengeneratedbybitbucket
 ```
 ---
 """
+
 
 def install():
     """bb installation"""
@@ -42,6 +44,7 @@ pip3 install --user bb-<version>.tar.gz
 ```
 ---
 """
+
 
 def test():
     """bb test configuration and connection"""
@@ -104,6 +107,7 @@ bb create --target master --yes    --> creates pull request without prompt
 ---
 """
 
+
 def delete():
     """bb delete pull-request functionality"""
     return """
@@ -136,6 +140,7 @@ bb delete --target 1 --yes                 --> deletes the given  pull request n
 ---
 """
 
+
 def diff():
     """bb show diffrence in pull-request functionality"""
     return """
@@ -148,6 +153,7 @@ bb delete --target 1 --yes --diff          --> deletes pull request without prom
 ```
 ---
 """
+
 
 def view():
     """bb view authored and reviewer pull-request(s)"""
@@ -163,6 +169,7 @@ bb view --reviewer  --> show pull requests that you are a reviewer
 ---
 """
 
+
 def autocomplete():
     """bb shell auto-completions"""
     return """
@@ -176,6 +183,7 @@ bb  --show-completion       Show completion for the current shell, to copy it or
 ---
 """
 
+
 def default():
     """bb docs default config"""
     return """
@@ -186,6 +194,7 @@ bb docs --help
 ^ Run the above command for more details
 """
 
+
 def setup():
     """bb setup instructions"""
     return f"""
@@ -194,15 +203,16 @@ def setup():
 {autocomplete()}
 """
 
+
 def wrapper(option: str) -> None:
     md_selector = {
-        'autocomplete' : autocomplete(),
+        'autocomplete': autocomplete(),
         'alt': alt(),
-        'create' : create(),
-        'delete' : delete(),
-        'diff' : diff(),
-        'install' : install(),
-        'view' : view(),
+        'create': create(),
+        'delete': delete(),
+        'diff': diff(),
+        'install': install(),
+        'view': view(),
         'test': test(),
         'default': default(),
         'setup': setup()

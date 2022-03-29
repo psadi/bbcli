@@ -1,8 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.scripts.view
 """
-from typer import echo
+import typer
 from typer import Exit
 
 from app.utils import api
@@ -11,12 +11,14 @@ from app.utils import command
 from app.utils import request
 from app.utils import richprint
 
+
 def to_richprint(repository: str, pr_repo_dict: dict, header: dict) -> None:
     echo(f"\u1405 Repository: {repository}")
     for status, data in pr_repo_dict.items():
         echo(f"\u1405 Status: {status}")
         for elements in data:
             richprint.to_console(header, elements, False)
+
 
 def view_pull_request(role: str, all: bool) -> None:
     """
@@ -36,11 +38,8 @@ def view_pull_request(role: str, all: bool) -> None:
                 repo_dict.update({repo: {}})
                 if pr['state'] not in repo_dict[repo].values():
                     repo_dict.update({repo: {pr['state']: []}})
-            temp_dict = {}
-            temp_dict['Tittle'] = pr['title']
-            temp_dict['From Branch'] = pr['fromRef']['displayId']
-            temp_dict['To Branch'] = pr['toRef']['displayId']
-            temp_dict['URL'] = pr['links']['self'][0]['href']
+            temp_dict = {'Tittle': pr['title'], 'From Branch': pr['fromRef']['displayId'],
+                         'To Branch': pr['toRef']['displayId'], 'URL': pr['links']['self'][0]['href']}
             repo_dict[repo][pr['state']].append(temp_dict)
 
         header = {

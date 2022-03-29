@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """"
     app.scripts.view
 """
@@ -7,6 +7,7 @@ from typer import echo
 from app.utils import iniparser
 from app.utils import api
 from app.utils import request
+
 
 def validate():
     username, token, bitbucket_host = iniparser.parse()
