@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bb"
-version = "0.3.5"
-description = "CLI Utility that can manage bitbucket pull requests"
+version = "0.3.7"
+description = "a command line Utility that can manage bitbucket pull requests"
 authors = ["P S, Adithya <adithya3494@gmail.com>"]
 readme = "README.md"
 packages = [
@@ -9,8 +9,8 @@ packages = [
 ]
 
 #[[tool.poetry.source]]
-#name = "your-custom-name"
-#url = "https://<your-custom>/pypi/simple"
+#name = "artifactory-pypi-relase"
+#url = "https://custom_pypi_index"
 #default = true
 
 [tool.poetry.scripts]

@@ -1,8 +1,7 @@
-# BBCLI
+<p align="center"><img height="200" width="200" src="./img/bitbucket.png">
 
-Bitbucket CLI (bbcli): A command line utility that will help you manage pull requests from your terminal.
+# <p align="center">Bitbucket CLI (bb): A command line utility to manage pull requests from your terminal
 
----
 
 ## REQUIREMENTS
 
@@ -13,24 +12,12 @@ Bitbucket CLI (bbcli): A command line utility that will help you manage pull req
 
 ### INSTALL
 
-a. Place the .alt file in your home directory
-
-```text
-[default]
-bitbucket_host=https://bitbucket.mycompany.com
-username=myusername
-token=thisisarandomwriteaccesstokengeneratedbybitbucket
-```
-
-b. clone the git repository
-
 Manual
 
 ```text
 git clone https://github.com/psadi/bbcli.git
 cd bb
-pip3 install --user -r requirements.txt
-poetry build
+python3 -m build .
 pip3 install --user dist/bb-<version>.tar.gz
 ```
 
@@ -40,6 +27,15 @@ From Releases
 
 ```text
 pip3 install --user bb-<version>.tar.gz
+```
+
+a. Place the .alt file in your home directory, [refer](.alt) for more details
+
+```text
+[default]
+bitbucket_host=https://bitbucket.mycompany.com
+username=myusername
+token=thisisarandomwriteaccesstokengeneratedbybitbucket
 ```
 
 c. Validate
@@ -54,49 +50,69 @@ bb test
 
 ```text
 ➜ bb test
-ᐅ Validating connection with 'https://bitbucket.<company>.com'...
+ᐅ Validating connection with 'https://bitbucket.mycompany.com'...
 ✅ OK
 ```
 
 ### WHAT CAN IT DO?
 
-* Create pull requests
+#### Create pull request
 
-```text
-bb create --target master           --> creates pull request and asks for confirmation
-bb create --target master --yes    --> creates pull request without prompt
-```
+|Command|Action|
+|-|-|
+|`bb create --target master`|creates pull request and asks for confirmation|
+|`bb create --target master --yes`|creates pull request without prompt|
 
-* Show diff of files (ADD/DELETE/MODIFY & RENAME) as an overview
+#### Show diff of files (ADD/DELETE/MODIFY & RENAME) as an overview
 
-```text
-bb create --target master --yes --diff     --> creates pull request without prompt and shows diff from the PR raised
-bb delete --target 1 --yes --diff          --> deletes pull request without prompt and shows diff befoew PR is deleted
-```
+|Command|Action|
+|-|-|
+|`bb create --target master --yes --diff`|creates pull request without prompt and shows diff from the PR raised|
+|`bb delete --id 1 --yes --diff`|deletes pull request without prompt and shows diff befoew PR is deleted|
+|`bb diff --id 1`|shows diff for the given pull request id|
 
-* Delete pull requests
+#### Delete pull request(s)
 
-```text
-bb delete --target 1                        --> deletes the given  pull request number with confirmation prompt
-bb delete --target 1 --yes                 --> deletes the given  pull request number without prompt
-```
+|Command|Action|
+|-|-|
+|`bb delete --id 1`|deletes the given  pull request number with confirmation prompt|
+|`bb delete --id 1 --yes`|deletes the given  pull request number without prompt|
+|`bb delete --id 1,2,3`|deletes multiple pull requests|
 
-* View pull requests authored/reviewer for the current repository
+#### Show pull request(s) authored/reviewer
 
-```text
-bb view             --> show pull requests authored[Default]
-bb view --author    --> show pull requests authored
-bb view --reviewer  --> show pull requests that you are a reviewer
-```
+|Command|Action|
+|-|-|
+|`bb show`|show pull requests in current repository [Default]|
+|`bb show --author`|show pull requests authored in current repository|
+|`bb show --author --all`|show pull requests authored in all repositories|
+|`bb show --reviewer`|show pull requests that you are a reviewer in current repository|
+|`bb show --reviewer --all`|show pull requests that you are a reviewer in all repositories|
+
+#### Review pull request
+
+|Command|Action|
+|-|-|
+|`bb review --id 1 --action approve`|marks the pull request as <span style="background-color:#00875a;color:white">**APPROVED**</span>|
+|`bb review --id 1 --action unapprove`|marks the pull request as <span style="background-color:#de350b;color:white">**UNAPPROVED**</span>|
+|`bb review --id 1 --action needs_work`|marks the pull request as <span style="background-color:#ffab00;color:white">**NEEDS WORK**</span>|
+
+#### Merge pull request
+
+|Command|Action|
+|-|-|
+|`bb merge --id 1`|Validates pull request merge conditions and prompts for merge|
+|`bb merge --id 1 --rebase`|adds optional rebase [Default: False]|
+|`bb merge --id 1 --delete-source-branch`|deletes source branch after merge, [Default: False], If false will prompt for deletion|
 
 ### Enable shell autocompletions
 
-* BB is equipped with shell auto completions, To enable it,
+* bb is equipped with shell auto completions, To enable it,
 
-```text
-bb --install-completion     Install completion for the current shell (One time setup)
-bb  --show-completion       Show completion for the current shell, to copy it or customize the installation.
-```
+|Command|Action|
+|-|-|
+|`bb --install-completion`|Install completion for the current shell (One time setup)|
+|`bb  --show-completion`|Show completion for the current shell, to copy it or customize the installation.|
 
 ---
 
@@ -109,14 +125,15 @@ bb  --show-completion       Show completion for the current shell, to copy it or
 
 ---
 
-### 💡 PRO TIP 💡
+### 💡💡 PRO TIP 💡💡
 
-* Use [Windows Terminal](https://github.com/microsoft/terminal) for better visual rendering
+* Use [Windows Terminal](https://axess.sc.net/marketplace/golden-versions/gv-windowsterminal-v1) for better visual rendering
 * Use Nerd font for better font/icon support, I personally use [DroidSansMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip)
   * [Preview Font](https://www.programmingfonts.org/#droid-sans)
 
+
 ---
 
-🕺🕺 That's all folks !!
+<p align="left"><img height="150" width="200" src="./img/thatsall.gif">
 
-🕺🕺 Enjoy being more efficient 😊
+Enjoy being more efficient 😊
