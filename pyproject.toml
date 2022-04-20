@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "bb"
+name = "bbcli"
 version = "0.3.7"
 description = "a command line Utility that can manage bitbucket pull requests"
 authors = ["P S, Adithya <adithya3494@gmail.com>"]
