@@ -1,18 +1,26 @@
 #-*- coding: utf-8 -*-
-""""
-    app.utils.iniparser
-"""
 
+# Importing the required modules for the program to run.
 import os
 import configparser
 from pathlib import Path
-
-from typer import Exit, prompt
+from typer import prompt
 from typer import echo
 
+# Creating a file called .alt in the home directory.
 altfile = os.path.expanduser('~') + '/.alt'
 
 def setup(bitbucket_host: str, username: str, token: str) -> None:
+    """
+    It creates a config file with the given parameters.
+
+    :param bitbucket_host: The URL of your Bitbucket server
+    :type bitbucket_host: str
+    :param username: your bitbucket username
+    :type username: str
+    :param token: The token you generated in the previous step
+    :type token: str
+    """
     defaut_config = """[default]
 bitbucket_host=https://bitbucket.<company>.com
 username=name
@@ -30,6 +38,10 @@ token=xxxxxxxxxxx"""
     ini.write(w_alt.open('w'))
 
 def parse() -> list:
+    """
+    It returns the configuration present in .alt file in home directory
+    :return: A list of strings
+    """
     """Returns the configuration present in .alt file in home directory"""
     if os.path.isfile(altfile):
         ini = configparser.ConfigParser()
@@ -38,13 +50,10 @@ def parse() -> list:
         username = ini.get('default', 'username')
         bitbucket_host = ini.get('default', 'bitbucket_host')
         return [username, token, bitbucket_host]
-    elif prompt(f"\u274C No .alt found at '{altfile}'\n\U0001F4A1 Do you want to setup").lower() == 'y':
+    elif prompt(f"* No '.alt' found at '{altfile}'\n* Do you wish to setup one ?").lower() == 'y':
         echo('')
-        setup(prompt("\u1405 bitbucket_host"), prompt("\u1405 username"), prompt("\u1405 token"))
+        setup(prompt("> bitbucket_host"), prompt("> username"), prompt("> token"))
         echo('')
-        echo(f"\u2705 .alt file written @ '{altfile}', Please run 'bb test' to validate")
-        raise Exit(code=0)
+        echo(f"'.alt' file written @ '{altfile}', Please re-run 'bb test' to validate")
     else:
-        echo("\u274C .alt configuration is required")
-        echo("\U0001F4A1 Please run 'bb docs --option setup' for more help")
-        raise Exit(code=1)
+        echo("'.alt' configuration is required")

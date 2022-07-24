@@ -5,7 +5,9 @@
 
 ## REQUIREMENTS
 
-* Python3 (3.6.2 or Higher) & Pip3 (latest recommended)
+* Git
+* Python3 (3.7 or Higher)
+* Pip3 (latest recommended)
 * Write access token from bitbucket
 
 ---
@@ -50,8 +52,8 @@ bb test
 
 ```text
 ➜ bb test
-ᐅ Validating connection with 'https://bitbucket.mycompany.com'...
-✅ OK
+> bb test           
+⠏ Validating connection with 'https://bitbucket.<company>.com'... OK
 ```
 
 ### WHAT CAN IT DO?
@@ -127,9 +129,21 @@ bb test
 
 ### 💡💡 PRO TIP 💡💡
 
-* Use [Windows Terminal](https://axess.sc.net/marketplace/golden-versions/gv-windowsterminal-v1) for better visual rendering
+* Use [Windows Terminal](https://github.com/Microsoft/Terminal) for better visual rendering
 * Use Nerd font for better font/icon support, I personally use [DroidSansMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip)
   * [Preview Font](https://www.programmingfonts.org/#droid-sans)
+
+---
+
+### CREDITS
+
+[bbcli](https://github.com/psadi/bbcli) wouldn't be possible if not for the open-source tools made avaiable.
+
+A huge thanks to,
+
+* [tiangolo/typer](https://github.com/tiangolo/typer)
+* [Textualize/rich](https://github.com/Textualize/rich)
+* [encode/httpx](https://github.com/encode/httpx)
 
 
 ---
