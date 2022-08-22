@@ -1,28 +1,22 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Importing the `echo` and `Exit` functions from the `typer` module, and the `iniparser`,
 # `api`, `request`, and `richprint` modules from the `bb.utils` package.
-from typer import Exit
-from bb.utils import (
-    iniparser,
-    api,
-    request,
-    richprint
-)
+from bb.utils import iniparser, api, request, richprint
+
 
 def validate():
     """
-    It prints a message, then calls the `api.test` function, which returns a URL. It then calls the
-    `request.get_response` function, which returns a tuple of the HTTP response code and the response
-    body. If the response code is not 200, it prints an error message and exits with a non-zero exit
-    code
+    alls the `api.test` function, If the response code is not 200,
+    prints exception and return non-zero exit code
     """
-    username, token, bitbucket_host = iniparser.parse()
-    message = f"Validating connection with '{bitbucket_host}'... "
-    with richprint.live_progress((message)) as live:
-        reponse = request.get_response(api.test(bitbucket_host), username, token)
-        if reponse[0] == 200:
-            live.update(richprint.console.print('OK', style='bold green'))
-        else:
-            live.update(richprint.console.print(f"ERROR", style='bold red'))
-            raise Exit(code=1)
+    try:
+        username, token, bitbucket_host = iniparser.parse()
+        message = f"Validating connection with '{bitbucket_host}'... "
+        with richprint.live_progress((message)) as live:
+            response = request.get(api.test(bitbucket_host), username, token)
+            if response[0] == 200:
+                live.update(richprint.console.print("OK", style="bold green"))
+    except Exception as err:
+        richprint.console.print("ERROR", style="bold red")
+        raise (err)
