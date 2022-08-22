@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bb"
-version = "0.4.1"
-description = "CLI Utility that can manage bitbucket pull requests"
+version = "0.4.2"
+description = "cli to manage bitbucket pull requests"
 authors = ["psadi <adithya3494@gmail.com>"]
 readme = "README.md"
 packages = [
@@ -22,7 +22,6 @@ typer = {extras = ["all"], version = "^0.4.0"}
 requests = "^2.27.1"
 rich = "^11.1.0"
 pyperclip = "^1.8.2"
-httpx = "^0.23.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
