@@ -8,7 +8,7 @@
 * Git
 * Python3 (3.7 or Higher)
 * Pip3 (latest recommended)
-* Write access token from bitbucket
+* A write access token from bitbucket
 
 ---
 
@@ -17,8 +17,7 @@
 Manual
 
 ```text
-git clone https://github.com/psadi/bbcli.git
-cd bb
+git clone https://github.com/psadi/bbcli.git && cd bb
 python3 -m build .
 pip3 install --user dist/bb-<version>.tar.gz
 ```
@@ -51,7 +50,6 @@ bb test
 * if all went well, you should get a response like this
 
 ```text
-➜ bb test
 > bb test           
 ⠏ Validating connection with 'https://bitbucket.<company>.com'... OK
 ```
@@ -127,7 +125,7 @@ bb test
 
 ---
 
-### 💡💡 PRO TIP 💡💡
+### 💡 TIP
 
 * Use [Windows Terminal](https://github.com/Microsoft/Terminal) for better visual rendering
 * Use Nerd font for better font/icon support, I personally use [DroidSansMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip)
@@ -137,13 +135,12 @@ bb test
 
 ### CREDITS
 
-[bbcli](https://github.com/psadi/bbcli) wouldn't be possible if not for the open-source tools made avaiable.
+[bbcli](https://github.com/psadi/bbcli) wouldn't be possible if not for the awesome open-source tools made avaiable.
 
 A huge thanks to,
 
 * [tiangolo/typer](https://github.com/tiangolo/typer)
 * [Textualize/rich](https://github.com/Textualize/rich)
-* [encode/httpx](https://github.com/encode/httpx)
 
 
 ---
