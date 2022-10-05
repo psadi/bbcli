@@ -1,20 +1,26 @@
-<p align="center"><img height="200" width="200" src="./img/bitbucket.png">
+<div id="texts" style="white-space:nowrap;">
+     <img height="100" width="100" src="./img/bb.png"  align="left"/>
+     <h1>bb (bitbucket-cli) </h1>
+     <h3>A command line tool to manage your pull requests</h3>
+     </br>
+</div>
 
-# <p align="center">Bitbucket CLI (bb): A command line utility to manage pull requests from your terminal
+<p><i>be lazy and still get things done</i></p>
 
+---
 
-## REQUIREMENTS
+###  REQUIREMENTS
 
-* Git
-* Python3 (3.7 or Higher)
-* Pip3 (latest recommended)
+* [Git](https://git-scm.com/downloads)
+* [Python3](https://www.python.org/downloads/) (3.7 or Higher)
+* [Pip3]( https://pypi.org/project/pip/) (latest recommended)
 * A write access token from bitbucket
 
 ---
 
-### INSTALL
+###  INSTALLATION
 
-Manual
+<b>From Source</b>
 
 ```text
 git clone https://github.com/psadi/bbcli.git && cd bb
@@ -22,15 +28,19 @@ python3 -m build .
 pip3 install --user dist/bb-<version>.tar.gz
 ```
 
-From Releases
+<b>From Releases</b>
 
-* Download the latest build from releases page
+Download the latest build from [releases](https://github.com/psadi/bbcli/releases) page
 
 ```text
 pip3 install --user bb-<version>.tar.gz
 ```
 
-a. Place the .alt file in your home directory, [refer](.alt) for more details
+---
+
+###  CONFIGURATION
+
+1. Place the .alt file in your home directory, [refer](.alt) for more details
 
 ```text
 [default]
@@ -39,31 +49,37 @@ username=myusername
 token=thisisarandomwriteaccesstokengeneratedbybitbucket
 ```
 
-c. Validate
+2. Validate
 
 * If the .alt file is placed in you home directory and setup didnt throw any error, then
 
-```text
+```sh
 bb test
 ```
 
 * if all went well, you should get a response like this
 
-```text
-> bb test           
+```sh
+> bb test
 ⠏ Validating connection with 'https://bitbucket.<company>.com'... OK
 ```
+---
 
-### WHAT CAN IT DO?
+###  HOW-TO ?
 
-#### Create pull request
+<details>
+  <summary>Create pull request</summary>
 
 |Command|Action|
 |-|-|
 |`bb create --target master`|creates pull request and asks for confirmation|
 |`bb create --target master --yes`|creates pull request without prompt|
 
-#### Show diff of files (ADD/DELETE/MODIFY & RENAME) as an overview
+</details>
+
+
+<details>
+  <summary>Show diff of files (ADD/DELETE/MODIFY & RENAME) as an overview</summary>
 
 |Command|Action|
 |-|-|
@@ -71,7 +87,11 @@ bb test
 |`bb delete --id 1 --yes --diff`|deletes pull request without prompt and shows diff befoew PR is deleted|
 |`bb diff --id 1`|shows diff for the given pull request id|
 
-#### Delete pull request(s)
+
+</details>
+
+<details>
+  <summary>Delete pull request(s)</summary>
 
 |Command|Action|
 |-|-|
@@ -79,7 +99,10 @@ bb test
 |`bb delete --id 1 --yes`|deletes the given  pull request number without prompt|
 |`bb delete --id 1,2,3`|deletes multiple pull requests|
 
-#### Show pull request(s) authored/reviewer
+</details>
+
+<details>
+  <summary>Show pull request(s) authored/reviewer</summary>
 
 |Command|Action|
 |-|-|
@@ -89,7 +112,10 @@ bb test
 |`bb show --reviewer`|show pull requests that you are a reviewer in current repository|
 |`bb show --reviewer --all`|show pull requests that you are a reviewer in all repositories|
 
-#### Review pull request
+</details>
+
+<details>
+  <summary>Review pull request</summary>
 
 |Command|Action|
 |-|-|
@@ -97,7 +123,11 @@ bb test
 |`bb review --id 1 --action unapprove`|marks the pull request as <span style="background-color:#de350b;color:white">**UNAPPROVED**</span>|
 |`bb review --id 1 --action needs_work`|marks the pull request as <span style="background-color:#ffab00;color:white">**NEEDS WORK**</span>|
 
-#### Merge pull request
+</details>
+
+
+<details>
+  <summary>Merge pull request</summary>
 
 |Command|Action|
 |-|-|
@@ -105,7 +135,10 @@ bb test
 |`bb merge --id 1 --rebase`|adds optional rebase [Default: False]|
 |`bb merge --id 1 --delete-source-branch`|deletes source branch after merge, [Default: False], If false will prompt for deletion|
 
-### Enable shell autocompletions
+</details>
+
+<details>
+  <summary>Enable shell autocompletions</summary>
 
 * bb is equipped with shell auto completions, To enable it,
 
@@ -114,9 +147,12 @@ bb test
 |`bb --install-completion`|Install completion for the current shell (One time setup)|
 |`bb  --show-completion`|Show completion for the current shell, to copy it or customize the installation.|
 
+
+</details>
+
 ---
 
-### Points to Ponder
+###  Points to Ponder
 
 * This utility is tested with bitbucket enterprise version 6.10.10
 * I have personally tested it in Linux, Windows(Powershell and Command Prompt), MacOS and GIT Bash and it works flawlessly
@@ -125,15 +161,15 @@ bb test
 
 ---
 
-### 💡 TIP
+###  💡 TIP
 
-* Use [Windows Terminal](https://github.com/Microsoft/Terminal) for better visual rendering
-* Use Nerd font for better font/icon support, I personally use [DroidSansMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip)
+* You could use [Windows Terminal](https://github.com/Microsoft/Terminal) for better visual rendering
+* You could use an Nerd font for better font/icon support, I personally use [DroidSansMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip)
   * [Preview Font](https://www.programmingfonts.org/#droid-sans)
 
 ---
 
-### CREDITS
+###  CREDITS
 
 [bbcli](https://github.com/psadi/bbcli) wouldn't be possible if not for the awesome open-source tools made avaiable.
 
