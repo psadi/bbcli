@@ -1,22 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # Importing the necessary modules for the script to run.
-import pyperclip as pc
 from typer import prompt, Exit
 from bb.pr.diff import show_diff
-from bb.utils import cmnd, iniparser, request, api, richprint
-
-
-def copy_to_clipboard(url: str) -> None:
-    """
-    Copy the pull request to user clipboard for convinience
-
-    """
-    try:
-        pc.copy(url)
-        pc.paste()
-    except Exception:  # Dosent work on VM's so we skip the exception if not available
-        pass
+from bb.utils import cmnd, iniparser, request, api, richprint, cp
 
 
 def gather_facts(
@@ -113,7 +100,7 @@ def create_pull_request(target: str, yes: bool, diff: bool) -> None:
                 style="bold green",
             )
             id = pull_request[1]["links"]["self"][0]["href"].split("/")[-1]
-            copy_to_clipboard(pull_request[1]["links"]["self"][0]["href"])
+            cp.copy_to_clipboard(pull_request[1]["links"]["self"][0]["href"])
             richprint.str_print(
                 "Tip: Pull request url is copied to clipboard ('ctrl+v' to paste)",
                 "dim white",
@@ -132,7 +119,7 @@ def create_pull_request(target: str, yes: bool, diff: bool) -> None:
             id = pull_request[1]["errors"][0]["existingPullRequest"]["links"]["self"][
                 0
             ]["href"].split("/")[-1]
-            copy_to_clipboard(
+            cp.copy_to_clipboard(
                 pull_request[1]["errors"][0]["existingPullRequest"]["links"]["self"][0][
                     "href"
                 ]

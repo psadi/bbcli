@@ -15,6 +15,7 @@ from bb.pr.show import show_pull_request
 from bb.pr.review import review_pull_request
 from bb.pr.merge import merge_pull_request
 from bb.pr.diff import show_diff
+from bb.pr.copy import copy_pull_request
 from bb.utils.cmnd import is_git_repo
 from bb.utils.richprint import console, traceback_to_console
 
@@ -197,3 +198,9 @@ def diff(
         error_tip()
         if state["verbose"]:
             traceback_to_console(Exception)
+
+
+@app.command()
+def copy(id: int = typer.Option("", help="pull request number to copy")):
+    """- copy pull request url to clipboard by id"""
+    copy_pull_request(id)

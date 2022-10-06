@@ -10,7 +10,7 @@ def show_diff(id: int) -> None:
     """
     username, token, bitbucket_host = iniparser.parse()
     project, repository = cmnd.base_repo()
-    url = api.pull_request_diffrence(bitbucket_host, project, repository, id)
+    url = api.pull_request_difference(bitbucket_host, project, repository, id)
     with richprint.live_progress(f"Fetching Contents from Pull Request ..."):
         response = request.get(url, username, token)[1]
 

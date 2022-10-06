@@ -6,7 +6,7 @@ from typer import Exit
 from bb.utils import api, cmnd, iniparser, request, richprint
 
 
-def to_richprint(repo_name: str, pr_repo_dict: dict, header: dict) -> None:
+def to_richprint(repo_name: str, pr_repo_dict: dict, header: list) -> None:
     """
     This function takes in a repository name, a dictionary of pull requests, and a header dictionary
     and prints the data to the console
@@ -39,11 +39,12 @@ def show_pull_request(role: str, all: bool) -> None:
                 repo_dict.update({repo: {}})
                 if pr["state"] not in repo_dict[repo].values():
                     repo_dict.update({repo: {pr["state"]: []}})
-            _list = []
-            _list.append(("Tittle", pr["title"]))
-            _list.append(("From Branch", pr["fromRef"]["displayId"]))
-            _list.append(("To Branch", pr["toRef"]["displayId"]))
-            _list.append(("URL", pr["links"]["self"][0]["href"]))
+            _list = [
+                ("Tittle", pr["title"]),
+                ("From Branch", pr["fromRef"]["displayId"]),
+                ("To Branch", pr["toRef"]["displayId"]),
+                ("URL", pr["links"]["self"][0]["href"]),
+            ]
             repo_dict[repo][pr["state"]].append(_list)
 
         header = [("SUMMARY", "yellow"), ("DESCRIPTION", "white")]
@@ -51,7 +52,6 @@ def show_pull_request(role: str, all: bool) -> None:
         for repo_name, pr_repo_dict in repo_dict.items():
             if repo_name.lower() == repository.lower() and not all:
                 to_richprint(repo_name, pr_repo_dict, header)
-            elif all:
-                to_richprint(repo_name, pr_repo_dict, header)
-            else:
-                raise Exit(code=0)
+                break
+
+            to_richprint(repo_name, pr_repo_dict, header)

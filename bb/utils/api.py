@@ -44,7 +44,7 @@ def pull_request_body(
     project: str,
     target: str,
     reviewers: list,
-) -> dict:
+) -> str:
     """
     It creates a pull request from the branch `from_branch` to the branch `target` in the repository
     `repository` in the project `project` with the title and description `title_and_description` and the
@@ -79,7 +79,7 @@ def pull_request_body(
     )
 
 
-def pull_request_diffrence(
+def pull_request_difference(
     bitbucket_host: str, project: str, repository: str, pr_number: int
 ) -> str:
     """
@@ -170,7 +170,7 @@ def get_merge_info(
 
 def pr_merge_body(
     project: str, repository: str, id: int, from_branch: str, target_branch: str
-) -> dict:
+) -> str:
     """
     It takes the project, repository, pull request id, from branch, and target branch and returns a JSON
     object that contains the message to be used when merging the pull request
@@ -190,7 +190,7 @@ def pr_cleanup(bitbucket_host: str, project: str, repository: str, id: int) -> s
     return f"{bitbucket_host}/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{id}"
 
 
-def pr_cleanup_body(delete_source_branch: bool) -> dict:
+def pr_cleanup_body(delete_source_branch: bool) -> str:
     """
     It returns a dictionary that contains a JSON string that contains a dictionary that contains a
     boolean
