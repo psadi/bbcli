@@ -13,10 +13,10 @@ def validate():
     try:
         username, token, bitbucket_host = iniparser.parse()
         message = f"Validating connection with '{bitbucket_host}'... "
-        with richprint.live_progress((message)) as live:
+        with richprint.live_progress(message) as live:
             response = request.get(api.test(bitbucket_host), username, token)
             if response[0] == 200:
                 live.update(richprint.console.print("OK", style="bold green"))
     except Exception as err:
         richprint.console.print("ERROR", style="bold red")
-        raise (err)
+        raise err
