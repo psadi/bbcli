@@ -3,6 +3,9 @@
 # Importing the os and subprocess modules.
 import os
 import subprocess
+from time import sleep
+from typer import Exit
+from bb.utils.richprint import console, str_print
 
 
 def subprocess_run(command: str) -> str:
@@ -17,8 +20,13 @@ def subprocess_run(command: str) -> str:
             shell=os.name == "posix",
             check=True,
         )
+
         return cmnd.stdout.decode().strip()
+
     except subprocess.CalledProcessError as err:
+        sleep(0.4)
+        console.print("ERROR", style="bold red")
+        console.print(err)
         raise ValueError(err)
 
 
@@ -59,5 +67,12 @@ def git_rebase(target_branch: str) -> None:
     """
     rebase source branch with target
     """
-    subprocess_run(f"git pull --rebase origin {target_branch}")
-    subprocess_run(f"git push --force-with-lease")
+    try:
+        subprocess_run(f"git pull --rebase origin {target_branch}")
+        subprocess_run(f"git push --force-with-lease")
+    except Exception:
+        str_print(
+            "Try running `git diff --diff-filter=U --relative` to know more on local conflicts",
+            "dim white",
+        )
+        raise Exit(code=1)

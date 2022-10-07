@@ -134,10 +134,6 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                     "href"
                 ]
             )
-            richprint.str_print(
-                "Tip: Pull request url is copied to clipboard ('ctrl+v' to paste)",
-                "dim white",
-            )
         else:
             request.http_response_definitions(pull_request[0])
             raise Exit(code=1)
