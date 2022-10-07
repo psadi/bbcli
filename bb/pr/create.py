@@ -58,13 +58,27 @@ def gather_facts(
     return [header, reviewers]
 
 
-def create_pull_request(target: str, yes: bool, diff: bool) -> None:
+def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> None:
     """
     It creates a pull request.
     """
     from_branch = cmnd.from_branch()
     if target == from_branch:
+        richprint.console.print("Source & target cannot be the same", style="bold red")
         raise Exit(code=1)
+
+    if (
+        rebase
+        or prompt(f"? Do you want rebase '{from_branch}' branch from '{target}' [y/n]")
+        .lower()
+        .strip()
+        == "y"
+    ):
+        with richprint.live_progress(
+            f"Rebasing {from_branch} with {target} ... "
+        ) as live:
+            cmnd.git_rebase(target)
+            live.update(richprint.console.print("REBASED", style="bold green"))
 
     username, token, bitbucket_host = iniparser.parse()
     project, repository = cmnd.base_repo()
@@ -101,10 +115,6 @@ def create_pull_request(target: str, yes: bool, diff: bool) -> None:
             )
             id = pull_request[1]["links"]["self"][0]["href"].split("/")[-1]
             cp.copy_to_clipboard(pull_request[1]["links"]["self"][0]["href"])
-            richprint.str_print(
-                "Tip: Pull request url is copied to clipboard ('ctrl+v' to paste)",
-                "dim white",
-            )
         elif pull_request[0] == 409:
             richprint.console.print(
                 f"Message: {pull_request[1]['errors'][0]['message']}",
