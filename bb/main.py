@@ -62,6 +62,9 @@ def create(
     target: str = typer.Option("", help="target branch name"),
     yes: bool = typer.Option(False, help="skip confirmation prompt"),
     diff: bool = typer.Option(False, help="show diff after raising pull request"),
+    rebase: bool = typer.Option(
+        False, help="rebase source branch with target before creation"
+    ),
 ):
     """- create new pull request"""
     try:
@@ -72,7 +75,7 @@ def create(
         if not target:
             target = typer.prompt("Target Branch")
 
-        create_pull_request(target, yes, diff)
+        create_pull_request(target, yes, diff, rebase)
     except Exception:
         error_tip()
         if state["verbose"]:

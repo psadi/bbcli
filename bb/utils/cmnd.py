@@ -3,16 +3,19 @@
 # Importing the os and subprocess modules.
 import os
 import subprocess
-from typer import Exit
 
 
 def subprocess_run(command: str) -> str:
     """
-    his function runs native os commands and pipes the stdout
+    runs native os commands and pipes the stdout
     """
     try:
         cmnd = subprocess.run(
-            command, stdout=subprocess.PIPE, shell=os.name == "posix", check=True
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=os.name == "posix",
+            check=True,
         )
         return cmnd.stdout.decode().strip()
     except subprocess.CalledProcessError as err:
@@ -50,3 +53,11 @@ def from_branch() -> str:
     `from_branch` returns the current working branch
     """
     return subprocess_run("git rev-parse --abbrev-ref HEAD")
+
+
+def git_rebase(target_branch: str) -> None:
+    """
+    rebase source branch with target
+    """
+    subprocess_run(f"git pull --rebase origin {target_branch}")
+    subprocess_run(f"git push --force-with-lease")

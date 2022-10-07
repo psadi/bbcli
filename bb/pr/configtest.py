@@ -7,7 +7,7 @@ from bb.utils import iniparser, api, request, richprint
 
 def validate():
     """
-    alls the `api.test` function, If the response code is not 200,
+    calls the `api.test` function, If the response code is not 200,
     prints exception and return non-zero exit code
     """
     try:
