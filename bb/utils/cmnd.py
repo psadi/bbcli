@@ -70,9 +70,15 @@ def git_rebase(target_branch: str) -> None:
     try:
         subprocess_run(f"git pull --rebase origin {target_branch}")
         subprocess_run(f"git push --force-with-lease")
-    except Exception:
-        str_print(
-            "Try running `git diff --diff-filter=U --relative` to know more on local conflicts",
-            "dim white",
-        )
+    except Exception as ex:
+        error_code = int(str(ex).split(" ")[-1].replace(".", ""))
+        error_message = {
+            128: "cannot pull with rebase, you have unstaged/uncommitted changes\nplease commit or stash them.",
+            1: "Try running `git diff --diff-filter=U --relative` to know more on local conflicts",
+        }
+        if error_code in error_message.keys():
+            str_print(
+                error_message[error_code],
+                "dim white",
+            )
         raise Exit(code=1)

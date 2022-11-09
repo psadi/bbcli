@@ -67,13 +67,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
         richprint.console.print("Source & target cannot be the same", style="bold red")
         raise Exit(code=1)
 
-    if (
-        rebase
-        or prompt(f"? Do you want rebase '{from_branch}' branch from '{target}' [y/n]")
-        .lower()
-        .strip()
-        == "y"
-    ):
+    if rebase:
         with richprint.live_progress(
             f"Rebasing {from_branch} with {target} ... "
         ) as live:
