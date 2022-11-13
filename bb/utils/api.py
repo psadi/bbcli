@@ -52,8 +52,8 @@ def pull_request_body(
     """
     return json.dumps(
         {
-            "title": title_and_description,
-            "description": title_and_description,
+            "title": title_and_description[0],
+            "description": title_and_description[1],
             "state": "OPEN",
             "open": "true",
             "closed": "false",

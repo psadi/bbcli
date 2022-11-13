@@ -53,7 +53,9 @@ def title_and_description() -> str:
     """
     `Set the latest commit message as title for pull request`
     """
-    return subprocess_run("git log -1 --pretty=format:%s")
+    commit_message = subprocess_run("git log --format=%B -n 1")
+    tmp = commit_message.split("\n")
+    return [tmp[0], "\n".join(tmp[2:])]
 
 
 def from_branch() -> str:

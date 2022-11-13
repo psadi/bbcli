@@ -50,7 +50,8 @@ def gather_facts(
             ("Repository ID", str(repo_id)),
             ("From Branch", from_branch),
             ("To Branch", target),
-            ("Title & Description", title_and_description),
+            ("Title", title_and_description[0]),
+            ("Description", title_and_description[1]),
         ]
 
     table = richprint.table(header, summary, True)
