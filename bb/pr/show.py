@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # Importing the modules from the bb.utils package.
-from typer import Exit
 
 from bb.utils import api, cmnd, iniparser, request, richprint
 
@@ -41,6 +40,10 @@ def show_pull_request(role: str, all: bool) -> None:
                     repo_dict.update({repo: {pr["state"]: []}})
             _list = [
                 ("Tittle", pr["title"]),
+                (
+                    "Description",
+                    pr["description"] if "description" in pr.keys() else "-",
+                ),
                 ("From Branch", pr["fromRef"]["displayId"]),
                 ("To Branch", pr["toRef"]["displayId"]),
                 ("URL", pr["links"]["self"][0]["href"]),

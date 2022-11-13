@@ -27,7 +27,13 @@ def delete_pull_request(id: list, yes: bool, diff: bool) -> None:
                 ("State", pull_request_info[1]["state"]),
                 ("From Branch", pull_request_info[1]["fromRef"]["displayId"]),
                 ("To Branch", pull_request_info[1]["toRef"]["displayId"]),
-                ("Title & Description", pull_request_info[1]["description"]),
+                ("Title", pull_request_info[1]["title"]),
+                (
+                    "Description",
+                    pull_request_info[1]["description"]
+                    if "description" in pull_request_info[1].keys()
+                    else "-",
+                ),
             ]
 
         table = richprint.table(header, summary, True)
