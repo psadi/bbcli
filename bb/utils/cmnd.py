@@ -84,3 +84,27 @@ def git_rebase(target_branch: str) -> None:
                 "dim white",
             )
         raise Exit(code=1)
+
+
+def checkout_and_pull(branch_name: str) -> None:
+    modified_files = len(
+        (list(filter(None, (subprocess_run("git ls-files -m")).split("\n"))))
+    )
+    if modified_files > 0:
+        str_print(
+            f"Cannot checkout to '{branch_name}' branch.\nCurrent workspace has {modified_files} modified files",
+            "dim white",
+        )
+        raise Exit(code=1)
+    subprocess_run(f"git checkout {branch_name} && git pull --no-edit")
+
+
+def delete_local_branch(branch_name: str):
+    if branch_name == from_branch():
+        str_print(
+            f"Cannot delete active branch '{branch_name}'",
+            "dim white",
+        )
+        raise Exit(code=1)
+
+    subprocess_run(f"git branch -D {branch_name}")
