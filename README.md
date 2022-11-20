@@ -22,7 +22,7 @@
 
 <b>From Source</b>
 
-```text
+```sh
 git clone https://github.com/psadi/bbcli.git && cd bb
 python3 -m build .
 pip3 install --user dist/bb-<version>.tar.gz
@@ -32,8 +32,22 @@ pip3 install --user dist/bb-<version>.tar.gz
 
 Download the latest build from [releases](https://github.com/psadi/bbcli/releases) page
 
-```text
+```sh
 pip3 install --user bb-<version>.tar.gz
+```
+
+<b>From Docker</b>
+
+A docker image is published to [hub.docker.com](https://hub.docker.com/r/adithya3494/bbcli)
+
+```sh
+docker pull adithya3494/bbcli:<tag>
+docker run -it -v $HOME/.alt:/root/.alt adithya3494/bbcli:<tag> [OPTIONS] COMMAND [ARGS]
+```
+
+Example:
+```sh
+docker run -it -v $HOME/.alt:/root/.alt adithya3494/bbcli:<tag> create --target master
 ```
 
 ---
