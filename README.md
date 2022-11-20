@@ -7,6 +7,10 @@
 
 <p><i>be lazy and still get things done</i></p>
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=psadi_bbcli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=psadi_bbcli)
+![](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
+<a href="https://www.buymeacoffee.com/addy3494" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 22px !important;width: 100px !important;" ></a>
+
 ---
 
 ###  REQUIREMENTS
@@ -38,16 +42,16 @@ pip3 install --user bb-<version>.tar.gz
 
 <b>From Docker</b>
 
-A docker image is published to [hub.docker.com](https://hub.docker.com/r/adithya3494/bbcli)
+A docker image is published to [hub.docker.com](https://hub.docker.com/r/psadi/bbcli)
 
 ```sh
-docker pull adithya3494/bbcli:<tag>
-docker run -it -v $HOME/.alt:/root/.alt adithya3494/bbcli:<tag> [OPTIONS] COMMAND [ARGS]
+docker pull psadi/bbcli:<tag>
+docker run -it -v $HOME/.alt:/root/.alt psadi/bbcli:<tag> [OPTIONS] COMMAND [ARGS]
 ```
 
 Example:
 ```sh
-docker run -it -v $HOME/.alt:/root/.alt adithya3494/bbcli:<tag> create --target master
+docker run -it -v $HOME/.alt:/root/.alt psadi/bbcli:<tag> create --target master
 ```
 
 ---
