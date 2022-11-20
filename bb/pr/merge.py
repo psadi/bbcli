@@ -3,7 +3,6 @@
 # Importing the necessary modules for the script to run.
 from typer import prompt, Exit
 from bb.utils import cmnd, richprint, iniparser, api, request
-from bb.pr.review import review_pull_request
 from rich import print_json
 
 
@@ -31,7 +30,7 @@ def merge_pull_request(
             )
             != 0
         ):
-            raise
+            raise Exit(code=1)
         validation_url = api.validate_merge(bitbucket_host, project, repository, id)
         validation_response = request.get(validation_url, username, token)
         if (
@@ -140,3 +139,6 @@ def merge_pull_request(
                 pr_cleanup_url = api.pr_cleanup(bitbucket_host, project, repository, id)
                 request.post(pr_cleanup_url, username, token, pr_cleanup_body)
                 live.update(richprint.console.print("DONE", style="green"))
+
+            cmnd.checkout_and_pull(target_branch)
+            cmnd.delete_local_branch(from_branch)

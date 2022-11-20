@@ -5,7 +5,6 @@ bbcli: a comman line utility that can manage pull requests in bitbucket.
 
 # This is importing all the required modules for the script to run.
 from enum import Enum
-from typing import List, Optional
 import typer
 from bb import __doc__
 from bb.pr.create import create_pull_request
@@ -16,7 +15,7 @@ from bb.pr.review import review_pull_request
 from bb.pr.merge import merge_pull_request
 from bb.pr.diff import show_diff
 from bb.pr.copy import copy_pull_request
-from bb.utils.cmnd import is_git_repo
+from bb.utils.cmnd import is_git_repo, checkout_and_pull
 from bb.utils.richprint import console, traceback_to_console
 
 # Creating a new Typer app.
@@ -57,9 +56,7 @@ def validate_input(input: any, expected: str, error: str) -> str:
 @app.callback()
 def callback(
     verbose: bool = False,
-    version: Optional[bool] = typer.Option(
-        None, "--version", callback=version_callback
-    ),
+    version: bool = typer.Option(None, "--version", callback=version_callback),
 ):
     """
     run: "bb --help" for more information
