@@ -7,8 +7,13 @@
 
 <p><i>be lazy and still get things done</i></p>
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=psadi_bbcli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=psadi_bbcli)
 ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
+[![Pylint](https://github.com/psadi/bbcli/actions/workflows/pylint.yml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/pylint.yml)
+[![CodeQL](https://github.com/psadi/bbcli/actions/workflows/codeql.yml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/codeql.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=psadi_bbcli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=psadi_bbcli)
+
+
+
 <a href="https://www.buymeacoffee.com/addy3494" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 22px !important;width: 100px !important;" ></a>
 
 ---
@@ -202,3 +207,4 @@ A huge thanks to,
 <p align="left"><img height="150" width="200" src="./img/thatsall.gif">
 
 Enjoy being more efficient 😊
+

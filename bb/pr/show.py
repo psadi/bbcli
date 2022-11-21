@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Importing the modules from the bb.utils package.
+"""
+    bb.pr.show lists all pr is current repo
+    can also show all pr's authored/revewing either in current repo
+    or all repos
+"""
 
 from bb.utils import api, cmnd, iniparser, request, richprint
 
@@ -14,46 +18,44 @@ def to_richprint(repo_name: str, pr_repo_dict: dict, header: list) -> None:
         richprint.render_tree(repo_name, status, header, data)
 
 
-def show_pull_request(role: str, all: bool) -> None:
+def show_pull_request(role: str, _all: bool) -> None:
     """
     Shows the list of pull requests authored and pull requests reviewing
     """
 
     username, token, bitbucket_host = iniparser.parse()
-    if role == "current":
-        project, repository = cmnd.base_repo()
-        request_url = api.current_pull_request(bitbucket_host, project, repository)
-    else:
+    project, repository = cmnd.base_repo()
+    request_url = api.current_pull_request(bitbucket_host, project, repository)
+    if role != "current":
         request_url = api.pull_request_viewer(bitbucket_host, role)
 
     with richprint.live_progress(f"Fetching Pull Requests ({role}) ..."):
         response = request.get(request_url, username, token)
-    repository = cmnd.base_repo()[1]
 
     repo_dict = {}
     if (response[0]) == 200 and (len(response[1]["values"]) > 0):
-        for pr in response[1]["values"]:
-            repo = f"{pr['fromRef']['repository']['slug']}"
-            if repo not in repo_dict.keys():
+        for _pr in response[1]["values"]:
+            repo = f"{_pr['fromRef']['repository']['slug']}"
+            if repo not in repo_dict:
                 repo_dict.update({repo: {}})
-                if pr["state"] not in repo_dict[repo].values():
-                    repo_dict.update({repo: {pr["state"]: []}})
+                if _pr["state"] not in repo_dict[repo].values():
+                    repo_dict.update({repo: {_pr["state"]: []}})
             _list = [
-                ("Tittle", pr["title"]),
+                ("Tittle", _pr["title"]),
                 (
                     "Description",
-                    pr["description"] if "description" in pr.keys() else "-",
+                    _pr["description"] if "description" in _pr.keys() else "-",
                 ),
-                ("From Branch", pr["fromRef"]["displayId"]),
-                ("To Branch", pr["toRef"]["displayId"]),
-                ("URL", pr["links"]["self"][0]["href"]),
+                ("From Branch", _pr["fromRef"]["displayId"]),
+                ("To Branch", _pr["toRef"]["displayId"]),
+                ("URL", _pr["links"]["self"][0]["href"]),
             ]
-            repo_dict[repo][pr["state"]].append(_list)
+            repo_dict[repo][_pr["state"]].append(_list)
 
         header = [("SUMMARY", "yellow"), ("DESCRIPTION", "white")]
 
         for repo_name, pr_repo_dict in repo_dict.items():
-            if repo_name.lower() == repository.lower() and not all:
+            if repo_name.lower() == repository.lower() and not _all:
                 to_richprint(repo_name, pr_repo_dict, header)
                 break
 

@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=C0301,R0914
 
-# Importing the necessary modules for the script to run.
+"""
+    bb.pr.create - creates a pull request in bitbucket
+    while doing so it gathers all the facts required for a pr from the
+    remote and local repository
+"""
+
 from typer import prompt, Exit
 from bb.pr.diff import show_diff
 from bb.utils import cmnd, iniparser, request, api, richprint, cp
@@ -11,9 +17,6 @@ def gather_facts(
     from_branch: str,
     project: str,
     repository: str,
-    username: str,
-    token: str,
-    bitbucket_host: str,
     title_and_description: str,
 ) -> list:
     """
@@ -21,6 +24,7 @@ def gather_facts(
     repository
     """
 
+    username, token, bitbucket_host = iniparser.parse()
     with richprint.live_progress(f"Gathering facts on '{repository}' ..."):
         repo_id = None
         for repo in request.get(
@@ -42,9 +46,9 @@ def gather_facts(
                     if key == "name":
                         reviewers.append({"user": {"name": dict_item[key]}})
 
-        header = [("SUMMARY", "bold yellow"), ("DESCRIPTION", "#FFFFFF")]
-
-        summary = [
+    table = richprint.table(
+        [("SUMMARY", "bold yellow"), ("DESCRIPTION", "#FFFFFF")],
+        [
             ("Project", project),
             ("Repository", repository),
             ("Repository ID", str(repo_id)),
@@ -52,17 +56,19 @@ def gather_facts(
             ("To Branch", target),
             ("Title", title_and_description[0]),
             ("Description", title_and_description[1]),
-        ]
-
-    table = richprint.table(header, summary, True)
+        ],
+        True,
+    )
     richprint.console.print(table)
-    return [header, reviewers]
+    return reviewers
 
 
 def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> None:
     """
     It creates a pull request.
     """
+
+    username, token, bitbucket_host = iniparser.parse()
     from_branch = cmnd.from_branch()
     if target == from_branch:
         richprint.console.print("Source & target cannot be the same", style="bold red")
@@ -75,22 +81,18 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
             cmnd.git_rebase(target)
             live.update(richprint.console.print("REBASED", style="bold green"))
 
-    username, token, bitbucket_host = iniparser.parse()
     project, repository = cmnd.base_repo()
     title_and_description = cmnd.title_and_description()
-    header, reviewers = gather_facts(
+    reviewers = gather_facts(
         target,
         from_branch,
         project,
         repository,
-        username,
-        token,
-        bitbucket_host,
         title_and_description,
     )
 
     if yes or prompt("Proceed [y/n]").lower().strip() == "y":
-        with richprint.live_progress(f"Creating Pull Request ..."):
+        with richprint.live_progress("Creating Pull Request ..."):
             url = api.pull_request_create(bitbucket_host, project, repository)
             body = api.pull_request_body(
                 title_and_description,
@@ -108,7 +110,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 highlight=True,
                 style="bold green",
             )
-            id = pull_request[1]["links"]["self"][0]["href"].split("/")[-1]
+            _id = pull_request[1]["links"]["self"][0]["href"].split("/")[-1]
             cp.copy_to_clipboard(pull_request[1]["links"]["self"][0]["href"])
         elif pull_request[0] == 409:
             richprint.console.print(
@@ -121,7 +123,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 highlight=True,
                 style="bold yellow",
             )
-            id = pull_request[1]["errors"][0]["existingPullRequest"]["links"]["self"][
+            _id = pull_request[1]["errors"][0]["existingPullRequest"]["links"]["self"][
                 0
             ]["href"].split("/")[-1]
             cp.copy_to_clipboard(
@@ -134,4 +136,4 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
             raise Exit(code=1)
 
     if diff:
-        show_diff(id)
+        show_diff(_id)

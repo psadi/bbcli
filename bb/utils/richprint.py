@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0613
 
-# Importing the rich library and setting up the console.
+"""
+    bb.utils.richprint - uses py rich api to pretty print information to console
+"""
+
 import sys
 from rich.console import Console, Group
 from rich.table import Table
@@ -12,6 +16,8 @@ from rich.tree import Tree
 
 # Setting up the console.
 console = Console()
+
+bold_white: str = "bold white"
 
 
 def str_print(text: str, style: str) -> None:
@@ -58,7 +64,7 @@ def live_progress(message: str):
     is_utf8 = sys.stdout.encoding.lower() == "utf-8"
     spin_type = "dots" if is_utf8 else "simpleDots"
     return Live(
-        Columns([Spinner(spin_type, style="bold white"), message]),
+        Columns([Spinner(spin_type, style=bold_white), message]),
         refresh_per_second=20,
     )
 
@@ -68,8 +74,8 @@ def render_tree(repo_name: str, status: str, header: list, data: list):
     utilised by bb show, catagorize pr's based on state and render a tree
     """
     tree = Tree("Root", highlight=True, hide_root=True)
-    tree_root = tree.add(f"[bold #2684FF]{repo_name}", guide_style="bold white")
-    containers_node = tree_root.add(f"[bold #2684FF]{status}", guide_style="bold white")
+    tree_root = tree.add(f"[bold #2684FF]{repo_name}", guide_style=bold_white)
+    containers_node = tree_root.add(f"[bold #2684FF]{status}", guide_style=bold_white)
     containers_node.expanded = True
     for _ in data:
         containers_node.add(Group("Pull Request Details", table(header, _, True)))

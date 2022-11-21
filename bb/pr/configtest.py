@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Importing the `echo` and `Exit` functions from the `typer` module, and the `iniparser`,
-# `api`, `request`, and `richprint` modules from the `bb.utils` package.
+"""
+    bb.pr.configtest - checks the install configuration for the user
+"""
 from bb.utils import iniparser, api, request, richprint
 
 

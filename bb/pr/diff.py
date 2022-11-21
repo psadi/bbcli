@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 
-# Importing the modules from the bb.utils package.
+"""
+    bb.pr.diff - shows the diffrence in pull requests which is already raised
+    TODO: show the diff contents for each file
+"""
+
 from bb.utils import cmnd, request, iniparser, richprint, api
 
 
-def show_diff(id: int) -> None:
+def show_diff(_id: str) -> None:
     """
-    Display the diff from remote pull request to the console applicable for create and delete actions
+    Display the diff from remote pull request
+    to the console applicable for create and delete actions
     """
     username, token, bitbucket_host = iniparser.parse()
     project, repository = cmnd.base_repo()
-    url = api.pull_request_difference(bitbucket_host, project, repository, id)
-    with richprint.live_progress(f"Fetching Contents from Pull Request ..."):
+    url = api.pull_request_difference(bitbucket_host, project, repository, _id)
+    with richprint.live_progress("Fetching Contents from Pull Request ..."):
         response = request.get(url, username, token)[1]
 
     header = [

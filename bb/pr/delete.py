@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Importing the necessary modules for the script to run.
+"""
+    bb.pr.delete - deletes a pull request(s) given for the given id(s)
+"""
+
 import json
 from typer import prompt, Exit
 from bb.utils import cmnd, iniparser, request, api, richprint
@@ -8,21 +11,21 @@ from bb.utils import cmnd, iniparser, request, api, richprint
 from bb.pr.diff import show_diff
 
 
-def delete_pull_request(id: list, yes: bool, diff: bool) -> None:
+def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
     """
     Delete pull request(s) by ID
     """
     username, token, bitbucket_host = iniparser.parse()
     project, repository = cmnd.base_repo()
 
-    for no in id:
-        with richprint.live_progress(f"Fetching info on {no} ..."):
-            url = api.pull_request_info(bitbucket_host, project, repository, no)
+    for _no in _id:
+        with richprint.live_progress(f"Fetching info on {_no} ..."):
+            url = api.pull_request_info(bitbucket_host, project, repository, _no)
             pull_request_info = request.get(url, username, token)
 
-            header = [("SUMMARY", "bold yellow"), ("DESCRIPTION", "#FFFFFF")]
-
-            summary = [
+        table = richprint.table(
+            [("SUMMARY", "bold yellow"), ("DESCRIPTION", "#FFFFFF")],
+            [
                 ("ID", str(pull_request_info[1]["id"])),
                 ("State", pull_request_info[1]["state"]),
                 ("From Branch", pull_request_info[1]["fromRef"]["displayId"]),
@@ -34,13 +37,13 @@ def delete_pull_request(id: list, yes: bool, diff: bool) -> None:
                     if "description" in pull_request_info[1].keys()
                     else "-",
                 ),
-            ]
-
-        table = richprint.table(header, summary, True)
+            ],
+            True,
+        )
         richprint.console.print(table)
 
         if diff:
-            show_diff(no)
+            show_diff(_no)
 
         if yes or prompt("Proceed [y/n]").lower().strip() == "y":
             with richprint.live_progress("Deleting Pull Request ..."):

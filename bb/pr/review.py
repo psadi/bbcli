@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Importing the necessary modules for the function to work.
+"""
+    bb.pr.review marks a pull request as approved/unapproved or needs_work
+    based on the pr id
+"""
+
 import json
 from time import sleep
 from bb.utils.iniparser import parse

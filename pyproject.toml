@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bb"
-version = "0.4.6.1"
+version = "0.4.7"
 description = "cli to manage bitbucket pull requests"
 authors = ["psadi <adithya3494@gmail.com>"]
 readme = "README.md"
