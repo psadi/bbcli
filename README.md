@@ -51,12 +51,12 @@ A docker image is published to [hub.docker.com](https://hub.docker.com/r/psadi/b
 
 ```sh
 docker pull psadi/bbcli:<tag>
-docker run -it -v $HOME/.alt:/root/.alt psadi/bbcli:<tag> [OPTIONS] COMMAND [ARGS]
+docker run -it -v $HOME/.alt:/root/.alt -v $(pwd):/app/. --network host psadi/bbcli [OPTIONS] COMMAND [ARGS]
 ```
 
 Example:
 ```sh
-docker run -it -v $HOME/.alt:/root/.alt psadi/bbcli:<tag> create --target master
+docker run -it -v $HOME/.alt:/root/.alt -v $(pwd):/app/. --network host psadi/bbcli create --target master
 ```
 
 ---
