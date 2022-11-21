@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=C0301,R0913
 
-# Importing the from_branch function from the bb.utils.command module.
+"""
+    bb.utils.api - contains the api model for bitbuket server
+"""
+
 import json
 
 
@@ -89,12 +93,12 @@ def pull_request_difference(
 
 
 def pull_request_info(
-    bitbucket_host: str, project: str, repository: str, id: int
+    bitbucket_host: str, project: str, repository: str, _id: int
 ) -> str:
     """
     It returns a URL for a Bitbucket pull request
     """
-    return f"{bitbucket_host}/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{id}"
+    return f"{bitbucket_host}/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{_id}"
 
 
 def pull_request_viewer(bitbucket_host: str, role: str) -> str:
@@ -131,7 +135,7 @@ def pr_source_branch_delete_check(
     bitbucket_host: str,
     project: str,
     repository: str,
-    id: int,
+    _id: int,
     delete_source_branch: str,
 ) -> str:
     """
@@ -139,15 +143,15 @@ def pr_source_branch_delete_check(
     and a boolean value for whether or not to delete the source branch,
     and returns a URL that can be used to check if the source branch can be deleted.
     """
-    return f"{bitbucket_host}/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{id}?deleteSourceRef={delete_source_branch}&retargetDependents={delete_source_branch}"
+    return f"{bitbucket_host}/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{_id}?deleteSourceRef={delete_source_branch}&retargetDependents={delete_source_branch}"
 
 
-def validate_merge(bitbucket_host: str, project: str, repository: str, id: int) -> str:
+def validate_merge(bitbucket_host: str, project: str, repository: str, _id: int) -> str:
     """
     It takes a Bitbucket host, a project, a repository, and a pull request ID, and returns a URL that
     can be used to validate the merge of the pull request
     """
-    return f"{bitbucket_host}/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{id}/merge"
+    return f"{bitbucket_host}/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{_id}/merge"
 
 
 def merge_config(bitbucket_host: str, project: str, repository: str) -> str:
@@ -169,7 +173,7 @@ def get_merge_info(
 
 
 def pr_merge_body(
-    project: str, repository: str, id: int, from_branch: str, target_branch: str
+    project: str, repository: str, _id: int, from_branch: str, target_branch: str
 ) -> str:
     """
     It takes the project, repository, pull request id, from branch, and target branch and returns a JSON
@@ -178,16 +182,16 @@ def pr_merge_body(
     return json.dumps(
         {
             "autoSubject": False,
-            "message": f"Merge pull request #{id} in {project}/{repository} from {from_branch} to {target_branch}",
+            "message": f"Merge pull request #{_id} in {project}/{repository} from {from_branch} to {target_branch}",
         }
     )
 
 
-def pr_cleanup(bitbucket_host: str, project: str, repository: str, id: int) -> str:
+def pr_cleanup(bitbucket_host: str, project: str, repository: str, _id: int) -> str:
     """
     It returns a URL for the Bitbucket REST API endpoint for the pull request cleanup plugin
     """
-    return f"{bitbucket_host}/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{id}"
+    return f"{bitbucket_host}/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{_id}"
 
 
 def pr_cleanup_body(delete_source_branch: bool) -> str:
@@ -201,12 +205,24 @@ def pr_cleanup_body(delete_source_branch: bool) -> str:
 
 
 def pr_rebase(
-    bitbucket_host: str, project: str, repository: str, id: int, version: int
+    bitbucket_host: str, project: str, repository: str, _id: int, version: int
 ) -> list:
     """
     It returns a list of two elements, the first being a JSON string, and the second being a URL
     """
     return [
         json.dumps({"version": version}),
-        f"{bitbucket_host}/rest/git/latest/projects/{project}/repos/{repository}/pull-requests/{id}/rebase",
+        f"{bitbucket_host}/rest/git/latest/projects/{project}/repos/{repository}/pull-requests/{_id}/rebase",
+    ]
+
+
+def delete_branch(
+    bitbucket_host: str, project: str, repository: str, source_branch: str
+) -> list:
+    """
+    provides the payload the the body to delete a branch in bitbucket
+    """
+    return [
+        json.dumps({"name": f"{source_branch}"}),
+        f"{bitbucket_host}/rest/branch-utils/latest/projects/{project}/repos/{repository}/branches",
     ]

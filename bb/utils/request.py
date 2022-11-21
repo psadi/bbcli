@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
-# This is importing the requests library, the echo function from typer, and the Exit function from
-# typer.
+"""
+    bb.utils.request - makes http requests
+"""
+
+from json import JSONDecodeError
 import requests
 from typer import echo
 from typer import Exit
+
+content_type: str = "application/json;charset=UTF-8"
 
 
 def http_response_definitions(status_code: int) -> str:
@@ -63,16 +68,22 @@ def get(url: str, username: str, token: str) -> list:
     """
     with requests.Session() as client:
         request = client.get(url, auth=(username, token), timeout=10)
-    if request.status_code == 200:
-        return [request.status_code, request.json()]
-    elif request.status_code == 400:
-        echo(f"{request.status_code} - {request.json()['errors'][0]['message']}")
-        raise Exit(code=1)
-    else:
+
+    if request.status_code != 200:
+        if request.status_code == 400:
+            echo(f"{request.status_code} - {request.json()['errors'][0]['message']}")
+
         echo(
             f"\n{request.status_code} - {http_response_definitions(request.status_code)}"
         )
         raise Exit(code=1)
+
+    try:
+        data: dict = request.json()
+    except JSONDecodeError:
+        data: str = request.content.decode()
+
+    return [request.status_code, data]
 
 
 def post(url: str, username: str, token: str, body: dict) -> list:
@@ -86,28 +97,35 @@ def post(url: str, username: str, token: str, body: dict) -> list:
             url,
             auth=(username, token),
             data=body,
-            headers={"content-type": "application/json;charset=UTF-8"},
+            headers={"content-type": content_type},
         )
+
     if request.status_code not in (200, 201, 204, 409):
         echo(
             f"\n{request.status_code} - {http_response_definitions(request.status_code)}"
         )
         raise Exit(code=1)
 
-    return [request.status_code, request.json()]
+    if request.status_code == 204:
+        json_data: dict = {}
+    else:
+        json_data: dict = request.json()
+
+    return [request.status_code, json_data]
 
 
 def put(url: str, username: str, token: str, body: dict) -> list:
     """
-    This function makes a PUT request to the specified URL with the specified username and token, and
-    returns the status code and response body as a list
+    This function makes a PUT request to the specified URL
+    with the specified username and token and returns the status code
+    and response body as a list
     """
     with requests.Session() as client:
         request = client.put(
             url,
             auth=(username, token),
             data=body,
-            headers={"content-type": "application/json;charset=UTF-8"},
+            headers={"content-type": content_type},
         )
     if request.status_code != 200:
         echo(
@@ -127,7 +145,7 @@ def delete(url: str, username: str, token: str, body: dict) -> int:
             url,
             auth=(username, token),
             data=body,
-            headers={"content-type": "application/json;charset=UTF-8"},
+            headers={"content-type": content_type},
         )
     if request.status_code != 204:
         echo(

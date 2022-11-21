@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0613,C0103,W0703,W0613,W0621,W0622
 """
 bbcli: a comman line utility that can manage pull requests in bitbucket.
 """
@@ -15,20 +16,24 @@ from bb.pr.review import review_pull_request
 from bb.pr.merge import merge_pull_request
 from bb.pr.diff import show_diff
 from bb.pr.copy import copy_pull_request
-from bb.utils.cmnd import is_git_repo, checkout_and_pull
+from bb.utils.cmnd import is_git_repo
 from bb.utils.richprint import console, traceback_to_console
 
 # Creating a new Typer app.
 app = typer.Typer()
 # A global variable that is used to store the state of the application.
-state = {"verbose": False}
+state: dict = {"verbose": False}
+id_cannot_be_none: str = "id cannot be none"
+not_a_git_repo: str = "Not a git repository"
+skip_prompt: str = "skip confirmation prompt"
 
 
 def version_callback(value: bool):
     """
     - It takes a boolean value as input.
-    - If the value is `True`, it prints the docstring of the current module (`__doc__`) and exits the
-    program.
+    - If the value is `True`,
+      it prints the docstring of the current module (`__doc__`)
+      and exits the program.
     """
     if value:
         console.print(__doc__)
@@ -36,21 +41,27 @@ def version_callback(value: bool):
 
 
 def error_tip():
+    """
+    reusable error message across mainstream commands
+    """
     console.print(
-        f"\n💻 Try running 'bb --verbose [OPTIONS] COMMAND [ARGS]' to debug",
+        "\n💻 Try running 'bb --verbose [OPTIONS] COMMAND [ARGS]' to debug",
         style="dim white",
     )
 
 
-def validate_input(input: any, expected: str, error: str) -> str:
-    if not input:
-        input: str = typer.prompt(f"? {expected}")
+def validate_input(_input: any, expected: str, error: str) -> str:
+    """
+    validates the input, raise the error if the value is not as expected
+    """
+    if not _input:
+        _input: str = typer.prompt(f"? {expected}")
 
-    if input == None or input.lower() == "none":
+    if _input is None or _input.lower() == "none":
         console.print(f"{error}", style="red")
-        raise (typer.Exit(code=1))
+        raise typer.Exit(code=1)
 
-    return input
+    return _input
 
 
 @app.callback()
@@ -68,7 +79,7 @@ def callback(
 @app.command()
 def create(
     target: str = typer.Option("", help="target branch name"),
-    yes: bool = typer.Option(False, help="skip confirmation prompt"),
+    yes: bool = typer.Option(False, help=skip_prompt),
     diff: bool = typer.Option(False, help="show diff after raising pull request"),
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before creation"
@@ -77,7 +88,7 @@ def create(
     """- create new pull request"""
     try:
         if not is_git_repo():
-            console.print("Not a git repository", style="red")
+            console.print(not_a_git_repo, style="red")
             raise typer.Exit(code=1)
 
         target = validate_input(target, "Target branch", "Target branch cannot be none")
@@ -93,22 +104,22 @@ def create(
 @app.command()
 def delete(
     id: str = typer.Option("", help="pull request number(s) to delete"),
-    yes: bool = typer.Option(False, help="skip confirmation prompt"),
+    yes: bool = typer.Option(False, help=skip_prompt),
     diff: bool = typer.Option(False, help="show diff before deleting pull request"),
 ):
     """- delete pull request's by id's"""
     try:
         if not is_git_repo():
-            console.print("Not a git repository", style="red")
+            console.print(not_a_git_repo, style="red")
             raise typer.Exit(code=1)
 
-        id = validate_input(
-            False,
+        _id = validate_input(
+            id,
             "Pull request id(s) to delete\n? ex: id (or) id1, id2",
             "Id's cannot be empty",
         ).split(",")
 
-        delete_pull_request(id, yes, diff)
+        delete_pull_request(_id, yes, diff)
 
     except Exception:
         error_tip()
@@ -116,16 +127,20 @@ def delete(
             traceback_to_console(Exception)
 
 
-# `Role` is a subclass of `str` that has a fixed set of values
 class Role(str, Enum):
-    author = "author"
-    reviewer = "reviewer"
-    current = "current"
+    """
+    enum role choices for pr.show
+    defaults to curent
+    """
+
+    AUTHOR = "author"
+    REVIEWER = "reviewer"
+    CURRENT = "current"
 
 
 @app.command()
 def show(
-    role: Role = Role.current.value,
+    role: Role = Role.CURRENT.value,
     all: bool = typer.Option(
         False, help="show all pull request(s) based on selected role"
     ),
@@ -133,7 +148,7 @@ def show(
     """- show pull request's authored & reviewing"""
     try:
         if not is_git_repo():
-            console.print("Not a git repository", style="red")
+            console.print(not_a_git_repo, style="red")
             raise typer.Exit(code=1)
 
         show_pull_request(role.value, all)
@@ -159,28 +174,28 @@ def test():
 class Action(str, Enum):
     """review enum choices"""
 
-    approve = "approve"
-    unapprove = "unapprove"
-    needs_work = "needs_work"
-    none = "none"
+    APPROVE = "approve"
+    UNAPPROVE = "unapprove"
+    NEEDS_WORK = "needs_work"
+    NONE = "none"
 
 
 @app.command()
 def review(
     id: str = typer.Option("", help="pull request number to review"),
-    action: Action = Action.none.value,
+    action: Action = Action.NONE.value,
 ):
     """- review Pull Request by ID"""
     try:
 
-        id = validate_input(id, "Pull request id to review", "id cannot be none")
+        _id = validate_input(id, "Pull request id to review", id_cannot_be_none)
         action = validate_input(
-            False if action.value is "none" else action.value,
+            False if action.value == "none" else action.value,
             "Action [approve|unapprove|needs_work]",
             "action cannot be none",
         )
 
-        review_pull_request(id, action)
+        review_pull_request(_id, action)
 
     except Exception:
         error_tip()
@@ -197,13 +212,13 @@ def merge(
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before merge"
     ),
-    yes: bool = typer.Option(False, help="skip confirmation prompt"),
+    yes: bool = typer.Option(False, help=skip_prompt),
 ):
     """- merge pull request by id"""
     try:
 
-        id = validate_input(id, "Pull request id to merge", "id cannot be none")
-        merge_pull_request(id, delete_source_branch, rebase, yes)
+        _id = validate_input(id, "Pull request id to merge", id_cannot_be_none)
+        merge_pull_request(_id, delete_source_branch, rebase, yes)
     except Exception:
         error_tip()
         if state["verbose"]:
@@ -212,12 +227,12 @@ def merge(
 
 @app.command()
 def diff(
-    id: int = typer.Option("", help="pull request number to show diff"),
+    id: str = typer.Option("", help="pull request number to show diff"),
 ):
     """- view diff in pull request (file only)"""
     try:
-        id = validate_input(id, "Pull request number to show diff", "id cannot be none")
-        show_diff(id)
+        _id = validate_input(id, "Pull request number to show diff", id_cannot_be_none)
+        show_diff(_id)
     except Exception:
         error_tip()
         if state["verbose"]:

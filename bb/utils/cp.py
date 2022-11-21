@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0703
+
+"""
+    bb.utils.cp - copies the received url to clipboard
+"""
 
 import pyperclip as pc
 from bb.utils.richprint import str_print
