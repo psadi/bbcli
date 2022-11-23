@@ -5,6 +5,7 @@
      </br>
 </div>
 
+
 <p><i>be lazy and still get things done</i></p>
 
 ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
@@ -90,6 +91,15 @@ bb test
 ---
 
 ###  HOW-TO ?
+
+
+Check out this video walking through the setup & demo of the features in bb if you want an idea of where to get started.
+
+[<img src="img/yt-bb.png">](https://youtu.be/g2eX_0_Dv14)
+
+
+
+
 
 <details>
   <summary>Create pull request</summary>
