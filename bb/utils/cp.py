@@ -16,7 +16,6 @@ def copy_to_clipboard(url: str) -> None:
     try:
         pc.copy(url)
         pc.paste()
-
         str_print(
             "Tip: Pull request url is copied to clipboard ('ctrl+v' to paste)",
             "dim white",
