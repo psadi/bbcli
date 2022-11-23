@@ -1,0 +1,41 @@
+name: SonarCloud
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+      types: [opened, synchronize, reopened]
+      branches: [ "main" ]
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10"]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Setup config & install tox
+        run: cp .alt ~ && pip install tox
+      - name: Run tox
+        run: tox
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args:
+            -Dsonar.projectKey=psadi_bbcli
+            -Dsonar.organization=psadi
+            -Dsonar.python.version=3
+            -Dsonar.sources=bb
+            -Dsonar.tests=tests
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.exclusions=tests

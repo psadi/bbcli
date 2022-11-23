@@ -29,7 +29,7 @@ def str_print(text: str, style: str) -> None:
     console.print(_text)
 
 
-def table(header_args: list, value_args: list, show_header: bool) -> None:
+def table(header_args: list, value_args: list, show_header: bool) -> Table:
     """
     Pretty print to console as a table
     The function takes three arguments:
@@ -69,7 +69,7 @@ def live_progress(message: str):
     )
 
 
-def render_tree(repo_name: str, status: str, header: list, data: list):
+def render_tree(repo_name: str, status: str, header: list, data: list) -> None:
     """
     utilised by bb show, catagorize pr's based on state and render a tree
     """

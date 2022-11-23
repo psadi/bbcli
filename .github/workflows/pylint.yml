@@ -20,4 +20,4 @@ jobs:
         pip install pylint typer requests rich pyperclip
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --ignore-paths tests $(git ls-files '*.py')

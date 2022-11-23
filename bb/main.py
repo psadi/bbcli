@@ -19,16 +19,17 @@ from bb.pr.copy import copy_pull_request
 from bb.utils.cmnd import is_git_repo
 from bb.utils.richprint import console, traceback_to_console
 
-# Creating a new Typer app.
-app = typer.Typer()
-# A global variable that is used to store the state of the application.
+# new app
+_bb = typer.Typer()
+
+# globals
 state: dict = {"verbose": False}
 id_cannot_be_none: str = "id cannot be none"
 not_a_git_repo: str = "Not a git repository"
 skip_prompt: str = "skip confirmation prompt"
 
 
-def version_callback(value: bool):
+def version_callback(value: bool) -> None:
     """
     - It takes a boolean value as input.
     - If the value is `True`,
@@ -40,7 +41,7 @@ def version_callback(value: bool):
         raise typer.Exit(code=0)
 
 
-def error_tip():
+def error_tip() -> None:
     """
     reusable error message across mainstream commands
     """
@@ -64,7 +65,7 @@ def validate_input(_input: any, expected: str, error: str) -> str:
     return _input
 
 
-@app.callback()
+@_bb.callback()
 def callback(
     verbose: bool = False,
     version: bool = typer.Option(None, "--version", callback=version_callback),
@@ -76,7 +77,7 @@ def callback(
         state["verbose"] = True
 
 
-@app.command()
+@_bb.command()
 def create(
     target: str = typer.Option("", help="target branch name"),
     yes: bool = typer.Option(False, help=skip_prompt),
@@ -101,7 +102,7 @@ def create(
             traceback_to_console(Exception)
 
 
-@app.command()
+@_bb.command()
 def delete(
     id: str = typer.Option("", help="pull request number(s) to delete"),
     yes: bool = typer.Option(False, help=skip_prompt),
@@ -138,7 +139,7 @@ class Role(str, Enum):
     CURRENT = "current"
 
 
-@app.command()
+@_bb.command()
 def show(
     role: Role = Role.CURRENT.value,
     all: bool = typer.Option(
@@ -159,7 +160,7 @@ def show(
             traceback_to_console(Exception)
 
 
-@app.command()
+@_bb.command()
 def test():
     """- test .alt config (or) prompt for manual config"""
     try:
@@ -180,7 +181,7 @@ class Action(str, Enum):
     NONE = "none"
 
 
-@app.command()
+@_bb.command()
 def review(
     id: str = typer.Option("", help="pull request number to review"),
     action: Action = Action.NONE.value,
@@ -203,7 +204,7 @@ def review(
             traceback_to_console(Exception)
 
 
-@app.command()
+@_bb.command()
 def merge(
     id: str = typer.Option("", help="pull request number to merge"),
     delete_source_branch: bool = typer.Option(
@@ -225,7 +226,7 @@ def merge(
             traceback_to_console(Exception)
 
 
-@app.command()
+@_bb.command()
 def diff(
     id: str = typer.Option("", help="pull request number to show diff"),
 ):
@@ -239,7 +240,7 @@ def diff(
             traceback_to_console(Exception)
 
 
-@app.command()
+@_bb.command()
 def copy(id: int = typer.Option("", help="pull request number to copy")):
     """- copy pull request url to clipboard by id"""
     copy_pull_request(id)
