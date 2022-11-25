@@ -18,23 +18,14 @@ def to_richprint(repo_name: str, pr_repo_dict: dict, header: list) -> None:
         richprint.render_tree(repo_name, status, header, data)
 
 
-def show_pull_request(role: str, _all: bool) -> None:
+def construct_repo_dict(role_info: list) -> dict:
     """
-    Shows the list of pull requests authored and pull requests reviewing
+    parses the role info (reviewer/author), constructs a dict that can be sent to
+    richprint tree view
     """
-
-    username, token, bitbucket_host = iniparser.parse()
-    project, repository = cmnd.base_repo()
-    request_url = api.current_pull_request(bitbucket_host, project, repository)
-    if role != "current":
-        request_url = api.pull_request_viewer(bitbucket_host, role)
-
-    with richprint.live_progress(f"Fetching Pull Requests ({role}) ..."):
-        response = request.get(request_url, username, token)
-
-    repo_dict = {}
-    if (response[0]) == 200 and (len(response[1]["values"]) > 0):
-        for _pr in response[1]["values"]:
+    repo_dict: dict = {}
+    if (role_info[0]) == 200 and (len(role_info[1]["values"]) > 0):
+        for _pr in role_info[1]["values"]:
             repo = f"{_pr['fromRef']['repository']['slug']}"
             if repo not in repo_dict:
                 repo_dict.update({repo: {}})
@@ -51,7 +42,22 @@ def show_pull_request(role: str, _all: bool) -> None:
                 ("URL", _pr["links"]["self"][0]["href"]),
             ]
             repo_dict[repo][_pr["state"]].append(_list)
+    return repo_dict
 
+
+def show_pull_request(role: str, _all: bool) -> None:
+    """
+    Shows the list of pull requests authored and pull requests reviewing
+    """
+    username, token, bitbucket_host = iniparser.parse()
+    project, repository = cmnd.base_repo()
+    request_url = api.current_pull_request(bitbucket_host, project, repository)
+    if role != "current":
+        request_url = api.pull_request_viewer(bitbucket_host, role)
+
+    with richprint.live_progress(f"Fetching Pull Requests ({role}) ..."):
+        role_info: list = request.get(request_url, username, token)
+        repo_dict: dict = construct_repo_dict(role_info)
         header = [("SUMMARY", "yellow"), ("DESCRIPTION", "white")]
 
         for repo_name, pr_repo_dict in repo_dict.items():

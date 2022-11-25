@@ -8,7 +8,7 @@
 from bb.utils import api, request, iniparser, cmnd, cp, richprint
 
 
-def copy_pull_request(_id: int) -> None:
+def copy_pull_request(_id: str) -> None:
     """
     Copy the pull request to user clipboard for convenience
     """
@@ -20,5 +20,5 @@ def copy_pull_request(_id: int) -> None:
             username,
             token,
         )
+        live.update(richprint.console.print("COPIED", style="bold green"))
         cp.copy_to_clipboard(url[1]["links"]["self"][0]["href"])
-        live.update(richprint.console.print("DONE", style="bold green"))

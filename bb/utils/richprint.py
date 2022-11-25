@@ -50,11 +50,11 @@ def table(header_args: list, value_args: list, show_header: bool) -> Table:
     return _table
 
 
-def traceback_to_console(*args, **kwargs):
+def traceback_to_console():
     """
     It prints the traceback to the console
     """
-    console.print_exception(max_frames=1, show_locals=True)
+    console.print_exception()
 
 
 def live_progress(message: str):

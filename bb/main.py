@@ -99,7 +99,7 @@ def create(
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 @_bb.command()
@@ -125,7 +125,7 @@ def delete(
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 class Role(str, Enum):
@@ -157,7 +157,7 @@ def show(
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 @_bb.command()
@@ -168,7 +168,7 @@ def test():
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 # `Action` is a subclass of `str` that has a fixed set of values
@@ -201,7 +201,7 @@ def review(
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 @_bb.command()
@@ -223,7 +223,7 @@ def merge(
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 @_bb.command()
@@ -237,10 +237,16 @@ def diff(
     except Exception:
         error_tip()
         if state["verbose"]:
-            traceback_to_console(Exception)
+            traceback_to_console()
 
 
 @_bb.command()
-def copy(id: int = typer.Option("", help="pull request number to copy")):
+def copy(id: str = typer.Option("", help="pull request number to copy")):
     """- copy pull request url to clipboard by id"""
-    copy_pull_request(id)
+    try:
+        _id = validate_input(id, "Pull request number to show copy", id_cannot_be_none)
+        copy_pull_request(_id)
+    except Exception:
+        error_tip()
+        if state["verbose"]:
+            traceback_to_console()
