@@ -69,7 +69,7 @@ def live_progress(message: str):
     )
 
 
-def render_tree(repo_name: str, status: str, header: list, data: list) -> None:
+def render_tree(repo_name: str, status: str, data: list) -> None:
     """
     utilised by bb show, catagorize pr's based on state and render a tree
     """
@@ -78,5 +78,7 @@ def render_tree(repo_name: str, status: str, header: list, data: list) -> None:
     containers_node = tree_root.add(f"[bold #2684FF]{status}", guide_style=bold_white)
     containers_node.expanded = True
     for _ in data:
-        containers_node.add(Group("Pull Request Details", table(header, _, True)))
+        containers_node.add(
+            Group(f"PR: #{_[-1][1].split('/')[-1]}", table(_, _, False))
+        )
     console.print(tree)
