@@ -7,7 +7,7 @@
 
 import json
 from time import sleep
-from bb.utils.iniparser import parse
+from bb.utils.ini import parse
 from bb.utils.request import get, put
 from bb.utils.richprint import live_progress, console
 from bb.utils.cmnd import base_repo

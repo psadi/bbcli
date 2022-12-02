@@ -29,17 +29,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Setup & Run Tox
         run: |
-          cp .alt ~
-          python -m pip install --upgrade pip
-          pip3 install pylint -r requirements.txt
-
-      - name: Analysing the code with pylint
-        run: |
-          pylint --ignore-paths tests $(git ls-files '*.py')
-      - name: Run tox
-        run: tox
+          mkdir -p ~/.config/bb
+          cat << EoF > ~/.config/bb/config.ini
+          [auth]
+          bitbucket_host = http://localhost:7990
+          username = xxxxxxxx
+          token = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          EoF
+          python3 -m pip install tox
+          tox
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master

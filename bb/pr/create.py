@@ -9,7 +9,7 @@
 
 from typer import prompt, Exit
 from bb.pr.diff import show_diff
-from bb.utils import cmnd, iniparser, request, api, richprint, cp
+from bb.utils import cmnd, ini, request, api, richprint, cp
 
 
 def gather_facts(
@@ -24,7 +24,7 @@ def gather_facts(
     repository
     """
 
-    username, token, bitbucket_host = iniparser.parse()
+    username, token, bitbucket_host = ini.parse()
     with richprint.live_progress(f"Gathering facts on '{repository}' ..."):
         repo_id = None
         for repo in request.get(
@@ -68,7 +68,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
     It creates a pull request.
     """
 
-    username, token, bitbucket_host = iniparser.parse()
+    username, token, bitbucket_host = ini.parse()
     from_branch = cmnd.from_branch()
     if target == from_branch:
         richprint.console.print("Source & target cannot be the same", style="bold red")

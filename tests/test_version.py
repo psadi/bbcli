@@ -2,7 +2,7 @@
 
 import toml
 from typer.testing import CliRunner
-from bb.main import _bb
+from bb import _bb
 
 runner = CliRunner()
 
@@ -14,6 +14,4 @@ def version() -> str:
 def test_version():
     result = runner.invoke(_bb, ["--version"])
     assert result.exit_code == 0
-    test_list: list = ["psadi", "adithya3494@gmail.com", "MIT"]
-    for item in test_list:
-        assert item in result.stdout
+    assert version() in result.stdout

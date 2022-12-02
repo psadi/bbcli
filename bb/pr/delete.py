@@ -6,7 +6,7 @@
 
 import json
 from typer import prompt, Exit
-from bb.utils import cmnd, iniparser, request, api, richprint
+from bb.utils import cmnd, ini, request, api, richprint
 
 from bb.pr.diff import show_diff
 
@@ -15,7 +15,7 @@ def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
     """
     Delete pull request(s) by ID
     """
-    username, token, bitbucket_host = iniparser.parse()
+    username, token, bitbucket_host = ini.parse()
     project, repository = cmnd.base_repo()
 
     for _no in _id:
