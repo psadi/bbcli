@@ -41,7 +41,8 @@ class Cp:
 
 
 @dataclass(frozen=True, order=True)
-class IniParser:
+class Ini:
     import os
 
-    altfile: str = os.path.expanduser("~") + "/.alt"
+    _XDG_CONFIG_HOME: str = os.path.expanduser("~") + "/.config/bb"
+    BB_CONFIG_FILE: str = f"{_XDG_CONFIG_HOME}/config.ini"

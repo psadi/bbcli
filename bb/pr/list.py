@@ -6,7 +6,7 @@
     or all repos
 """
 
-from bb.utils import api, cmnd, iniparser, request, richprint
+from bb.utils import api, cmnd, ini, request, richprint
 
 
 def to_richprint(repo_name: str, pr_repo_dict: dict) -> None:
@@ -18,15 +18,15 @@ def to_richprint(repo_name: str, pr_repo_dict: dict) -> None:
         richprint.render_tree(repo_name, status, data)
 
 
-def state_check(_input, message) -> str:
+def state_check(_input) -> str:
     """state to rich print mapping for table"""
     state: dict = {
-        "CLEAN": f"[bold green]{message}[/bold green]",
-        "CONFLICTED": f"[blink bold red]{message}",
-        "APPROVED": f"[bold green]{message}[/bold green]",
-        "UNAPPROVED": f"[bold red]{message}[/bold red]",
-        "NEEDS_WORK": f"[bold yellow]{message}[/bold yellow]",
-        "NONE": "[bold cyan]NO REVIEWERS[/bold cyan]",
+        "CLEAN": f"[bold green]{_input}[/bold green]",
+        "CONFLICTED": f"[blink bold black on red]{_input}[/blink bold black on red]",
+        "APPROVED": f"[bold green]{_input}[/bold green]",
+        "UNAPPROVED": f"[bold red]{_input}[/bold red]",
+        "NEEDS_WORK": f"[bold yellow]{_input}[/bold yellow]",
+        "NONE": "[bold cyan]NOT REVIEWED[/bold cyan]",
     }
 
     return state[_input.upper()]
@@ -37,26 +37,25 @@ def outcome(_pr: dict) -> tuple:
     show the current status of the pr clean/conflicted
     """
     return (
-        "Outcome",
         "[bold green]CLEAN"
         if "mergeResult" not in _pr["properties"]
-        else f"{state_check(_pr['properties']['mergeResult']['outcome'], _pr['properties']['mergeResult']['outcome'])}",
+        else f"{state_check(_pr['properties']['mergeResult']['outcome'])}",
     )
 
 
-def pr_status(reviewers: list) -> tuple:
+def review_status(reviewers: list) -> str:
     """how the Pr reviewer status"""
     users = []
     if len(reviewers) > 0:
         for user in reviewers:
             if bool(user["user"]["active"]):
-                users.append(f"{state_check(user['status'], user['status'])}")
+                users.append(f"{state_check(user['status'])}")
     else:
-        users.append(state_check("NONE", ""))
-    return ("Review State", " | ".join(list(set(users))))
+        users.append(state_check("NONE"))
+    return " & ".join(list(set(users)))
 
 
-def construct_repo_dict(role_info: list) -> dict:
+def construct_repo_dict(role_info: list) -> tuple:
     """
     parses the role info (reviewer/author), constructs a dict that can be sent to
     richprint tree view
@@ -70,26 +69,26 @@ def construct_repo_dict(role_info: list) -> dict:
                 if _pr["state"] not in repo_dict[repo].values():
                     repo_dict.update({repo: {_pr["state"]: []}})
             _list = [
-                (outcome(_pr)),
-                (pr_status(_pr["reviewers"])),
-                ("Tittle", _pr["title"]),
                 (
-                    "Description",
+                    "[bold]Ref[/bold]",
+                    f"{_pr['fromRef']['displayId']} -> {_pr['toRef']['displayId']} | {outcome(_pr)[0]} | {review_status(_pr['reviewers'])}",
+                ),
+                ("[bold]Tittle[/bold]", _pr["title"]),
+                (
+                    "[bold]Description[/bold]",
                     _pr["description"] if "description" in _pr.keys() else "-",
                 ),
-                ("From Branch", _pr["fromRef"]["displayId"]),
-                ("To Branch", _pr["toRef"]["displayId"]),
-                ("URL", _pr["links"]["self"][0]["href"]),
+                ("[bold]Url[/bold]", _pr["links"]["self"][0]["href"]),
             ]
             repo_dict[repo][_pr["state"]].append(_list)
     return repo_dict
 
 
-def show_pull_request(role: str, _all: bool) -> None:
+def list_pull_request(role: str, _all: bool) -> None:
     """
     Shows the list of pull requests authored and pull requests reviewing
     """
-    username, token, bitbucket_host = iniparser.parse()
+    username, token, bitbucket_host = ini.parse()
     project, repository = cmnd.base_repo()
     request_url = api.current_pull_request(bitbucket_host, project, repository)
     if role != "current":
@@ -97,7 +96,7 @@ def show_pull_request(role: str, _all: bool) -> None:
 
     with richprint.live_progress(f"Fetching Pull Requests ({role}) ... ") as live:
         role_info: list = request.get(request_url, username, token)
-        repo_dict: dict = construct_repo_dict(role_info)
+        repo_dict = construct_repo_dict(role_info)
 
         live.update(richprint.console.print("DONE", style="bold green"))
 
@@ -109,4 +108,6 @@ def show_pull_request(role: str, _all: bool) -> None:
 
                 to_richprint(repo_name, pr_repo_dict)
         else:
-            richprint.console.print("No PR's to show :clap-emoji:", style="bold white")
+            richprint.console.print(
+                "There are no open pr's :clap-emoji:", style="bold white"
+            )
