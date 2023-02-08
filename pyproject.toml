@@ -1,36 +1,43 @@
-[tool.poetry]
+[project]
 name = "bb"
-version = "0.4.9"
-description = "cli to manage bitbucket pull requests"
-authors = ["psadi <adithya3494@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [
-    { include = "bb" }
+dynamic = ["version"]
+description = "Work seamlessly with BitBucket from the command line."
+authors = [
+    {name = "psadi", email = "adithya3494@gmail.com"},
 ]
+dependencies = [
+    "typer[all]>=0.7.0",
+    "xdg>=5.1.1",
+    "requests>=2.28.2",
+    "pyperclip>=1.8.2",
+]
+requires-python = ">=3.7"
+readme = "README.md"
+license = {text = "MIT"}
 
-[tool.poetry.scripts]
+[project.scripts]
 bb = "bb:_bb"
 
-[tool.poetry.dependencies]
-python = ">=3.7.2,<4.0.0"
-typer = {extras = ["all"], version = "^0.4.0"}
-requests = ">=2.27.1"
-rich = ">=11.1.0"
-pyperclip = ">=1.8.2"
-xdg = "^5.1.1"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.2.0"
-tox = "^3.27.1"
-pytest-cov = "^4.0.0"
-pylint = "^2.15.6"
-toml = "^0.10.2"
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["."]
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-pep517>=1.0"]
+build-backend = "pdm.pep517.api"
+
+[tool.pdm]
+version = { source = "file", path = "bb/__version__.py" }
+
+[tool.pdm.build]
+includes = ["bb"]
+excludes = ["tests"]
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=7.2.1",
+    "tox>=4.4.5",
+    "pytest-cov>=4.0.0",
+    "pylint>=2.13.9",
+    "tox-pdm>=0.6.1",
+    "mypy>=1.0.1",
+]
+
+[tool.pdm.scripts]
+bb = { call = "bb:_bb" }

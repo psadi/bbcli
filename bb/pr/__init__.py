@@ -14,9 +14,10 @@ from bb.pr.review import review_pull_request
 from bb.pr.merge import merge_pull_request
 from bb.pr.diff import show_diff
 from bb.pr.copy import copy_pull_request
+from bb.pr.view import view_pull_request
 from bb.utils.validate import validate_input, error_tip, state
 from bb.utils.cmnd import is_git_repo
-from bb.utils.richprint import traceback_to_console
+from bb.utils.richprint import traceback_to_console, console
 
 _pr = typer.Typer(add_completion=False)
 
@@ -95,10 +96,12 @@ def list(
             raise ValueError(not_a_git_repo)
 
         list_pull_request(role.value, all)
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style="bold red")
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
 
 
 # `Action` is a subclass of `str` that has a fixed set of values
@@ -125,10 +128,12 @@ def review(
             "action cannot be none",
         )
         review_pull_request(_id, action)
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style="bold red")
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
 
 
 @_pr.command()
@@ -146,10 +151,12 @@ def merge(
     try:
         _id = validate_input(id, "Pull request id to merge", id_cannot_be_none)
         merge_pull_request(_id, delete_source_branch, rebase, yes)
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style="bold red")
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
 
 
 @_pr.command()
@@ -160,19 +167,40 @@ def diff(
     try:
         _id = validate_input(id, "Pull request number to show diff", id_cannot_be_none)
         show_diff(_id)
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style="bold red")
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
 
 
 @_pr.command()
 def copy(id: str = typer.Option("", help="pull request number to copy")):
     """Copy pull request url to clipboard"""
     try:
-        _id = validate_input(id, "Pull request number to show copy", id_cannot_be_none)
+        _id = validate_input(id, "Pull request number to copy", id_cannot_be_none)
         copy_pull_request(_id)
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style="bold red")
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
+
+
+@_pr.command()
+def view(
+    id: str = typer.Option("", help="pull request id to view"),
+    web: bool = typer.Option(False, help="view pull request in browser"),
+):
+    """View a pull requests"""
+    try:
+        _id = validate_input(id, "Pull request id to view", id_cannot_be_none)
+        view_pull_request(_id, web)
+    except Exception as err:
+        console.print(f"ERROR: {err}", style="bold red")
+        if state["verbose"]:
+            traceback_to_console()
+        else:
+            error_tip()

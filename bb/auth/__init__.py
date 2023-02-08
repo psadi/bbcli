@@ -11,32 +11,32 @@ from bb.utils.validate import validate_config, error_tip, state
 from bb.utils.richprint import traceback_to_console, console
 
 _auth = typer.Typer(add_completion=False)
+bold_red: str = "bold red"
 
 
 @_auth.command()
 def setup():
     """Configure bbcli to work with bitbucket"""
     try:
-        if not is_config_present():
-            _setup(
-                typer.prompt("> bitbucket_host"),
-                typer.prompt("> username"),
-                typer.prompt("> token"),
-            )
-            typer.echo(
-                f"Configuration written at '{BB_CONFIG_FILE}',"
-                + "Please re-run 'bb auth test' to validate"
-            )
-            typer.Exit(code=0)
-        else:
+        if is_config_present():
             console.print(
                 "Configuration file found, Run 'bb auth status' for more information"
             )
-            typer.Exit(code=0)
-    except Exception:
-        error_tip()
+        _setup(
+            typer.prompt("> bitbucket_host"),
+            typer.prompt("> username"),
+            typer.prompt("> token"),
+        )
+        typer.echo(
+            f"Configuration written at '{BB_CONFIG_FILE}',"
+            + "Please re-run 'bb auth test' to validate"
+        )
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
 
 
 @_auth.command()
@@ -44,10 +44,12 @@ def test():
     """Test configuration & connection"""
     try:
         validate_config()
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()
 
 
 @_auth.command()
@@ -67,7 +69,9 @@ def status(token: bool = typer.Option(False, help="Display auth token")):
         else:
             console.print("Configuration missing, run 'bb auth setup'")
             raise typer.Exit(code=1)
-    except Exception:
-        error_tip()
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:
             traceback_to_console()
+        else:
+            error_tip()

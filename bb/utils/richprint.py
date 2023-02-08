@@ -54,7 +54,7 @@ def traceback_to_console():
     """
     It prints the traceback to the console
     """
-    console.print_exception()
+    console.print_exception(show_locals=False, extra_lines=1)
 
 
 def live_progress(message: str):
