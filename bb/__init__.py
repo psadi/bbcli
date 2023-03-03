@@ -7,11 +7,15 @@ bb: a cli for bitbucket.
 import typer
 from bb.pr import _pr
 from bb.auth import _auth
+from bb.repo import _repo
 from bb.utils.validate import state
 from bb.utils.richprint import console
+from bb import __version__
 
-__version__ = "0.4.9"
-_bb = typer.Typer(add_completion=False)
+_bb = typer.Typer(
+    add_completion=False,
+    epilog="Source Code: https://github.com/psadi/bbcli",
+)
 
 
 def version_callback(value: bool) -> None:
@@ -20,7 +24,7 @@ def version_callback(value: bool) -> None:
     and exits the program.
     """
     if value:
-        console.print(f"bb version: {__version__}")
+        console.print(f"bb version: {__version__.__version__}")
         raise typer.Exit(code=0)
 
 
@@ -37,4 +41,9 @@ def callback(
 
 
 _bb.add_typer(_pr, name="pr", help="Manage pull requests")
-_bb.add_typer(_auth, name="auth", help="Authenticate bb and git with Bitbucket")
+_bb.add_typer(
+    _auth,
+    name="auth",
+    help="Authenticate bb and git with Bitbucket",
+)
+_bb.add_typer(_repo, name="repo", help="Work with BitBucket repositories")

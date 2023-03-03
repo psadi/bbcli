@@ -7,5 +7,3 @@ RUN apk add git; \
     python3 -m pip --no-cache-dir install bb.tar.gz;
 
 WORKDIR /app
-
-ENTRYPOINT [ "bb" ]

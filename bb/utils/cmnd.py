@@ -128,3 +128,8 @@ def delete_local_branch(branch_name: str):
         raise Exit(code=1)
 
     subprocess_run(f"git branch -D {branch_name}")
+
+
+def clone_repo(repo: str, bitbucket_host: str) -> None:
+    "clones a given repostory to the local workspace"
+    os.system(f"git clone {bitbucket_host}/scm/{repo}.git")

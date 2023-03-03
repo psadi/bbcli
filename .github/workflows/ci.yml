@@ -1,6 +1,7 @@
 name: Continuous Integration
 
 on:
+  workflow_dispatch: {}
   push:
     branches: [ "main" ]
   pull_request:
@@ -9,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     permissions:
       actions: read
       contents: read
@@ -17,29 +18,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.11"]
+        os: [ubuntu-latest]
         language: [ 'python' ]
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v2
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Setup & Run Tox
+      - name: Prepare Environment, Sync Dependences and Run Tox
         run: |
           mkdir -p ~/.config/bb
-          cat << EoF > ~/.config/bb/config.ini
-          [auth]
-          bitbucket_host = http://localhost:7990
-          username = xxxxxxxx
-          token = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          EoF
-          python3 -m pip install tox
-          tox
+          cp config.ini ~/.config/bb
+          pdm sync
+          pdm run tox
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
