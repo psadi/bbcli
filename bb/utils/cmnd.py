@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0301
+
 """
     bb.utils.cmnd - contains funcs to run native os command
     can capture relavent details from local repository

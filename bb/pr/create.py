@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0301,R0914
+
 
 """
     bb.pr.create - creates a pull request in bitbucket

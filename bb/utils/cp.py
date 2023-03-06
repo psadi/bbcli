@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0703
+
 
 """
     bb.utils.cp - copies the received url to clipboard

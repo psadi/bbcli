@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0301,R0912,R0914
+
 
 """
     bb.pr.merge - merges a pull request given a id.

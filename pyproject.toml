@@ -34,10 +34,13 @@ dev = [
     "pytest>=7.2.1",
     "tox>=4.4.5",
     "pytest-cov>=4.0.0",
-    "pylint>=2.13.9",
     "tox-pdm>=0.6.1",
     "mypy>=1.0.1",
+    "ruff>=0.0.254",
 ]
 
 [tool.pdm.scripts]
 bb = { call = "bb:_bb" }
+
+[tool.ruff]
+ignore = ["E501"]

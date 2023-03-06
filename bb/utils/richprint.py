@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0613
+
 
 """
     bb.utils.richprint - uses py rich api to pretty print information to console
@@ -69,7 +69,7 @@ def live_progress(message: str):
     )
 
 
-def render_tree(repo_name: str, status: str, data: list) -> None:
+def render_tree(repo_name: str, status: str, data: dict[str, list[tuple]]) -> None:
     """
     utilised by bb show, catagorize pr's based on state and render a tree
     """
@@ -77,8 +77,6 @@ def render_tree(repo_name: str, status: str, data: list) -> None:
     tree_root = tree.add(f"[bold #2684FF]{repo_name}", guide_style=bold_white)
     containers_node = tree_root.add(f"[bold #2684FF]{status}", guide_style=bold_white)
     containers_node.expanded = True
-    for _ in data:
-        containers_node.add(
-            Group(f"PR: #{_[-1][1].split('/')[-1]}", table(_, _, False))
-        )
+    for _ in zip(data.keys(), data.values()):
+        containers_node.add(Group(f"PR: #{_[0]}", table(_[1], _[1], False)))
     console.print(tree)
