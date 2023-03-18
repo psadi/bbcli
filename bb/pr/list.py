@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0301
+
 """
     bb.pr.show lists all pr is current repo
     can also show all pr's authored/revewing either in current repo
@@ -55,7 +55,7 @@ def review_status(reviewers: list) -> str:
     return " & ".join(list(set(users)))
 
 
-def construct_repo_dict(role_info: list) -> tuple:
+def construct_repo_dict(role_info: list) -> dict:
     """
     parses the role info (reviewer/author), constructs a dict that can be sent to
     richprint tree view
@@ -67,10 +67,24 @@ def construct_repo_dict(role_info: list) -> tuple:
             if repo not in repo_dict:
                 repo_dict.update({repo: {}})
                 if _pr["state"] not in repo_dict[repo].values():
-                    repo_dict.update({repo: {_pr["state"]: []}})
+                    repo_dict.update({repo: {_pr["state"]: {}}})
+            pr_url_id: tuple = (
+                _pr["links"]["self"][0]["href"].split("/")[-1],
+                _pr["links"]["self"][0]["href"],
+            )
+            author: dict[str, str] = {
+                "display_name": _pr["author"]["user"].get(
+                    "displayName", "name not found"
+                ),
+                "name": _pr["author"]["user"].get("name", "id not found"),
+                "email_address": _pr["author"]["user"].get(
+                    "emailAddress", "email not found"
+                ),
+            }
+
             _list = [
                 (
-                    "[bold]Ref[/bold]",
+                    "[bold]Status[/bold]",
                     f"{_pr['fromRef']['displayId']} -> {_pr['toRef']['displayId']} | {outcome(_pr)[0]} | {review_status(_pr['reviewers'])}",
                 ),
                 ("[bold]Tittle[/bold]", _pr["title"]),
@@ -78,9 +92,13 @@ def construct_repo_dict(role_info: list) -> tuple:
                     "[bold]Description[/bold]",
                     _pr["description"] if "description" in _pr.keys() else "-",
                 ),
-                ("[bold]Url[/bold]", _pr["links"]["self"][0]["href"]),
+                (
+                    "[bold]Author[/bold]",
+                    f"{author['display_name']} [{author['name']}]({author['email_address']})",
+                ),
+                ("[bold]Url[/bold]", f"[link={pr_url_id[1]}]Click Here[/link]"),
             ]
-            repo_dict[repo][_pr["state"]].append(_list)
+            repo_dict[repo][_pr["state"]].update({pr_url_id[0]: _list})
     return repo_dict
 
 

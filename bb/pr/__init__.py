@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0613,C0103,W0703,W0613,W0621,W0622
 """
 bb pr: Manage pull requests
 """
@@ -20,7 +19,7 @@ from bb.utils.cmnd import is_git_repo
 from bb.utils.richprint import traceback_to_console, console
 
 _pr = typer.Typer(add_completion=False)
-
+bold_red: str = "bold red"
 # globals
 id_cannot_be_none: str = "id cannot be none"
 not_a_git_repo: str = "Not a git repository"
@@ -97,7 +96,7 @@ def list(
 
         list_pull_request(role.value, all)
     except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
+        console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
             traceback_to_console()
         else:
@@ -129,7 +128,7 @@ def review(
         )
         review_pull_request(_id, action)
     except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
+        console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
             traceback_to_console()
         else:
@@ -152,7 +151,7 @@ def merge(
         _id = validate_input(id, "Pull request id to merge", id_cannot_be_none)
         merge_pull_request(_id, delete_source_branch, rebase, yes)
     except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
+        console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
             traceback_to_console()
         else:
@@ -168,7 +167,7 @@ def diff(
         _id = validate_input(id, "Pull request number to show diff", id_cannot_be_none)
         show_diff(_id)
     except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
+        console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
             traceback_to_console()
         else:
@@ -182,7 +181,7 @@ def copy(id: str = typer.Option("", help="pull request number to copy")):
         _id = validate_input(id, "Pull request number to copy", id_cannot_be_none)
         copy_pull_request(_id)
     except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
+        console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
             traceback_to_console()
         else:
@@ -199,7 +198,7 @@ def view(
         _id = validate_input(id, "Pull request id to view", id_cannot_be_none)
         view_pull_request(_id, web)
     except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
+        console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
             traceback_to_console()
         else:

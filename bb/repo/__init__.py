@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0613,C0103,W0703,W0613,W0621,W0622,R0801
 
 """
 bb: repo - repository management

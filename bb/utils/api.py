@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0301,R0913
-
 """
     bb.utils.api - contains the api model for bitbuket server
 """
