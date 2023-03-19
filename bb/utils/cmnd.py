@@ -9,7 +9,7 @@ import os
 import platform
 import subprocess
 from time import sleep
-from typing import Union, Dict, Optional
+from typing import Dict, Optional
 from typer import Exit
 from bb.utils.richprint import console, str_print
 

@@ -21,15 +21,16 @@ def setup() -> None:
             console.print(
                 "Configuration file found, Run 'bb auth status' for more information"
             )
-        _setup(
-            typer.prompt("> bitbucket_host"),
-            typer.prompt("> username"),
-            typer.prompt("> token"),
-        )
-        typer.echo(
-            f"Configuration written at '{BB_CONFIG_FILE}',"
-            + "Please re-run 'bb auth test' to validate"
-        )
+        else:
+            _setup(
+                typer.prompt("> bitbucket_host"),
+                typer.prompt("> username"),
+                typer.prompt("> token"),
+            )
+            typer.echo(
+                f"Configuration written at '{BB_CONFIG_FILE}',"
+                + "Please re-run 'bb auth test' to validate"
+            )
     except Exception as err:
         console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:
