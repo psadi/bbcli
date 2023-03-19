@@ -4,12 +4,13 @@ bb: a cli for bitbucket.
 """
 
 import typer
-from bb.pr import _pr
-from bb.auth import _auth
-from bb.repo import _repo
-from bb.utils.validate import state
-from bb.utils.richprint import console
+
 from bb import __version__
+from bb.auth import _auth
+from bb.pr import _pr
+from bb.repo import _repo
+from bb.utils.richprint import console
+from bb.utils.validate import state
 
 
 def setup() -> typer.Typer:

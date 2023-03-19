@@ -5,11 +5,11 @@ bb: repo - repository management
 """
 
 import typer
-from bb.utils.cmnd import clone_repo
-from bb.utils.validate import validate_input, error_tip, state
-from bb.utils.richprint import traceback_to_console, console
-from bb.utils.ini import parse
 
+from bb.utils.cmnd import clone_repo
+from bb.utils.ini import parse
+from bb.utils.richprint import console, traceback_to_console
+from bb.utils.validate import error_tip, state, validate_input
 
 _repo = typer.Typer(add_completion=True)
 

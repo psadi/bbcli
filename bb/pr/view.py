@@ -5,11 +5,12 @@
 """
 
 import webbrowser
-from bb.utils.ini import parse
+
 from bb.utils.api import pull_request_info
 from bb.utils.cmnd import base_repo
+from bb.utils.ini import parse
 from bb.utils.request import get
-from bb.utils.richprint import console, table, live_progress
+from bb.utils.richprint import console, live_progress, table
 
 
 def view_pull_request(_id: str, web: bool) -> None:

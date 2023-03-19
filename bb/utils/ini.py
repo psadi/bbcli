@@ -5,10 +5,11 @@
     prompts for setup if not present
 """
 
-import os
 import configparser
+import os
 from pathlib import Path
-from typer import echo, Exit
+
+from typer import Exit, echo
 
 
 def config_path() -> tuple[str, str]:

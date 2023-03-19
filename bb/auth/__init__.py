@@ -5,9 +5,10 @@ bb: auth - validates and configures the auth details
 """
 
 import typer
-from bb.utils.ini import _setup, BB_CONFIG_FILE, parse, is_config_present
-from bb.utils.validate import validate_config, error_tip, state
-from bb.utils.richprint import traceback_to_console, console
+
+from bb.utils.ini import BB_CONFIG_FILE, _setup, is_config_present, parse
+from bb.utils.richprint import console, traceback_to_console
+from bb.utils.validate import error_tip, state, validate_config
 
 _auth: typer.Typer = typer.Typer(add_completion=False)
 bold_red: str = "bold red"

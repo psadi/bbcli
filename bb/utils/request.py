@@ -5,9 +5,9 @@
 """
 
 from json import JSONDecodeError
+
 import requests
-from typer import echo
-from typer import Exit
+from typer import Exit, echo
 
 content_type: str = "application/json;charset=UTF-8"
 

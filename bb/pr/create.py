@@ -6,9 +6,10 @@
     remote and local repository
 """
 
-from typer import prompt, Exit
+from typer import Exit, prompt
+
 from bb.pr.diff import show_diff
-from bb.utils import cmnd, ini, request, api, richprint
+from bb.utils import api, cmnd, ini, request, richprint
 
 
 def gather_facts(

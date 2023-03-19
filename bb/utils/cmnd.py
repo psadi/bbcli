@@ -10,7 +10,9 @@ import platform
 import subprocess
 from time import sleep
 from typing import Dict, Optional
+
 from typer import Exit
+
 from bb.utils.richprint import console, str_print
 
 dim_white: str = "dim white"

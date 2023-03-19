@@ -5,7 +5,7 @@
     clipboard
 """
 
-from bb.utils import api, request, ini, cmnd, richprint
+from bb.utils import api, cmnd, ini, request, richprint
 
 
 def copy_pull_request(_id: str) -> None:

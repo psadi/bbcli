@@ -5,18 +5,20 @@ bb pr: Manage pull requests
 
 from enum import Enum
 from typing import Optional
+
 import typer
+
+from bb.pr.copy import copy_pull_request
 from bb.pr.create import create_pull_request
 from bb.pr.delete import delete_pull_request
-from bb.pr.list import list_pull_request
-from bb.pr.review import review_pull_request
-from bb.pr.merge import merge_pull_request
 from bb.pr.diff import show_diff
-from bb.pr.copy import copy_pull_request
+from bb.pr.list import list_pull_request
+from bb.pr.merge import merge_pull_request
+from bb.pr.review import review_pull_request
 from bb.pr.view import view_pull_request
-from bb.utils.validate import validate_input, error_tip, state
 from bb.utils.cmnd import is_git_repo
-from bb.utils.richprint import traceback_to_console, console
+from bb.utils.richprint import console, traceback_to_console
+from bb.utils.validate import error_tip, state, validate_input
 
 _pr: typer.Typer = typer.Typer(add_completion=False)
 bold_red: str = "bold red"

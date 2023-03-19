@@ -4,11 +4,12 @@
 """
 
 import sys
-from rich.console import Console, Group
-from rich.table import Table
-from rich.spinner import Spinner
+
 from rich.columns import Columns
+from rich.console import Console, Group
 from rich.live import Live
+from rich.spinner import Spinner
+from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
 

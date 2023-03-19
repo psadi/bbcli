@@ -6,9 +6,10 @@
     rebase and source branch deletion
 """
 
-from typer import prompt, Exit
 from rich import print_json
-from bb.utils import cmnd, richprint, ini, api, request
+from typer import Exit, prompt
+
+from bb.utils import api, cmnd, ini, request, richprint
 
 BOLD_RED = "bold red"
 

@@ -5,7 +5,7 @@
     TODO: show the diff contents for each file
 """
 
-from bb.utils import cmnd, request, ini, richprint, api
+from bb.utils import api, cmnd, ini, request, richprint
 
 
 def show_diff(_id: str) -> None:
