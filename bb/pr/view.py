@@ -12,7 +12,7 @@ from bb.utils.request import get
 from bb.utils.richprint import console, table, live_progress
 
 
-def view_pull_request(_id: int, web: bool) -> None:
+def view_pull_request(_id: str, web: bool) -> None:
     """view a pull request in terminal or in a browser"""
     with live_progress(f"Fetching info on pr #{_id} ... ") as live:
         username, token, bitbucket_host = parse()

@@ -16,7 +16,7 @@ BOLD_RED = "bold red"
 def pr_source_branch_delete_check(
     project: str,
     repository: str,
-    _id: int,
+    _id: str,
     delete_source_branch: bool,
 ) -> None:
     """
@@ -39,7 +39,7 @@ def pr_source_branch_delete_check(
 
 
 def validate_pr_source_branch_delete_check(
-    project: str, repository: str, _id: int
+    project: str, repository: str, _id: str
 ) -> None:
     """
     validates the pull request source branch and check for conflitcts or vetos
@@ -63,7 +63,7 @@ def validate_pr_source_branch_delete_check(
             raise Exit(code=1)
 
 
-def validate_automerge_conditions(project: str, repository: str, _id: int) -> tuple:
+def validate_automerge_conditions(project: str, repository: str, _id: str) -> tuple:
     """validate all auto merge conitions before pr merge"""
     with richprint.live_progress(
         f"Checking for '{repository}' auto-merge conditions ... "
@@ -118,7 +118,7 @@ def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
         raise Exit(code=1)
 
 
-def rebase_pr(project: str, repository: str, _id: int, version: int):
+def rebase_pr(project: str, repository: str, _id: str, version: int):
     """perform rebase in source branch on bitbucket"""
     username, token, bitbucket_host = ini.parse()
     request.post(
@@ -152,7 +152,7 @@ def delete_branch(project, repository, _id, from_branch, target_branch):
 
 
 def merge_pr(
-    live, project: str, repository: str, _id: int, branches_and_version: tuple
+    live, project: str, repository: str, _id: str, branches_and_version: tuple
 ) -> None:
     """perform pull request merge"""
     username, token, bitbucket_host = ini.parse()
@@ -176,7 +176,7 @@ def merge_pr(
 
 
 def merge_pull_request(
-    _id: int, delete_source_branch: bool, rebase: bool, yes: bool
+    _id: str, delete_source_branch: bool, rebase: bool, yes: bool
 ) -> None:
     """
     It merges a pull request, Validates merge conditions and checks for automerge.

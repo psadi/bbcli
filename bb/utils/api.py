@@ -91,7 +91,7 @@ def pull_request_difference(
 
 
 def pull_request_info(
-    bitbucket_host: str, project: str, repository: str, _id: int
+    bitbucket_host: str, project: str, repository: str, _id: str
 ) -> str:
     """
     It returns a URL for a Bitbucket pull request
@@ -133,7 +133,7 @@ def pr_source_branch_delete_check(
     bitbucket_host: str,
     project: str,
     repository: str,
-    _id: int,
+    _id: str,
     delete_source_branch: str,
 ) -> str:
     """
@@ -144,7 +144,7 @@ def pr_source_branch_delete_check(
     return f"{bitbucket_host}/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{_id}?deleteSourceRef={delete_source_branch}&retargetDependents={delete_source_branch}"
 
 
-def validate_merge(bitbucket_host: str, project: str, repository: str, _id: int) -> str:
+def validate_merge(bitbucket_host: str, project: str, repository: str, _id: str) -> str:
     """
     It takes a Bitbucket host, a project, a repository, and a pull request ID, and returns a URL that
     can be used to validate the merge of the pull request
@@ -171,7 +171,7 @@ def get_merge_info(
 
 
 def pr_merge_body(
-    project: str, repository: str, _id: int, from_branch: str, target_branch: str
+    project: str, repository: str, _id: str, from_branch: str, target_branch: str
 ) -> str:
     """
     It takes the project, repository, pull request id, from branch, and target branch and returns a JSON
@@ -185,7 +185,7 @@ def pr_merge_body(
     )
 
 
-def pr_cleanup(bitbucket_host: str, project: str, repository: str, _id: int) -> str:
+def pr_cleanup(bitbucket_host: str, project: str, repository: str, _id: str) -> str:
     """
     It returns a URL for the Bitbucket REST API endpoint for the pull request cleanup plugin
     """
@@ -203,7 +203,7 @@ def pr_cleanup_body(delete_source_branch: bool) -> str:
 
 
 def pr_rebase(
-    bitbucket_host: str, project: str, repository: str, _id: int, version: int
+    bitbucket_host: str, project: str, repository: str, _id: str, version: int
 ) -> list:
     """
     It returns a list of two elements, the first being a JSON string, and the second being a URL

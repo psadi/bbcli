@@ -138,11 +138,6 @@ requires_python = ">=3.6"
 summary = "Pygments is a syntax highlighting package written in Python."
 
 [[package]]
-name = "pyperclip"
-version = "1.8.2"
-summary = "A cross-platform clipboard module for Python. (Only handles plain text for now.)"
-
-[[package]]
 name = "pyproject-api"
 version = "1.5.0"
 requires_python = ">=3.7"
@@ -309,7 +304,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:0c15db7eb06d1e4f7a5613730c595e1a77d2d1e9fc684f6349dc38dfefc86418"
+content_hash = "sha256:0d5e1237c0fdd63d47a4237eaa1f0cb3231560aa272bbe7086f2bcbaae8ddf7c"
 
 [metadata.files]
 "attrs 22.2.0" = [
@@ -522,9 +517,6 @@ content_hash = "sha256:0c15db7eb06d1e4f7a5613730c595e1a77d2d1e9fc684f6349dc38dfe
 "pygments 2.14.0" = [
     {url = "https://files.pythonhosted.org/packages/0b/42/d9d95cc461f098f204cd20c85642ae40fbff81f74c300341b8d0e0df14e0/Pygments-2.14.0-py3-none-any.whl", hash = "sha256:fa7bd7bd2771287c0de303af8bfdfc731f51bd2c6a47ab69d117138893b82717"},
     {url = "https://files.pythonhosted.org/packages/da/6a/c427c06913204e24de28de5300d3f0e809933f376e0b7df95194b2bb3f71/Pygments-2.14.0.tar.gz", hash = "sha256:b3ed06a9e8ac9a9aae5a6f5dbe78a8a58655d17b43b93c078f094ddc476ae297"},
-]
-"pyperclip 1.8.2" = [
-    {url = "https://files.pythonhosted.org/packages/a7/2c/4c64579f847bd5d539803c8b909e54ba087a79d01bb3aba433a95879a6c5/pyperclip-1.8.2.tar.gz", hash = "sha256:105254a8b04934f0bc84e9c24eb360a591aaf6535c9def5f29d92af107a9bf57"},
 ]
 "pyproject-api 1.5.0" = [
     {url = "https://files.pythonhosted.org/packages/25/8d/261289ccd17044fb1fdf99da1ece3fda631b61b53b3c49f02e21f3e8af00/pyproject_api-1.5.0-py3-none-any.whl", hash = "sha256:4c111277dfb96bcd562c6245428f27250b794bfe3e210b8714c4f893952f2c17"},

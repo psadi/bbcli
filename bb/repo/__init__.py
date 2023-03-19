@@ -16,9 +16,9 @@ _repo = typer.Typer(add_completion=True)
 
 @_repo.command()
 def clone(
-    name: str = typer.Argument(..., help="repository name, Format: project/repository"),
+    name: str = typer.Argument(..., help="repository name, Format: project/repository")
 ) -> None:
-    "Clone a BitBucket repository locally,"
+    """Clone a BitBucket repository locally"""
     try:
         name = validate_input(
             name, "project/repository to clone", "repository can't be none"
