@@ -8,7 +8,7 @@
 
 from typer import prompt, Exit
 from bb.pr.diff import show_diff
-from bb.utils import cmnd, ini, request, api, richprint, cp
+from bb.utils import cmnd, ini, request, api, richprint
 
 
 def gather_facts(
@@ -110,7 +110,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 style="bold green",
             )
             _id = pull_request[1]["links"]["self"][0]["href"].split("/")[-1]
-            cp.copy_to_clipboard(pull_request[1]["links"]["self"][0]["href"])
+            cmnd.cp_to_clipboard(pull_request[1]["links"]["self"][0]["href"])
         elif pull_request[0] == 409:
             richprint.console.print(
                 f"Message: {pull_request[1]['errors'][0]['message']}",
@@ -125,7 +125,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
             _id = pull_request[1]["errors"][0]["existingPullRequest"]["links"]["self"][
                 0
             ]["href"].split("/")[-1]
-            cp.copy_to_clipboard(
+            cmnd.cp_to_clipboard(
                 pull_request[1]["errors"][0]["existingPullRequest"]["links"]["self"][0][
                     "href"
                 ]

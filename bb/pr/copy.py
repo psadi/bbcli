@@ -5,8 +5,7 @@
     clipboard
 """
 
-from typing import Dict
-from bb.utils import api, request, ini, cmnd, cp, richprint
+from bb.utils import api, request, ini, cmnd, richprint
 
 
 def copy_pull_request(_id: str) -> None:
@@ -26,5 +25,5 @@ def copy_pull_request(_id: str) -> None:
             username,
             token,
         )[1]["links"]["self"][0]["href"]
+        cmnd.cp_to_clipboard(url)
         live.update(richprint.console.print("COPIED", style="bold green"))
-        cp.copy_to_clipboard(url)
