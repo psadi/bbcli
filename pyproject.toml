@@ -34,6 +34,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "tox-pdm>=0.6.1",
     "ruff>=0.0.257",
+    "bandit>=1.7.5",
 ]
 
 [tool.pdm.scripts]
