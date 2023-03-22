@@ -83,7 +83,7 @@ bb auth setup
 ```
 ---
 
-###  HOW-TO ?
+###  HOW-TO OVERVIEW
 
 <details>
   <summary>Create pull request</summary>
@@ -124,11 +124,11 @@ bb auth setup
 
 |Command|Action|
 |-|-|
-|`bb pr show`|show pull requests in current repository [Default]|
-|`bb pr show --author`|show pull requests authored in current repository|
-|`bb pr show --author --all`|show pull requests authored in all repositories|
-|`bb pr show --reviewer`|show pull requests that you are a reviewer in current repository|
-|`bb pr show --reviewer --all`|show pull requests that you are a reviewer in all repositories|
+|`bb pr list`|show pull requests in current repository [Default]|
+|`bb pr list --author`|show pull requests authored in current repository|
+|`bb pr list --author --all`|show pull requests authored in all repositories|
+|`bb pr list --reviewer`|show pull requests that you are a reviewer in current repository|
+|`bb pr list --reviewer --all`|show pull requests that you are a reviewer in all repositories|
 
 </details>
 
