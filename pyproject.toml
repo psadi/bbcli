@@ -36,14 +36,21 @@ dev = [
     "ruff>=0.0.257",
     "isort>=5.11.5",
     "bandit>=1.7.5",
+    "pre-commit>=2.21.0",
 ]
 
 [tool.pdm.scripts]
 bb = { call = "bb:_bb" }
 
+[tool.black]
+includes = "bb"
+
+[tool.isort]
+profile = "black"
+src_paths = ["bb", "tests"]
+
 [tool.ruff]
 ignore = ["E501"]
-
 
 [tool.bandit]
 skips = ["B404","B603","B607"]

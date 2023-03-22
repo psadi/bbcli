@@ -181,4 +181,3 @@ A huge thanks to,
 <p align="left"><img height="150" width="200" src="./img/thatsall.gif">
 
 Enjoy being more efficient 😊
-
