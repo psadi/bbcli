@@ -7,7 +7,7 @@
 from http import HTTPStatus
 from json import JSONDecodeError
 
-import requests
+import httpx
 from typer import Exit, echo
 
 content_type: str = "application/json;charset=UTF-8"
@@ -27,8 +27,8 @@ def get(url: str, username: str, token: str) -> list:
     """
     It makes a get request to the url, with the username and token as authentication.
     """
-    with requests.Session() as client:
-        request = client.get(url, auth=(username, token), timeout=10)
+    with httpx.Client() as client:
+        request = client.get(url, auth=(username, token))
 
     if request.status_code != 200:
         if request.status_code == 400:
@@ -53,7 +53,7 @@ def post(url: str, username: str, token: str, body: dict) -> list:
     for authentication, and the specified body as the request body
 
     """
-    with requests.Session() as client:
+    with httpx.Client() as client:
         request = client.post(
             url,
             auth=(username, token),
@@ -81,7 +81,7 @@ def put(url: str, username: str, token: str, body: dict) -> list:
     with the specified username and token and returns the status code
     and response body as a list
     """
-    with requests.Session() as client:
+    with httpx.Client() as client:
         request = client.put(
             url,
             auth=(username, token),
@@ -101,8 +101,9 @@ def delete(url: str, username: str, token: str, body: dict) -> int:
     This function sends a DELETE request to the specified URL with the specified username and token,
     and returns the HTTP status code
     """
-    with requests.Session() as client:
-        request = client.delete(
+    with httpx.Client() as client:
+        request = client.request(
+            "DELETE",
             url,
             auth=(username, token),
             data=body,

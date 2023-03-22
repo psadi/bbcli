@@ -26,7 +26,7 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
 
     try:
         cmnd = subprocess.run(
-            command,
+            command.split(" "),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             input=text,
