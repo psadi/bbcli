@@ -5,7 +5,6 @@
 
 """
 
-import os
 import platform
 import subprocess
 from time import sleep
@@ -30,7 +29,6 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=os.name == "posix",
             input=text,
             check=True,
         )
@@ -141,7 +139,9 @@ def delete_local_branch(branch_name: str):
 
 def clone_repo(repo: str, bitbucket_host: str) -> None:
     "clones a given repostory to the local workspace"
-    os.system(f"git clone {bitbucket_host}/scm/{repo}.git")
+    subprocess.check_call(
+        ["git", "clone", f"{bitbucket_host}/scm/{repo}.git", repo.split("/")[1]]
+    )
 
 
 def cp_to_clipboard(url: str) -> None:
