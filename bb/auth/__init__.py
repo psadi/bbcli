@@ -5,31 +5,33 @@ bb: auth - validates and configures the auth details
 """
 
 import typer
-from bb.utils.ini import _setup, BB_CONFIG_FILE, parse, is_config_present
-from bb.utils.validate import validate_config, error_tip, state
-from bb.utils.richprint import traceback_to_console, console
 
-_auth = typer.Typer(add_completion=False)
+from bb.utils.ini import BB_CONFIG_FILE, _setup, is_config_present, parse
+from bb.utils.richprint import console, traceback_to_console
+from bb.utils.validate import error_tip, state, validate_config
+
+_auth: typer.Typer = typer.Typer(add_completion=False)
 bold_red: str = "bold red"
 
 
 @_auth.command()
-def setup():
+def setup() -> None:
     """Configure bbcli to work with bitbucket"""
     try:
         if is_config_present():
             console.print(
                 "Configuration file found, Run 'bb auth status' for more information"
             )
-        _setup(
-            typer.prompt("> bitbucket_host"),
-            typer.prompt("> username"),
-            typer.prompt("> token"),
-        )
-        typer.echo(
-            f"Configuration written at '{BB_CONFIG_FILE}',"
-            + "Please re-run 'bb auth test' to validate"
-        )
+        else:
+            _setup(
+                typer.prompt("> bitbucket_host"),
+                typer.prompt("> username"),
+                typer.prompt("> token"),
+            )
+            typer.echo(
+                f"Configuration written at '{BB_CONFIG_FILE}',"
+                + "Please re-run 'bb auth test' to validate"
+            )
     except Exception as err:
         console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:
@@ -39,7 +41,7 @@ def setup():
 
 
 @_auth.command()
-def test():
+def test() -> None:
     """Test configuration & connection"""
     try:
         validate_config()
@@ -52,7 +54,7 @@ def test():
 
 
 @_auth.command()
-def status(token: bool = typer.Option(False, help="Display auth token")):
+def status(token: bool = typer.Option(False, help="Display auth token")) -> None:
     """View authentication config status"""
     try:
         if is_config_present():

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+
 from bb.utils import api
 from props import Api
 
@@ -46,7 +47,7 @@ def test_default_reviewers():
     reviewer_query = f"avatarSize=32&sourceRepoId={property.repo_id}&sourceRefId=refs%2Fheads%2F{property.from_branch.replace('/','%2F')}&targetRepoId={property.repo_id}&targetRefId=refs%2Fheads%2F{property.target.replace('/','%2F')}"
     assert (
         reviewer_query
-        == f"avatarSize=32&sourceRepoId=1234&sourceRefId=refs%2Fheads%2Ffeature%2Ftest_branch&targetRepoId=1234&targetRefId=refs%2Fheads%2Fmaster"
+        == "avatarSize=32&sourceRepoId=1234&sourceRefId=refs%2Fheads%2Ffeature%2Ftest_branch&targetRepoId=1234&targetRefId=refs%2Fheads%2Fmaster"
     )
 
     assert type(reviewer_query) == str

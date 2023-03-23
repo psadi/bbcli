@@ -5,35 +5,43 @@
 
 """
 
-import os
+import platform
 import subprocess
 from time import sleep
+from typing import Dict, Optional
+
 from typer import Exit
+
 from bb.utils.richprint import console, str_print
 
 dim_white: str = "dim white"
 
 
-def subprocess_run(command: str) -> str:
+def subprocess_run(command: str, text: Optional[str] = None) -> str:
     """
-    runs native os commands and pipes the stdout
+    Runs native os commands and pipes the stdout
     """
+    if text is not None:
+        text = text.encode("utf-8")
+
     try:
         cmnd = subprocess.run(
-            command,
+            command.split(" "),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=os.name == "posix",
+            input=text,
             check=True,
         )
-
-        return cmnd.stdout.decode().strip()
 
     except subprocess.CalledProcessError as err:
         sleep(0.4)
         console.print("ERROR", style="bold red")
         console.print(err)
-        raise ValueError(err) from err
+        raise RuntimeError(
+            f"Command {command} failed with return code {err.returncode}: {err.stderr.decode().strip()}"
+        ) from err
+
+    return cmnd.stdout.decode().strip()
 
 
 def is_git_repo() -> bool:
@@ -131,4 +139,31 @@ def delete_local_branch(branch_name: str):
 
 def clone_repo(repo: str, bitbucket_host: str) -> None:
     "clones a given repostory to the local workspace"
-    os.system(f"git clone {bitbucket_host}/scm/{repo}.git")
+    subprocess.check_call(
+        ["git", "clone", f"{bitbucket_host}/scm/{repo}.git", repo.split("/")[1]]
+    )
+
+
+def cp_to_clipboard(url: str) -> None:
+    """
+    Copy the specified text to the system clipboard.
+
+    Args:
+        text: The text to be copied to the clipboard.
+
+    Raises:
+        Exit: If the current operating system is not Windows, Linux, or macOS.
+    """
+    platform_based_cp: Dict[str, str] = {
+        "Windows": "clip.exe",
+        "Linux": "xclip -selection clipboard",
+        "Darwin": "pbcopy",
+    }
+
+    cmd: str = platform_based_cp.get(platform.system(), "n/a")
+
+    if cmd == "n/a":
+        str_print("Copying to clipboard is not supported in platform", dim_white)
+        raise Exit(code=1)
+
+    subprocess_run(cmd, url)

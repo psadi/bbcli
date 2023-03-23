@@ -5,10 +5,11 @@
 """
 
 import json
-from typer import prompt, Exit
-from bb.utils import cmnd, ini, request, api, richprint
+
+from typer import Exit, prompt
 
 from bb.pr.diff import show_diff
+from bb.utils import api, cmnd, ini, request, richprint
 
 
 def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:

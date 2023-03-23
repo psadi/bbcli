@@ -7,11 +7,12 @@
 
 import json
 from time import sleep
+
+from bb.utils.api import action_pull_request, whoami
+from bb.utils.cmnd import base_repo
 from bb.utils.ini import parse
 from bb.utils.request import get, put
-from bb.utils.richprint import live_progress, console
-from bb.utils.cmnd import base_repo
-from bb.utils.api import whoami, action_pull_request
+from bb.utils.richprint import console, live_progress
 
 
 def review_pull_request(target: int, action: str) -> None:

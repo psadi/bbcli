@@ -10,7 +10,7 @@ def test_is_git_repo():
     is_git_repo = cmnd.is_git_repo()
     cmnd_is_git_repo = cmnd.subprocess_run(property.is_git_repo)
 
-    assert is_git_repo == True
+    assert is_git_repo is True
     assert type(is_git_repo)
     assert cmnd_is_git_repo == "true"
     assert type(cmnd_is_git_repo) == str

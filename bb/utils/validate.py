@@ -5,8 +5,8 @@ utils.validate - consists of validation functions
 """
 
 from typer import prompt
-from bb.utils import ini, api, request, richprint
 
+from bb.utils import api, ini, request, richprint
 
 state: dict = {"verbose": False}
 

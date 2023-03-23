@@ -5,14 +5,27 @@
     prompts for setup if not present
 """
 
-import os
 import configparser
+import os
 from pathlib import Path
-from xdg import xdg_config_home
-from typer import echo, Exit
 
-_XDG_CONFIG_HOME: str = f"{xdg_config_home()}/bb"
-BB_CONFIG_FILE: str = f"{_XDG_CONFIG_HOME}/config.ini"
+from typer import Exit, echo
+
+
+def config_path() -> tuple[str, str]:
+    """
+    Returns the path to the directory and file where the application's config file should be located.
+
+    Returns:
+        Tuple containing the path to the configuration directory and the path to the configuration file.
+    """
+    home: str = str(Path.home())
+    config_dir: str = os.path.join(home, ".config", "bb")
+    config_file: str = os.path.join(config_dir, "config.ini")
+    return (config_dir, config_file)
+
+
+_XDG_CONFIG_HOME, BB_CONFIG_FILE = config_path()
 
 
 def is_config_present() -> bool:

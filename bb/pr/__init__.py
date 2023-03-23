@@ -3,24 +3,25 @@
 bb pr: Manage pull requests
 """
 
-# This is importing all the required modules for the script to run.
 from enum import Enum
+from typing import Optional
+
 import typer
+
+from bb.pr.copy import copy_pull_request
 from bb.pr.create import create_pull_request
 from bb.pr.delete import delete_pull_request
-from bb.pr.list import list_pull_request
-from bb.pr.review import review_pull_request
-from bb.pr.merge import merge_pull_request
 from bb.pr.diff import show_diff
-from bb.pr.copy import copy_pull_request
+from bb.pr.list import list_pull_request
+from bb.pr.merge import merge_pull_request
+from bb.pr.review import review_pull_request
 from bb.pr.view import view_pull_request
-from bb.utils.validate import validate_input, error_tip, state
 from bb.utils.cmnd import is_git_repo
-from bb.utils.richprint import traceback_to_console, console
+from bb.utils.richprint import console, traceback_to_console
+from bb.utils.validate import error_tip, state, validate_input
 
-_pr = typer.Typer(add_completion=False)
+_pr: typer.Typer = typer.Typer(add_completion=False)
 bold_red: str = "bold red"
-# globals
 id_cannot_be_none: str = "id cannot be none"
 not_a_git_repo: str = "Not a git repository"
 skip_prompt: str = "skip confirmation prompt"
@@ -34,7 +35,7 @@ def create(
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before creation"
     ),
-):
+) -> None:
     """Create a pull request"""
     try:
         if not is_git_repo():
@@ -54,7 +55,7 @@ def delete(
     id: str = typer.Option("", help="pull request number(s) to delete"),
     yes: bool = typer.Option(False, help=skip_prompt),
     diff: bool = typer.Option(False, help="show diff before deleting pull request"),
-):
+) -> None:
     """Delete pull requests"""
     try:
         _id = validate_input(
@@ -84,17 +85,17 @@ class Role(str, Enum):
 
 @_pr.command()
 def list(
-    role: Role = Role.CURRENT.value,
+    role: str = Role.CURRENT.value,
     all: bool = typer.Option(
         False, help="show all pull request(s) based on selected role"
     ),
-):
+) -> None:
     """List pull requests in a repository"""
     try:
         if not is_git_repo():
             raise ValueError(not_a_git_repo)
 
-        list_pull_request(role.value, all)
+        list_pull_request(role, all)
     except Exception as err:
         console.print(f"ERROR: {err}", style=f"{bold_red}")
         if state["verbose"]:
@@ -103,7 +104,6 @@ def list(
             error_tip()
 
 
-# `Action` is a subclass of `str` that has a fixed set of values
 class Action(str, Enum):
     """review enum choices"""
 
@@ -116,13 +116,14 @@ class Action(str, Enum):
 @_pr.command()
 def review(
     id: str = typer.Option("", help="pull request number to review"),
-    action: Action = Action.NONE.value,
-):
+    action: Action = Action.NONE,
+) -> None:
     """Add a review to a pull request"""
     try:
-        _id = validate_input(id, "Pull request id to review", id_cannot_be_none)
-        action = validate_input(
-            False if action.value == "none" else action.value,
+        _id: str = validate_input(id, "Pull request id to review", id_cannot_be_none)
+        action_value: str = "none" if action == Action.NONE else action.value
+        action: str = validate_input(
+            action_value,
             "Action [approve|unapprove|needs_work]",
             "action cannot be none",
         )
@@ -145,10 +146,10 @@ def merge(
         False, help="rebase source branch with target before merge"
     ),
     yes: bool = typer.Option(False, help=skip_prompt),
-):
+) -> None:
     """Merge a pull request"""
     try:
-        _id = validate_input(id, "Pull request id to merge", id_cannot_be_none)
+        _id: str = validate_input(id, "Pull request id to merge", id_cannot_be_none)
         merge_pull_request(_id, delete_source_branch, rebase, yes)
     except Exception as err:
         console.print(f"ERROR: {err}", style=f"{bold_red}")
@@ -161,10 +162,12 @@ def merge(
 @_pr.command()
 def diff(
     id: str = typer.Option("", help="pull request number to show diff"),
-):
+) -> None:
     """View changes in a pull request"""
     try:
-        _id = validate_input(id, "Pull request number to show diff", id_cannot_be_none)
+        _id: str = validate_input(
+            id, "Pull request number to show diff", id_cannot_be_none
+        )
         show_diff(_id)
     except Exception as err:
         console.print(f"ERROR: {err}", style=f"{bold_red}")
@@ -175,10 +178,10 @@ def diff(
 
 
 @_pr.command()
-def copy(id: str = typer.Option("", help="pull request number to copy")):
+def copy(id: str = typer.Option("", help="pull request number to copy")) -> None:
     """Copy pull request url to clipboard"""
     try:
-        _id = validate_input(id, "Pull request number to copy", id_cannot_be_none)
+        _id: str = validate_input(id, "Pull request number to copy", id_cannot_be_none)
         copy_pull_request(_id)
     except Exception as err:
         console.print(f"ERROR: {err}", style=f"{bold_red}")
@@ -191,9 +194,9 @@ def copy(id: str = typer.Option("", help="pull request number to copy")):
 @_pr.command()
 def view(
     id: str = typer.Option("", help="pull request id to view"),
-    web: bool = typer.Option(False, help="view pull request in browser"),
-):
-    """View a pull requests"""
+    web: Optional[bool] = typer.Option(False, help="view pull request in browser"),
+) -> None:
+    """View a pull request"""
     try:
         _id = validate_input(id, "Pull request id to view", id_cannot_be_none)
         view_pull_request(_id, web)
