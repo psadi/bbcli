@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.4.0
     hooks:
     - id: check-docstring-first
     - id: end-of-file-fixer
@@ -12,7 +12,7 @@ repos:
     - id: requirements-txt-fixer
 
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 23.3.0
     hooks:
     - id: black
 
@@ -23,7 +23,7 @@ repos:
         args: ["--profile", "black", "--filter-files"]
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.257'
+    rev: 'v0.0.261'
     hooks:
       - id: ruff
         args: [bb, --fix, --exit-non-zero-on-fix]

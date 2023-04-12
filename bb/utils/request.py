@@ -8,7 +8,8 @@ from http import HTTPStatus
 from json import JSONDecodeError
 
 import httpx
-from typer import Exit, echo
+
+from bb.utils.richprint import str_print
 
 content_type: str = "application/json;charset=UTF-8"
 
@@ -32,12 +33,11 @@ def get(url: str, username: str, token: str) -> list:
 
     if request.status_code != 200:
         if request.status_code == 400:
-            echo(f"{request.status_code} - {request.json()['errors'][0]['message']}")
+            str_print(f"Message: {request.json()['errors'][0]['message']}", "dim white")
 
-        echo(
-            f"\n{request.status_code} - {http_response_definitions(request.status_code)}"
+        raise ValueError(
+            f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )
-        raise Exit(code=1)
 
     try:
         data: dict = request.json()
@@ -62,10 +62,9 @@ def post(url: str, username: str, token: str, body: dict) -> list:
         )
 
     if request.status_code not in (200, 201, 204, 409):
-        echo(
-            f"\n{request.status_code} - {http_response_definitions(request.status_code)}"
+        raise ValueError(
+            f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )
-        raise Exit(code=1)
 
     if request.status_code == 204:
         json_data: dict = {}
@@ -89,10 +88,9 @@ def put(url: str, username: str, token: str, body: dict) -> list:
             headers={"content-type": content_type},
         )
     if request.status_code != 200:
-        echo(
-            f"\n{request.status_code} - {http_response_definitions(request.status_code)}"
+        raise ValueError(
+            f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )
-        raise Exit(code=1)
     return [request.status_code, request.json()]
 
 
@@ -110,8 +108,7 @@ def delete(url: str, username: str, token: str, body: dict) -> int:
             headers={"content-type": content_type},
         )
     if request.status_code != 204:
-        echo(
-            f"\n{request.status_code} - {http_response_definitions(request.status_code)}"
+        raise ValueError(
+            f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )
-        raise Exit(code=1)
     return request.status_code

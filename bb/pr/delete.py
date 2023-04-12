@@ -6,7 +6,7 @@
 
 import json
 
-from typer import Exit, prompt
+from typer import prompt
 
 from bb.pr.diff import show_diff
 from bb.utils import api, cmnd, ini, request, richprint
@@ -52,8 +52,7 @@ def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
                 pull_request = request.delete(url, username, token, body)
 
             if pull_request != 204:
-                richprint.console.print("Error deleting pull request", style="red")
-                raise Exit(code=1)
+                raise ValueError("Cannot delete pull request, Response<204>")
 
             richprint.console.print(
                 f"Pull Request Deleted: {pull_request_info[1]['links']['self'][0]['href']}",
