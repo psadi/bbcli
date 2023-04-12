@@ -44,7 +44,8 @@ def create(
         target = validate_input(target, "Target branch", "Target branch cannot be none")
 
         create_pull_request(target, yes, diff, rebase)
-    except Exception:
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         error_tip()
         if state["verbose"]:
             traceback_to_console()
@@ -58,18 +59,20 @@ def delete(
 ) -> None:
     """Delete pull requests"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
+
         _id = validate_input(
             id,
             "Pull request id(s) to delete\n? ex: id (or) id1, id2",
             "Id's cannot be empty",
         ).split(",")
         delete_pull_request(_id, yes, diff)
-    except Exception:
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         error_tip()
         if state["verbose"]:
             traceback_to_console()
-    if not is_git_repo():
-        raise ValueError(not_a_git_repo)
 
 
 class Role(str, Enum):

@@ -9,8 +9,6 @@ import configparser
 import os
 from pathlib import Path
 
-from typer import Exit, echo
-
 
 def config_path() -> tuple[str, str]:
     """
@@ -63,8 +61,7 @@ def parse() -> list:
     It returns the configuration present in .alt file in home directory
     """
     if not os.path.isfile(BB_CONFIG_FILE):
-        echo("Configuration required, Try running 'bb auth setup'")
-        raise Exit(code=1)
+        raise ValueError("Configuration required, Try running 'bb auth setup'")
 
     ini = configparser.ConfigParser()
     ini.read(BB_CONFIG_FILE)

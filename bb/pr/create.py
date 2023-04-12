@@ -6,7 +6,7 @@
     remote and local repository
 """
 
-from typer import Exit, prompt
+from typer import prompt
 
 from bb.pr.diff import show_diff
 from bb.utils import api, cmnd, ini, request, richprint
@@ -71,8 +71,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
     username, token, bitbucket_host = ini.parse()
     from_branch = cmnd.from_branch()
     if target == from_branch:
-        richprint.console.print("Source & target cannot be the same", style="bold red")
-        raise Exit(code=1)
+        raise ValueError("Source & target cannot be the same")
 
     if rebase:
         with richprint.live_progress(
@@ -132,8 +131,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 ]
             )
         else:
-            request.http_response_definitions(pull_request[0])
-            raise Exit(code=1)
+            raise ValueError(request.http_response_definitions(pull_request[0]))
 
     if diff:
         show_diff(_id)

@@ -7,10 +7,9 @@
 
 import platform
 import subprocess
+from shutil import which
 from time import sleep
 from typing import Dict, Optional
-
-from typer import Exit
 
 from bb.utils.richprint import console, str_print
 
@@ -59,8 +58,7 @@ def base_repo() -> list:
     cmnd = subprocess_run("git remote -v")
 
     if cmnd is None:
-        str_print("no remote information is found", dim_white)
-        raise Exit(code=1)
+        raise ValueError("no remote information is found")
 
     formatted_cmnd = cmnd.splitlines()[0].replace("\t", " ").split(" ")[1].strip()
 
@@ -104,7 +102,7 @@ def git_rebase(target_branch: str) -> None:
                 error_message[error_code],
                 dim_white,
             )
-        raise Exit(code=1) from ex
+        raise ValueError(ex) from ex
 
 
 def checkout_and_pull(branch_name: str) -> None:
@@ -115,11 +113,9 @@ def checkout_and_pull(branch_name: str) -> None:
         (list(filter(None, (subprocess_run("git ls-files -m")).split("\n"))))
     )
     if modified_files > 0:
-        str_print(
-            f"Cannot checkout to '{branch_name}' branch.\nCurrent workspace has {modified_files} modified files",
-            dim_white,
+        raise ValueError(
+            f"Cannot checkout to '{branch_name}' branch.\nCurrent workspace has {modified_files} modified files"
         )
-        raise Exit(code=1)
     subprocess_run(f"git checkout {branch_name} && git pull --no-edit")
 
 
@@ -128,11 +124,7 @@ def delete_local_branch(branch_name: str):
     given a branch name, deletes its local reference if there are no files in staging area
     """
     if branch_name == from_branch():
-        str_print(
-            f"Cannot delete active branch '{branch_name}'",
-            dim_white,
-        )
-        raise Exit(code=1)
+        raise ValueError(f"Cannot delete active branch '{branch_name}'")
 
     subprocess_run(f"git branch -D {branch_name}")
 
@@ -156,14 +148,15 @@ def cp_to_clipboard(url: str) -> None:
     """
     platform_based_cp: Dict[str, str] = {
         "Windows": "clip.exe",
-        "Linux": "xclip -selection clipboard",
+        "Linux": "xclip -selection clipboard"
+        if which("xclip") is not None
+        else "clip.exe",
         "Darwin": "pbcopy",
     }
 
     cmd: str = platform_based_cp.get(platform.system(), "n/a")
 
     if cmd == "n/a":
-        str_print("Copying to clipboard is not supported in platform", dim_white)
-        raise Exit(code=1)
+        raise ValueError("Copying to clipboard is not supported in platform")
 
     subprocess_run(cmd, url)

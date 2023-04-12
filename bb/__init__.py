@@ -35,7 +35,7 @@ def version_callback(value: bool) -> None:
     """
     if value:
         console.print(f"bb version: {__version__.__version__}")
-        raise typer.Exit(code=0)
+        typer.Exit(code=0)
 
 
 @_bb.callback()
