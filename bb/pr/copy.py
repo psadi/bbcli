@@ -27,3 +27,7 @@ def copy_pull_request(_id: str) -> None:
         )[1]["links"]["self"][0]["href"]
         cmnd.cp_to_clipboard(url)
         live.update(richprint.console.print("COPIED", style="bold green"))
+    richprint.str_print(
+        "Tip: Pull request url is copied to clipboard ('ctrl+v' to paste)",
+        "dim white",
+    )

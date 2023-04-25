@@ -44,7 +44,8 @@ def create(
         target = validate_input(target, "Target branch", "Target branch cannot be none")
 
         create_pull_request(target, yes, diff, rebase)
-    except Exception:
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         error_tip()
         if state["verbose"]:
             traceback_to_console()
@@ -58,18 +59,20 @@ def delete(
 ) -> None:
     """Delete pull requests"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
+
         _id = validate_input(
             id,
             "Pull request id(s) to delete\n? ex: id (or) id1, id2",
             "Id's cannot be empty",
         ).split(",")
         delete_pull_request(_id, yes, diff)
-    except Exception:
+    except Exception as err:
+        console.print(f"ERROR: {err}", style=bold_red)
         error_tip()
         if state["verbose"]:
             traceback_to_console()
-    if not is_git_repo():
-        raise ValueError(not_a_git_repo)
 
 
 class Role(str, Enum):
@@ -120,6 +123,8 @@ def review(
 ) -> None:
     """Add a review to a pull request"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
         _id: str = validate_input(id, "Pull request id to review", id_cannot_be_none)
         action_value: str = "none" if action == Action.NONE else action.value
         action: str = validate_input(
@@ -149,6 +154,8 @@ def merge(
 ) -> None:
     """Merge a pull request"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
         _id: str = validate_input(id, "Pull request id to merge", id_cannot_be_none)
         merge_pull_request(_id, delete_source_branch, rebase, yes)
     except Exception as err:
@@ -165,6 +172,8 @@ def diff(
 ) -> None:
     """View changes in a pull request"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
         _id: str = validate_input(
             id, "Pull request number to show diff", id_cannot_be_none
         )
@@ -181,6 +190,9 @@ def diff(
 def copy(id: str = typer.Option("", help="pull request number to copy")) -> None:
     """Copy pull request url to clipboard"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
+
         _id: str = validate_input(id, "Pull request number to copy", id_cannot_be_none)
         copy_pull_request(_id)
     except Exception as err:
@@ -198,6 +210,8 @@ def view(
 ) -> None:
     """View a pull request"""
     try:
+        if not is_git_repo():
+            raise ValueError(not_a_git_repo)
         _id = validate_input(id, "Pull request id to view", id_cannot_be_none)
         view_pull_request(_id, web)
     except Exception as err:

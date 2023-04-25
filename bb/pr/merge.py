@@ -7,7 +7,7 @@
 """
 
 from rich import print_json
-from typer import Exit, prompt
+from typer import prompt
 
 from bb.utils import api, cmnd, ini, request, richprint
 
@@ -36,7 +36,7 @@ def pr_source_branch_delete_check(
         )
         != 0
     ):
-        raise Exit(code=1)
+        raise ValueError("Source branch deletion validation failed")
 
 
 def validate_pr_source_branch_delete_check(
@@ -61,7 +61,7 @@ def validate_pr_source_branch_delete_check(
         else:
             live.update(richprint.console.print("FAILED", style="red"))
             print_json(data=validation_response[1])
-            raise Exit(code=1)
+            raise ValueError("Merge validation failed")
 
 
 def validate_automerge_conditions(project: str, repository: str, _id: str) -> tuple:
@@ -115,8 +115,7 @@ def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
             "bold cyan",
         )
     else:
-        richprint.str_print(pr_merge_response, BOLD_RED)
-        raise Exit(code=1)
+        raise ValueError(pr_merge_response)
 
 
 def rebase_pr(project: str, repository: str, _id: str, version: int):

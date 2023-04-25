@@ -13,9 +13,22 @@ from bb.utils.richprint import console
 from bb.utils.validate import state
 
 
+def version_callback(value: bool) -> None:
+    """
+    returns the docstring of the current module (`__doc__`)
+    and exits the program.
+    """
+    if value:
+        console.print(f"bb version: {__version__.__version__}")
+        raise typer.Exit(code=0)
+
+
 def setup() -> typer.Typer:
     _bb = typer.Typer(
-        add_completion=False, epilog="Source Code: https://github.com/psadi/bbcli"
+        add_completion=False,
+        epilog="Source Code: https://github.com/psadi/bbcli",
+        help="Work seamlessly with Bitbucket from the command line.",
+        no_args_is_help=True,
     )
 
     _bb.add_typer(_pr, name="pr", help="Manage pull requests")
@@ -26,16 +39,6 @@ def setup() -> typer.Typer:
 
 
 _bb = setup()
-
-
-def version_callback(value: bool) -> None:
-    """
-    returns the docstring of the current module (`__doc__`)
-    and exits the program.
-    """
-    if value:
-        console.print(f"bb version: {__version__.__version__}")
-        raise typer.Exit(code=0)
 
 
 @_bb.callback()

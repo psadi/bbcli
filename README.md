@@ -1,12 +1,9 @@
 <div id="texts" style="white-space:nowrap;">
      <img height="100" width="100" src="./img/bb.png"  align="left"/>
-     <h1>bb (bitbucket-cli) </h1>
-     <h3>A command line tool to manage your pull requests</h3>
+     <h1>Bitbucket-CLI (bb) </h1>
+     <h3>Work seamlessly with Bitbucket from the command line</h3>
      </br>
 </div>
-
-
-<p><i>be lazy and still get things done</i></p>
 
 ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
 [![Continuous Integration](https://github.com/psadi/bbcli/actions/workflows/ci.yml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/ci.yml)
@@ -83,7 +80,7 @@ bb auth setup
 ```
 ---
 
-###  HOW-TO OVERVIEW
+###  HOW-TO?
 
 <details>
   <summary>Create pull request</summary>

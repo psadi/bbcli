@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
     "typer[all]>=0.7.0",
-    "httpx>=0.23.3",
+    "httpx>=0.24.0",
 ]
 requires-python = ">=3.7"
 readme = "README.md"

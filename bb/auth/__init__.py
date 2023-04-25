@@ -68,11 +68,11 @@ def status(token: bool = typer.Option(False, help="Display auth token")) -> None
             )
             console.print(f"{hcm} Token: {'*' * len(_token) if not token else _token}")
         else:
-            console.print("Configuration missing, run 'bb auth setup'")
-            raise typer.Exit(code=1)
+            raise ValueError("Configuration missing, run 'bb auth setup'")
     except Exception as err:
         console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:
             traceback_to_console()
         else:
             error_tip()
+        typer.Exit(code=1)

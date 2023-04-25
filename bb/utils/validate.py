@@ -24,8 +24,7 @@ def validate_config():
             if response[0] == 200:
                 live.update(richprint.console.print("OK", style="bold green"))
     except Exception as err:
-        richprint.console.print("ERROR", style="bold red")
-        raise err
+        raise ValueError(err)
 
 
 def validate_input(_input: any, expected: str, error: str) -> str:
