@@ -23,7 +23,17 @@ repos:
         args: ["--profile", "black", "--filter-files"]
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.261'
+    rev: 'v0.0.264'
     hooks:
       - id: ruff
         args: [bb, --fix, --exit-non-zero-on-fix]
+
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: 3.2.1
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages:
+          - post-commit
+          - push

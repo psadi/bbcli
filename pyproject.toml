@@ -37,6 +37,7 @@ dev = [
     "isort>=5.11.5",
     "bandit>=1.7.5",
     "pre-commit>=2.21.0",
+    "commitizen>=3.2.1",
 ]
 
 [tool.pdm.scripts]
