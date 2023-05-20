@@ -66,11 +66,7 @@ def post(url: str, username: str, token: str, body: dict) -> list:
             f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )
 
-    if request.status_code == 204:
-        json_data: dict = {}
-    else:
-        json_data: dict = request.json()
-
+    json_data: dict = {} if request.status_code == 204 else request.json()
     return [request.status_code, json_data]
 
 

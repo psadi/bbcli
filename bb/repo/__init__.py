@@ -11,7 +11,7 @@ from bb.utils.ini import parse
 from bb.utils.richprint import console, traceback_to_console
 from bb.utils.validate import error_tip, state, validate_input
 
-_repo = typer.Typer(add_completion=True)
+_repo = typer.Typer(add_completion=True, no_args_is_help=True)
 
 
 @_repo.command()

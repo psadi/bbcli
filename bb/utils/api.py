@@ -60,7 +60,7 @@ def pull_request_body(
             "open": "true",
             "closed": "false",
             "fromRef": {
-                "id": "refs/heads/" + from_branch,
+                "id": f"refs/heads/{from_branch}",
                 "repository": {
                     "slug": repository,
                     "name": repository,
@@ -68,7 +68,7 @@ def pull_request_body(
                 },
             },
             "toRef": {
-                "id": "refs/heads/" + target,
+                "id": f"refs/heads/{target}",
                 "repository": {
                     "slug": repository,
                     "name": repository,
@@ -82,7 +82,7 @@ def pull_request_body(
 
 
 def pull_request_difference(
-    bitbucket_host: str, project: str, repository: str, pr_number: int
+    bitbucket_host: str, project: str, repository: str, pr_number: str
 ) -> str:
     """
     Returns the diff API to check in a given pull request

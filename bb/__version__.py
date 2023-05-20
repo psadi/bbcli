@@ -4,4 +4,4 @@
     Sets the packge version, picked dynamically by
     the utility and pyproject
 """
-__version__ = "0.5.2"
+__version__ = "0.5.3"

@@ -10,7 +10,7 @@ from bb.utils.ini import BB_CONFIG_FILE, _setup, is_config_present, parse
 from bb.utils.richprint import console, traceback_to_console
 from bb.utils.validate import error_tip, state, validate_config
 
-_auth: typer.Typer = typer.Typer(add_completion=False)
+_auth: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
 bold_red: str = "bold red"
 
 
@@ -57,18 +57,17 @@ def test() -> None:
 def status(token: bool = typer.Option(False, help="Display auth token")) -> None:
     """View authentication config status"""
     try:
-        if is_config_present():
-            hcm: str = "[bold green]:heavy_check_mark:[/bold green]"
-            console.print(
-                f"{hcm} Configuration found at [bold cyan]{BB_CONFIG_FILE}[/bold cyan]"
-            )
-            username, _token, bitbucket_host = parse()
-            console.print(
-                f"{hcm} Will connect to [bold]{bitbucket_host}[/bold] as [bold]{username}[/bold]"
-            )
-            console.print(f"{hcm} Token: {'*' * len(_token) if not token else _token}")
-        else:
+        if not is_config_present():
             raise ValueError("Configuration missing, run 'bb auth setup'")
+        hcm: str = "[bold green]:heavy_check_mark:[/bold green]"
+        console.print(
+            f"{hcm} Configuration found at [bold cyan]{BB_CONFIG_FILE}[/bold cyan]"
+        )
+        username, _token, bitbucket_host = parse()
+        console.print(
+            f"{hcm} Will connect to [bold]{bitbucket_host}[/bold] as [bold]{username}[/bold]"
+        )
+        console.print(f"{hcm} Token: {_token if token else '*' * len(_token)}")
     except Exception as err:
         console.print(f"ERROR: {err}", style=bold_red)
         if state["verbose"]:

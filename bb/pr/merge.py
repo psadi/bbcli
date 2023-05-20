@@ -96,9 +96,9 @@ def validate_automerge_conditions(project: str, repository: str, _id: str) -> tu
 def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
     """display all merge related statistics"""
     if (
-        pr_merge_response["status"]["id"] == "AUTO_MERGE_DISABLED"
-        or pr_merge_response["status"]["id"] == "NO_PATH"
-    ) and pr_merge_response["status"]["available"] is False:
+        pr_merge_response["status"]["id"] in ["AUTO_MERGE_DISABLED", "NO_PATH"]
+        and pr_merge_response["status"]["available"] is False
+    ):
         richprint.str_print(
             f"> '{from_branch}' will merge to '{target_branch}'", "bold cyan"
         )
@@ -196,7 +196,7 @@ def merge_pull_request(
 
     show_merge_stats(pr_merge_response, from_branch, target_branch)
 
-    rebase_condition = bool(
+    rebase_condition = (
         rebase
         or prompt(
             f"? Do you want rebase '{from_branch}' branch from '{target_branch}' [y/n]"
@@ -211,7 +211,7 @@ def merge_pull_request(
         ).lower()
         == "y"
     ):
-        delete_condition = bool(
+        delete_condition = (
             delete_source_branch
             or prompt(
                 f"? Do you want to delete source '{from_branch}' branch [y/n]"
