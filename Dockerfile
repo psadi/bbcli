@@ -1,4 +1,4 @@
-FROM python:alpine3.16
+FROM python:alpine3.18
 
 COPY dist/bb-*.tar.gz bb.tar.gz
 
@@ -7,3 +7,5 @@ RUN apk add git; \
     python3 -m pip --no-cache-dir install bb.tar.gz;
 
 WORKDIR /app
+
+ENTRYPOINT [ "bb" ]
