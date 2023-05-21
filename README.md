@@ -1,5 +1,5 @@
 <div id="texts" style="white-space:nowrap;">
-     <img height="100" width="100" src="./img/bb.png"  align="left"/>
+     <img height="100" width="100" src="./resources/bb.png"  align="left"/>
      <h1>Bitbucket-CLI (bb) </h1>
      <h3>Work seamlessly with Bitbucket from the command line</h3>
      </br>
@@ -175,6 +175,6 @@ A huge thanks to,
 
 ---
 
-<p align="left"><img height="150" width="200" src="./img/thatsall.gif">
+<p align="left"><img height="150" width="200" src="./resources/thatsall.gif">
 
 Enjoy being more efficient 😊
