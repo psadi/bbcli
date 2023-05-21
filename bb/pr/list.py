@@ -46,10 +46,12 @@ def outcome(_pr: dict) -> tuple:
 def review_status(reviewers: list) -> str:
     """how the Pr reviewer status"""
     users = []
-    if len(reviewers) > 0:
-        for user in reviewers:
-            if bool(user["user"]["active"]):
-                users.append(f"{state_check(user['status'])}")
+    if reviewers:
+        users.extend(
+            f"{state_check(user['status'])}"
+            for user in reviewers
+            if bool(user["user"]["active"])
+        )
     else:
         users.append(state_check("NONE"))
     return " & ".join(list(set(users)))
@@ -65,9 +67,9 @@ def construct_repo_dict(role_info: list) -> dict:
         for _pr in role_info[1]["values"]:
             repo = f"{_pr['fromRef']['repository']['slug']}"
             if repo not in repo_dict:
-                repo_dict.update({repo: {}})
+                repo_dict[repo] = {}
                 if _pr["state"] not in repo_dict[repo].values():
-                    repo_dict.update({repo: {_pr["state"]: {}}})
+                    repo_dict[repo] = {_pr["state"]: {}}
             pr_url_id: tuple = (
                 _pr["links"]["self"][0]["href"].split("/")[-1],
                 _pr["links"]["self"][0]["href"],

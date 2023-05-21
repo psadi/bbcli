@@ -20,7 +20,7 @@ from bb.utils.cmnd import is_git_repo
 from bb.utils.richprint import console, traceback_to_console
 from bb.utils.validate import error_tip, state, validate_input
 
-_pr: typer.Typer = typer.Typer(add_completion=False)
+_pr: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
 bold_red: str = "bold red"
 id_cannot_be_none: str = "id cannot be none"
 not_a_git_repo: str = "Not a git repository"

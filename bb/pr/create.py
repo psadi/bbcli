@@ -42,10 +42,11 @@ def gather_facts(
                 username,
                 token,
             )[1]:
-                for key in dict_item:
-                    if key == "name":
-                        reviewers.append({"user": {"name": dict_item[key]}})
-
+                reviewers.extend(
+                    {"user": {"name": dict_item[key]}}
+                    for key in dict_item
+                    if key == "name"
+                )
     table = richprint.table(
         [("SUMMARY", "bold yellow"), ("DESCRIPTION", "#FFFFFF")],
         [

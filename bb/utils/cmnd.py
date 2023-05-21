@@ -7,7 +7,6 @@
 
 import platform
 import subprocess
-from shutil import which
 from time import sleep
 from typing import Dict, Optional
 
@@ -148,15 +147,25 @@ def cp_to_clipboard(url: str) -> None:
     """
     platform_based_cp: Dict[str, str] = {
         "Windows": "clip.exe",
-        "Linux": "xclip -selection clipboard"
-        if which("xclip") is not None
-        else "clip.exe",
+        "Linux": "clip.exe"
+        if "microsoft" in platform.release().lower()
+        else "xclip -selection clipboard",
         "Darwin": "pbcopy",
     }
 
     cmd: str = platform_based_cp.get(platform.system(), "n/a")
 
     if cmd == "n/a":
-        raise ValueError("Copying to clipboard is not supported in platform")
+        raise ValueError("Clipboard copy not supported in platform")
 
     subprocess_run(cmd, url)
+
+
+def show_git_diff(from_branch: str, to_branch: str) -> None:
+    """
+    shows the diff between two branches
+    """
+    try:
+        subprocess.check_call(["git", "diff", f"{from_branch}...{to_branch}"])
+    except subprocess.CalledProcessError as err:
+        raise ValueError("ABORTED") from err
