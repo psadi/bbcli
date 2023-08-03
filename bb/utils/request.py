@@ -29,7 +29,7 @@ def get(url: str, username: str, token: str) -> list:
     It makes a get request to the url, with the username and token as authentication.
     """
     with httpx.Client() as client:
-        request = client.get(url, auth=(username, token))
+        request = client.get(url, auth=(username, token), timeout=10.0)
 
     if request.status_code != 200:
         if request.status_code == 400:
@@ -59,6 +59,7 @@ def post(url: str, username: str, token: str, body: dict) -> list:
             auth=(username, token),
             data=body,
             headers={"content-type": content_type},
+            timeout=10.0,
         )
 
     if request.status_code not in (200, 201, 204, 409):
@@ -82,6 +83,7 @@ def put(url: str, username: str, token: str, body: dict) -> list:
             auth=(username, token),
             data=body,
             headers={"content-type": content_type},
+            timeout=10.0,
         )
     if request.status_code != 200:
         raise ValueError(
@@ -102,6 +104,7 @@ def delete(url: str, username: str, token: str, body: dict) -> int:
             auth=(username, token),
             data=body,
             headers={"content-type": content_type},
+            timeout=10.0,
         )
     if request.status_code != 204:
         raise ValueError(

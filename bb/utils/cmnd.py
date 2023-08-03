@@ -20,7 +20,7 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
     Runs native os commands and pipes the stdout
     """
     if text is not None:
-        text = text.encode("utf-8")
+        text = text.encode("utf-8")  # type: ignore
 
     try:
         cmnd = subprocess.run(
@@ -115,7 +115,10 @@ def checkout_and_pull(branch_name: str) -> None:
         raise ValueError(
             f"Cannot checkout to '{branch_name}' branch.\nCurrent workspace has {modified_files} modified files"
         )
-    subprocess_run(f"git checkout {branch_name} && git pull --no-edit")
+
+    subprocess.check_call(
+        ["git", "checkout", branch_name, "&&", "git", "pull", "--no-edit"]
+    )
 
 
 def delete_local_branch(branch_name: str):
@@ -125,7 +128,7 @@ def delete_local_branch(branch_name: str):
     if branch_name == from_branch():
         raise ValueError(f"Cannot delete active branch '{branch_name}'")
 
-    subprocess_run(f"git branch -D {branch_name}")
+    subprocess.check_call(["git", "branch", "-D", branch_name])
 
 
 def clone_repo(repo: str, bitbucket_host: str) -> None:
@@ -166,6 +169,6 @@ def show_git_diff(from_branch: str, to_branch: str) -> None:
     shows the diff between two branches
     """
     try:
-        subprocess.check_call(["git", "diff", f"{from_branch}...{to_branch}"])
+        subprocess.check_call(["git", "diff", from_branch, to_branch])
     except subprocess.CalledProcessError as err:
         raise ValueError("ABORTED") from err
