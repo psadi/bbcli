@@ -7,7 +7,6 @@
 
 import platform
 import subprocess
-from time import sleep
 from typing import Dict, Optional
 
 from bb.utils.richprint import console, str_print
@@ -32,7 +31,6 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
         )
 
     except subprocess.CalledProcessError as err:
-        sleep(0.4)
         console.print("ERROR", style="bold red")
         console.print(err)
         raise RuntimeError(
@@ -169,6 +167,6 @@ def show_git_diff(from_branch: str, to_branch: str) -> None:
     shows the diff between two branches
     """
     try:
-        subprocess.check_call(["git", "diff", from_branch, to_branch])
+        subprocess.check_call(["git", "diff", to_branch, from_branch])
     except subprocess.CalledProcessError as err:
         raise ValueError("ABORTED") from err
