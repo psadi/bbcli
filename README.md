@@ -15,6 +15,9 @@
 
 ---
 
+### DEMO
+[![asciicast](https://asciinema.org/a/DzNfEhcqhLNjHUMVcTP11lnrw.svg)](https://asciinema.org/a/DzNfEhcqhLNjHUMVcTP11lnrw)
+
 ###  REQUIREMENTS
 
 * [Git](https://git-scm.com/downloads)
