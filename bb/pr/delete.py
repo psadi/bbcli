@@ -6,7 +6,7 @@
 
 import json
 
-from typer import prompt
+from typer import confirm
 
 from bb.pr.diff import show_diff
 from bb.utils import api, cmnd, ini, request, richprint
@@ -43,10 +43,12 @@ def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
         )
         richprint.console.print(table)
 
-        if diff:
+        if diff or confirm(
+            f"Review diff between '{pull_request_info[1]['fromRef']['displayId']}' & '{pull_request_info[1]['toRef']['displayId']}' in PR #{_no}"
+        ):
             show_diff(_no)
 
-        if yes or prompt("Proceed [y/n]").lower().strip() == "y":
+        if yes or confirm("Proceed"):
             with richprint.live_progress("Deleting Pull Request ..."):
                 body = json.dumps({"version": int(pull_request_info[1]["version"])})
                 pull_request = request.delete(url, username, token, body)

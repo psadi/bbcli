@@ -7,7 +7,7 @@
 """
 
 from rich import print_json
-from typer import prompt
+from typer import confirm
 
 from bb.utils import api, cmnd, ini, request, richprint
 
@@ -196,27 +196,13 @@ def merge_pull_request(
 
     show_merge_stats(pr_merge_response, from_branch, target_branch)
 
-    rebase_condition = (
-        rebase
-        or prompt(
-            f"? Do you want rebase '{from_branch}' branch from '{target_branch}' [y/n]"
-        ).lower()
-        == "y"
+    rebase_condition = rebase or confirm(
+        f"? Do you want rebase '{from_branch}' branch from '{target_branch}'"
     )
 
-    if (
-        yes
-        or prompt(
-            f"? Proceed with {'rebase and ' if rebase_condition else ''}merge [y/n]"
-        ).lower()
-        == "y"
-    ):
-        delete_condition = (
-            delete_source_branch
-            or prompt(
-                f"? Do you want to delete source '{from_branch}' branch [y/n]"
-            ).lower()
-            == "y"
+    if yes or confirm("? Proceed with merge"):
+        delete_condition = delete_source_branch or confirm(
+            f"? Do you want to delete source '{from_branch}' branch"
         )
 
         with richprint.live_progress(

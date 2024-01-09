@@ -85,10 +85,12 @@ def put(url: str, username: str, token: str, body: dict) -> list:
             headers={"content-type": content_type},
             timeout=10.0,
         )
-    if request.status_code != 200:
+
+    if request.status_code not in (200, 409):
         raise ValueError(
             f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )
+
     return [request.status_code, request.json()]
 
 
@@ -106,7 +108,7 @@ def delete(url: str, username: str, token: str, body: dict) -> int:
             headers={"content-type": content_type},
             timeout=10.0,
         )
-    if request.status_code != 204:
+    if request.status_code not in (202, 204):
         raise ValueError(
             f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )

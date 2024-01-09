@@ -6,7 +6,9 @@
     remote and local repository
 """
 
-from typer import prompt
+from typing import Optional
+
+from typer import confirm
 
 from bb.pr.diff import show_diff
 from bb.utils import api, cmnd, ini, request, richprint
@@ -69,6 +71,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
     It creates a pull request.
     """
 
+    _id: Optional[str] = None
     username, token, bitbucket_host = ini.parse()
     from_branch = cmnd.from_branch()
     if target == from_branch:
@@ -91,7 +94,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
         title_and_description,
     )
 
-    if yes or prompt("Proceed [y/n]").lower().strip() == "y":
+    if yes or confirm("Proceed"):
         with richprint.live_progress("Creating Pull Request ..."):
             url = api.pull_request_create(bitbucket_host, project, repository)
             body = api.pull_request_body(
@@ -139,5 +142,8 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
             "dim white",
         )
 
-    if diff:
+    if _id and (
+        diff
+        or confirm(f"Review diff from '{from_branch}' -> to '{target}' in PR #{_id}?")
+    ):
         show_diff(_id)

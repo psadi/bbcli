@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from bb.utils.ini import parse, config_path
-from pathlib import Path
 import os
+from pathlib import Path
+
 from props import Ini
+
+from bb.utils.ini import config_path, parse
 
 property = Ini()
 
@@ -11,10 +13,10 @@ property = Ini()
 def test_parse():
     if property.BB_CONFIG_FILE:
         _parse = parse()
-        assert type(_parse) == list
+        assert isinstance(_parse, list)
         assert len(_parse) == 3
         for i in _parse:
-            assert type(i) == str
+            assert isinstance(i, str)
 
 
 def test_config_path():

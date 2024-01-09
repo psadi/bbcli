@@ -9,7 +9,7 @@ dependencies = [
     "typer[all]>=0.7.0",
     "httpx>=0.24.0",
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "MIT"}
 
@@ -34,24 +34,23 @@ dev = [
     "pytest-cov>=4.0.0",
     "tox-pdm>=0.6.1",
     "ruff>=0.0.257",
-    "isort>=5.11.5",
     "bandit>=1.7.5",
-    "pre-commit>=2.21.0",
-    "commitizen>=3.2.1",
 ]
 
 [tool.pdm.scripts]
 bb = { call = "bb:_bb" }
 
-[tool.black]
-includes = "bb"
-
-[tool.isort]
-profile = "black"
-src_paths = ["bb", "tests"]
-
 [tool.ruff]
 ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint]
+extend-select = ["I"]
 
 [tool.bandit]
 skips = ["B404","B603","B607"]
