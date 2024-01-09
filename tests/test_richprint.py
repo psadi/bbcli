@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bb.utils import richprint
 
 
@@ -13,5 +14,5 @@ def test_table():
         {"name": "Bob", "age": 30, "gender": "Male"},
         {"name": "Charlie", "age": 35, "gender": "Male"},
     ]
-    table = richprint.table(header_args, value_args, True)
+    richprint.table(header_args, value_args, True)
     # The output should be a table with the given header and values.

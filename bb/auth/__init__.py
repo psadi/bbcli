@@ -24,9 +24,11 @@ def setup() -> None:
             )
         else:
             _setup(
-                typer.prompt("> bitbucket_host"),
+                typer.prompt(
+                    "> bitbucket_host",
+                ),
                 typer.prompt("> username"),
-                typer.prompt("> token"),
+                typer.prompt("> token", hide_input=True),
             )
             typer.echo(
                 f"Configuration written at '{BB_CONFIG_FILE}',"

@@ -29,16 +29,13 @@ def show_diff(_id: str) -> None:
         )[1]
 
     header = [
-        ("FROM HASH", "bold red"),
-        ("TO HASH", "bold green"),
+        ("HASH", "bold white"),
         ("FILE", "bold white"),
         ("TYPE", "bold yellow"),
     ]
-
     value_args = [
         (
-            f"{response['fromHash'][:11]}",
-            f"{response['toHash'][:11]}",
+            f"[bold red]{response['fromHash'][:11]}[/bold red] - [bold green]{response['toHash'][:11]}[/bold green]",
             i["path"]["toString"],
             f"{i['type']}",
         )

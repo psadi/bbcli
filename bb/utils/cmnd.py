@@ -114,9 +114,9 @@ def checkout_and_pull(branch_name: str) -> None:
             f"Cannot checkout to '{branch_name}' branch.\nCurrent workspace has {modified_files} modified files"
         )
 
-    subprocess.check_call(
-        ["git", "checkout", branch_name, "&&", "git", "pull", "--no-edit"]
-    )
+    subprocess.check_call(["git", "checkout", branch_name])
+
+    subprocess.check_call(["git", "pull", "--no-edit"])
 
 
 def delete_local_branch(branch_name: str):

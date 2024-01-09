@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bb.utils.validate import validate_input
 
 

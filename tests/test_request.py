@@ -1,6 +1,8 @@
-import pytest
+# -*- coding: utf-8 -*-
 import httpx
-from bb.utils.request import get, post, put, delete
+import pytest
+
+from bb.utils.request import delete, post
 
 
 @pytest.fixture

@@ -224,3 +224,17 @@ def delete_branch(
         json.dumps({"name": f"{source_branch}"}),
         f"{bitbucket_host}/rest/branch-utils/latest/projects/{project}/repos/{repository}/branches",
     ]
+
+
+def delete_repo(bitbucket_host: str, project: str, repo: str) -> str:
+    """
+    provides the payload to delete a repo
+    """
+    return f"{bitbucket_host}/rest/api/latest/projects/{project}/repos/{repo}"
+
+
+def create_repo(bitbucket_host: str, project: str, repo: str) -> str:
+    """
+    provides the payload to create a repo
+    """
+    return f"{bitbucket_host}/rest/api/latest/projects/{project}/repos"
