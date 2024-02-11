@@ -9,9 +9,13 @@ from json import JSONDecodeError
 
 import httpx
 
+from bb.utils.ini import is_config_present, parse
 from bb.utils.richprint import str_print
 
 content_type: str = "application/json;charset=UTF-8"
+
+if is_config_present():
+    username, token, _ = parse()
 
 
 def http_response_definitions(status_code: int) -> str:
@@ -24,7 +28,7 @@ def http_response_definitions(status_code: int) -> str:
         return "Unknown Status Code"
 
 
-def get(url: str, username: str, token: str) -> list:
+def get(url: str) -> list[int, dict]:
     """
     It makes a get request to the url, with the username and token as authentication.
     """
@@ -47,7 +51,7 @@ def get(url: str, username: str, token: str) -> list:
     return [request.status_code, data]
 
 
-def post(url: str, username: str, token: str, body: dict) -> list:
+def post(url: str, body: dict) -> list[int, dict]:
     """
     This function makes a POST request to the specified URL, using the specified username and token
     for authentication, and the specified body as the request body
@@ -71,7 +75,7 @@ def post(url: str, username: str, token: str, body: dict) -> list:
     return [request.status_code, json_data]
 
 
-def put(url: str, username: str, token: str, body: dict) -> list:
+def put(url: str, body: dict) -> list[int, dict]:
     """
     This function makes a PUT request to the specified URL
     with the specified username and token and returns the status code
@@ -94,7 +98,7 @@ def put(url: str, username: str, token: str, body: dict) -> list:
     return [request.status_code, request.json()]
 
 
-def delete(url: str, username: str, token: str, body: dict) -> int:
+def delete(url: str, body: dict) -> int:
     """
     This function sends a DELETE request to the specified URL with the specified username and token,
     and returns the HTTP status code

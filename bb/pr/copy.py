@@ -5,7 +5,8 @@
     clipboard
 """
 
-from bb.utils import api, cmnd, ini, request, richprint
+from bb.utils import cmnd, ini, request, richprint
+from bb.utils.api import bitbucket_api
 
 
 def copy_pull_request(_id: str) -> None:
@@ -21,7 +22,7 @@ def copy_pull_request(_id: str) -> None:
         username, token, bitbucket_host = ini.parse()
         project, repository = cmnd.base_repo()
         url: str = request.get(
-            api.pull_request_info(bitbucket_host, project, repository, _id),
+            bitbucket_api.pull_request_info(bitbucket_host, project, repository, _id),
             username,
             token,
         )[1]["links"]["self"][0]["href"]

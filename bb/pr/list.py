@@ -6,10 +6,15 @@
     or all repos
 """
 
-from bb.utils import api, cmnd, ini, request, richprint
+from typing import Dict, List, Tuple
+
+from bb.utils import cmnd, ini, request, richprint
+from bb.utils.api import bitbucket_api
 
 
-def to_richprint(repo_name: str, pr_repo_dict: dict) -> None:
+def to_richprint(
+    repo_name: str, pr_repo_dict: Dict[str, Dict[str, List[Tuple[str, str]]]]
+) -> None:
     """
     This function takes in a repository name, a dictionary of pull requests, and a header dictionary
     and prints the data to the console
@@ -18,7 +23,7 @@ def to_richprint(repo_name: str, pr_repo_dict: dict) -> None:
         richprint.render_tree(repo_name, status, data)
 
 
-def state_check(_input) -> str:
+def state_check(_input: str) -> str:
     """state to rich print mapping for table"""
     state: dict = {
         "CLEAN": f"[bold green]{_input}[/bold green]",
@@ -110,12 +115,12 @@ def list_pull_request(role: str, _all: bool) -> None:
     """
     username, token, bitbucket_host = ini.parse()
     project, repository = cmnd.base_repo()
-    request_url = api.current_pull_request(bitbucket_host, project, repository)
+    request_url = bitbucket_api.current_pull_request(project, repository)
     if role != "current":
-        request_url = api.pull_request_viewer(bitbucket_host, role)
+        request_url = bitbucket_api.pull_request_viewer(role)
 
     with richprint.live_progress(f"Fetching Pull Requests ({role}) ... ") as live:
-        role_info: list = request.get(request_url, username, token)
+        role_info: list = request.get(request_url)
         repo_dict = construct_repo_dict(role_info)
 
         live.update(richprint.console.print("DONE", style="bold green"))

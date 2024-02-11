@@ -9,20 +9,20 @@ import json
 from typer import confirm
 
 from bb.pr.diff import show_diff
-from bb.utils import api, cmnd, ini, request, richprint
+from bb.utils import cmnd, request, richprint
+from bb.utils.api import bitbucket_api
 
 
 def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
     """
     Delete pull request(s) by ID
     """
-    username, token, bitbucket_host = ini.parse()
     project, repository = cmnd.base_repo()
 
     for _no in _id:
         with richprint.live_progress(f"Fetching info on {_no} ..."):
-            url = api.pull_request_info(bitbucket_host, project, repository, _no)
-            pull_request_info = request.get(url, username, token)
+            url = bitbucket_api.pull_request_info(project, repository, _no)
+            pull_request_info = request.get(url)
 
         table = richprint.table(
             [("SUMMARY", "bold yellow"), ("DESCRIPTION", "#FFFFFF")],
@@ -51,7 +51,7 @@ def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
         if yes or confirm("Proceed"):
             with richprint.live_progress("Deleting Pull Request ..."):
                 body = json.dumps({"version": int(pull_request_info[1]["version"])})
-                pull_request = request.delete(url, username, token, body)
+                pull_request = request.delete(url, body)
 
             if pull_request != 204:
                 raise ValueError("Cannot delete pull request, Response<204>")

@@ -6,8 +6,7 @@
 
 from typer import Exit, confirm, prompt
 
-from bb.utils.api import delete_repo
-from bb.utils.ini import parse
+from bb.utils.api import bitbucket_api
 from bb.utils.request import delete as delete_request
 from bb.utils.richprint import console, live_progress
 
@@ -31,10 +30,10 @@ If you prefer, you can archive this repository instead via [blue]'bb repo archiv
     ):
         raise Exit(code=1)
 
-    username, token, bitbucket_host = parse()
     with live_progress(f"Deleting Repository '{project}/{repo}' ... ") as live:
         request = delete_request(
-            delete_repo(bitbucket_host, project, repo), username, token, {}
+            bitbucket_api.delete_repo(project, repo),
+            {},
         )
 
         if request == 202:

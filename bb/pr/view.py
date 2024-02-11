@@ -6,9 +6,8 @@
 
 import webbrowser
 
-from bb.utils.api import pull_request_info
+from bb.utils.api import bitbucket_api
 from bb.utils.cmnd import base_repo
-from bb.utils.ini import parse
 from bb.utils.request import get
 from bb.utils.richprint import console, live_progress, table
 
@@ -16,11 +15,8 @@ from bb.utils.richprint import console, live_progress, table
 def view_pull_request(_id: str, web: bool) -> None:
     """view a pull request in terminal or in a browser"""
     with live_progress(f"Fetching info on pr #{_id} ... ") as live:
-        username, token, bitbucket_host = parse()
         project, repository = base_repo()
-        url = get(
-            pull_request_info(bitbucket_host, project, repository, _id), username, token
-        )
+        url = get(bitbucket_api.pull_request_info(project, repository, _id))
         live.update(console.print("DONE", style="bold green"))
 
     if web:

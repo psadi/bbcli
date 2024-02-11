@@ -10,9 +10,9 @@ from bb.repo.archive import archive_repository
 from bb.repo.create import create_repository
 from bb.repo.delete import delete_repository
 from bb.utils.cmnd import clone_repo
+from bb.utils.helper import error_handler, validate_input
 from bb.utils.ini import parse
-from bb.utils.richprint import console, traceback_to_console
-from bb.utils.validate import error_tip, state, validate_input
+from bb.utils.richprint import console
 
 _repo = Typer(add_completion=True, no_args_is_help=True)
 
@@ -22,18 +22,17 @@ def clone(
     name: str = Argument(..., help="repository name, Format: project/repository"),
 ) -> None:
     """Clone a BitBucket repository locally"""
-    try:
+
+    @error_handler
+    def _clone(name):
         name = validate_input(
             name, "project/repository to clone", "repository can't be none"
         )
+
         console.print(f"Cloning '{name}' into '{name.split('/')[1]}'...")
         clone_repo(name, parse()[2])
-    except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
-        if state["verbose"]:
-            traceback_to_console()
-        else:
-            error_tip()
+
+    _clone(name)
 
 
 @_repo.command()
@@ -42,18 +41,15 @@ def delete(
     repo: str = Option("", help="repository name to delete"),
 ) -> None:
     "Delete a Bitbucket repository"
-    try:
+
+    @error_handler
+    def _delete(project, repo):
         project = validate_input(project, "Project name", "project can't be none")
         repo = validate_input(repo, "Repository Name", "repository can't be none")
 
         delete_repository(project, repo)
 
-    except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
-        if state["verbose"]:
-            traceback_to_console()
-        else:
-            error_tip()
+    _delete(project, repo)
 
 
 @_repo.command()
@@ -62,18 +58,15 @@ def archive(
     repo: str = Option("", help="repository name to archive"),
 ) -> None:
     "Archive a Bitbucket repository"
-    try:
+
+    @error_handler
+    def _archive(project, repo):
         project = validate_input(project, "Project name", "project can't be none")
         repo = validate_input(repo, "Repository Name", "repository can't be none")
 
         archive_repository(project, repo, True)
 
-    except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
-        if state["verbose"]:
-            traceback_to_console()
-        else:
-            error_tip()
+    _archive(project, repo)
 
 
 @_repo.command()
@@ -82,18 +75,15 @@ def unarchive(
     repo: str = Option("", help="repository name to unarchive"),
 ) -> None:
     "Unarchive a Bitbucket repository"
-    try:
+
+    @error_handler
+    def _unarchive(project, repo):
         project = validate_input(project, "Project name", "project can't be none")
         repo = validate_input(repo, "Repository Name", "repository can't be none")
 
         archive_repository(project, repo, False)
 
-    except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
-        if state["verbose"]:
-            traceback_to_console()
-        else:
-            error_tip()
+    _unarchive(project, repo)
 
 
 @_repo.command()
@@ -104,15 +94,12 @@ def create(
     default_branch: str = Option("master", help="Set default branch "),
 ) -> None:
     """Create a Bitbucket repository"""
-    try:
+
+    @error_handler
+    def _create(project, repo, forkable, default_branch):
         project = validate_input(project, "Project name", "project can't be none")
         repo = validate_input(repo, "Repository Name", "repository can't be none")
 
         create_repository(project, repo, forkable, default_branch)
 
-    except Exception as err:
-        console.print(f"ERROR: {err}", style="bold red")
-        if state["verbose"]:
-            traceback_to_console()
-        else:
-            error_tip()
+    _create(project, repo, forkable, default_branch)

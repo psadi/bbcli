@@ -11,7 +11,8 @@ from typing import Optional
 from typer import confirm
 
 from bb.pr.diff import show_diff
-from bb.utils import api, cmnd, ini, request, richprint
+from bb.utils import cmnd, ini, request, richprint
+from bb.utils.api import bitbucket_api
 
 
 def gather_facts(
@@ -26,23 +27,16 @@ def gather_facts(
     repository
     """
 
-    username, token, bitbucket_host = ini.parse()
     with richprint.live_progress(f"Gathering facts on '{repository}' ..."):
         repo_id = None
-        for repo in request.get(
-            api.get_repo_info(bitbucket_host, project), username, token
-        )[1]["values"]:
+        for repo in request.get(bitbucket_api.get_repo_info(project))[1]["values"]:
             if repo["name"] == repository:
                 repo_id = repo["id"]
 
         reviewers = []
         if repo_id is not None:
             for dict_item in request.get(
-                api.default_reviewers(
-                    bitbucket_host, project, repo_id, from_branch, target
-                ),
-                username,
-                token,
+                bitbucket_api.default_reviewers(project, repo_id, from_branch, target),
             )[1]:
                 reviewers.extend(
                     {"user": {"name": dict_item[key]}}
@@ -96,8 +90,8 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
 
     if yes or confirm("Proceed"):
         with richprint.live_progress("Creating Pull Request ..."):
-            url = api.pull_request_create(bitbucket_host, project, repository)
-            body = api.pull_request_body(
+            url = bitbucket_api.pull_request_create(project, repository)
+            body = bitbucket_api.pull_request_body(
                 title_and_description,
                 from_branch,
                 repository,
@@ -105,7 +99,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 target,
                 reviewers,
             )
-            pull_request = request.post(url, username, token, body)
+            pull_request = request.post(url, body)
 
         if pull_request[0] == 201:
             richprint.console.print(

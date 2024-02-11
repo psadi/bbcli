@@ -7,8 +7,7 @@ import json
 
 from typer import Exit, confirm
 
-from bb.utils.api import delete_repo
-from bb.utils.ini import parse
+from bb.utils.api import bitbucket_api
 from bb.utils.request import put
 from bb.utils.richprint import console, live_progress
 
@@ -19,14 +18,11 @@ def archive_repository(project: str, repo: str, archive: bool) -> None:
     ):
         raise Exit(code=1)
 
-    username, token, bitbucket_host = parse()
     with live_progress(
         f"{'Archiving' if archive else 'Unarchiving' } Repository '{project}/{repo}' ... "
     ) as live:
         request = put(
-            delete_repo(bitbucket_host, project, repo),
-            username,
-            token,
+            bitbucket_api.delete_repo(project, repo),
             json.dumps({"archived": archive}),  # type: ignore
         )
 
