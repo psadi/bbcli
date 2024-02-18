@@ -9,7 +9,8 @@
 from rich import print_json
 from typer import confirm
 
-from bb.utils import api, cmnd, ini, request, richprint
+from bb.utils import cmnd, request, richprint
+from bb.utils.api import bitbucket_api
 
 BOLD_RED = "bold red"
 
@@ -23,15 +24,12 @@ def pr_source_branch_delete_check(
     """
     checks is the source branch is ok to be deleted if requested
     """
-    username, token, bitbucket_host = ini.parse()
     if (
         len(
             request.get(
-                api.pr_source_branch_delete_check(
-                    bitbucket_host, project, repository, _id, delete_source_branch
+                bitbucket_api.pr_source_branch_delete_check(
+                    project, repository, _id, delete_source_branch
                 ),
-                username,
-                token,
             )[1]
         )
         != 0
@@ -46,11 +44,8 @@ def validate_pr_source_branch_delete_check(
     validates the pull request source branch and check for conflitcts or vetos
     """
     with richprint.live_progress(f"Validating Merge for '{_id}' ... ") as live:
-        username, token, bitbucket_host = ini.parse()
         validation_response = request.get(
-            api.validate_merge(bitbucket_host, project, repository, _id),
-            username,
-            token,
+            bitbucket_api.validate_merge(project, repository, _id),
         )
         if (
             validation_response[1]["canMerge"] is True
@@ -69,11 +64,8 @@ def validate_automerge_conditions(project: str, repository: str, _id: str) -> tu
     with richprint.live_progress(
         f"Checking for '{repository}' auto-merge conditions ... "
     ):
-        username, token, bitbucket_host = ini.parse()
         pr_info = request.get(
-            api.pull_request_info(bitbucket_host, project, repository, _id),
-            username,
-            token,
+            bitbucket_api.pull_request_info(project, repository, _id),
         )[1]
         from_branch, target_branch, version = (
             pr_info["fromRef"]["displayId"],
@@ -83,9 +75,7 @@ def validate_automerge_conditions(project: str, repository: str, _id: str) -> tu
         return (
             pr_info,
             request.get(
-                api.get_merge_info(bitbucket_host, project, repository, target_branch),
-                username,
-                token,
+                bitbucket_api.get_merge_info(project, repository, target_branch),
             )[1],
             from_branch,
             target_branch,
@@ -120,30 +110,22 @@ def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
 
 def rebase_pr(project: str, repository: str, _id: str, version: int):
     """perform rebase in source branch on bitbucket"""
-    username, token, bitbucket_host = ini.parse()
     request.post(
-        api.pr_rebase(bitbucket_host, project, repository, _id, version)[1],
-        username,
-        token,
-        api.pr_rebase(bitbucket_host, project, repository, _id, version)[0],
+        bitbucket_api.pr_rebase(project, repository, _id, version)[1],
+        bitbucket_api.pr_rebase(project, repository, _id, version)[0],
     )
 
 
 def delete_branch(project, repository, _id, from_branch, target_branch):
     """delete source branch in bitbucket and local git repository"""
     with richprint.live_progress(f"Deleting Source Ref '{from_branch}'... ") as live:
-        username, token, bitbucket_host = ini.parse()
         request.post(
-            api.pr_cleanup(bitbucket_host, project, repository, _id),
-            username,
-            token,
-            api.pr_cleanup_body(True),
+            bitbucket_api.pr_cleanup(project, repository, _id),
+            bitbucket_api.pr_cleanup_body(True),
         )
         request.delete(
-            api.delete_branch(bitbucket_host, project, repository, from_branch)[1],
-            username,
-            token,
-            api.delete_branch(bitbucket_host, project, repository, from_branch)[0],
+            bitbucket_api.delete_branch(project, repository, from_branch)[1],
+            bitbucket_api.delete_branch(project, repository, from_branch)[0],
         )
         live.update(richprint.console.print("DONE", style="green"))
 
@@ -155,13 +137,12 @@ def merge_pr(
     live, project: str, repository: str, _id: str, branches_and_version: tuple
 ) -> None:
     """perform pull request merge"""
-    username, token, bitbucket_host = ini.parse()
     from_branch, target_branch, version = branches_and_version
     pr_merge_response = request.post(
-        f"{api.validate_merge(bitbucket_host, project, repository, _id)}?avatarSize=32&version={version}",
-        username,
-        token,
-        api.pr_merge_body(project, repository, _id, from_branch, target_branch),
+        f"{bitbucket_api.validate_merge(project, repository, _id)}?avatarSize=32&version={version}",
+        bitbucket_api.pr_merge_body(
+            project, repository, _id, from_branch, target_branch
+        ),
     )
     if pr_merge_response[0] == 200 and pr_merge_response[1]["state"] == "MERGED":
         live.update(richprint.console.print("MERGED", style="green"))

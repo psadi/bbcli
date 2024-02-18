@@ -8,9 +8,10 @@
 import configparser
 import os
 from pathlib import Path
+from typing import List, Tuple
 
 
-def config_path() -> tuple[str, str]:
+def config_path() -> Tuple[str, str]:
     """
     Returns the path to the directory and file where the application's config file should be located.
 
@@ -31,7 +32,7 @@ def is_config_present() -> bool:
     return os.path.isfile(BB_CONFIG_FILE)
 
 
-def _setup(bitbucket_host: str, username: str, token: str) -> None:
+def auth_setup(bitbucket_host: str, username: str, token: str) -> None:
     """
     It creates a config file with the given parameters.
     """
@@ -56,7 +57,7 @@ token=xxxxxxxxxxx"""
     ini.write(w_alt.open("w", encoding="utf-8"))
 
 
-def parse() -> list:
+def parse() -> List[str]:
     """
     It returns the configuration present in .alt file in home directory
     """

@@ -2,16 +2,11 @@
 name = "bb"
 dynamic = ["version"]
 description = "Work seamlessly with BitBucket from the command line."
-authors = [
-    {name = "psadi", email = "adithya3494@gmail.com"},
-]
-dependencies = [
-    "typer[all]>=0.7.0",
-    "httpx>=0.24.0",
-]
+authors = [{ name = "psadi", email = "ps.adithya@icloud.com" }]
+dependencies = ["typer[all]>=0.7.0", "httpx>=0.24.0"]
 requires-python = ">=3.8"
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "MIT" }
 
 [project.scripts]
 bb = "bb:_bb"
@@ -53,4 +48,4 @@ line-ending = "auto"
 extend-select = ["I"]
 
 [tool.bandit]
-skips = ["B404","B603","B607"]
+skips = ["B404", "B603", "B607"]

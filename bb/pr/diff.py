@@ -5,7 +5,8 @@
     TODO: show the diff contents for each file
 """
 
-from bb.utils import api, cmnd, ini, request, richprint
+from bb.utils import cmnd, request, richprint
+from bb.utils.api import bitbucket_api
 
 
 def show_diff(_id: str) -> None:
@@ -13,19 +14,14 @@ def show_diff(_id: str) -> None:
     Display the diff from remote pull request
     to the console applicable for create and delete actions
     """
-    username, token, bitbucket_host = ini.parse()
     project, repository = cmnd.base_repo()
     with richprint.live_progress("Fetching Contents from Pull Request ..."):
         response = request.get(
-            api.pull_request_difference(bitbucket_host, project, repository, _id),
-            username,
-            token,
+            bitbucket_api.pull_request_difference(project, repository, _id),
         )[1]
 
         pr_info = request.get(
-            api.pull_request_info(bitbucket_host, project, repository, _id),
-            username,
-            token,
+            bitbucket_api.pull_request_info(project, repository, _id),
         )[1]
 
     header = [

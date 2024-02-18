@@ -4,13 +4,13 @@ import json
 
 from props import Api
 
-from bb.utils import api
+from bb.utils.api import bitbucket_api
 
 property = Api()
 
 
 def test_test():
-    test = api.test(property.bitbucket_host)
+    test = bitbucket_api.test()
     assert (
         test == f"{property.bitbucket_host}/rest/api/latest/inbox/pull-requests/count"
     )
@@ -18,8 +18,8 @@ def test_test():
 
 
 def test_pull_request_create():
-    pull_request_create = api.pull_request_create(
-        property.bitbucket_host, property.project, property.repository
+    pull_request_create = bitbucket_api.pull_request_create(
+        property.project, property.repository
     )
     assert (
         pull_request_create
@@ -29,7 +29,7 @@ def test_pull_request_create():
 
 
 def test_get_repo_info():
-    get_repo_info = api.get_repo_info(property.bitbucket_host, property.project)
+    get_repo_info = bitbucket_api.get_repo_info(property.project)
     assert (
         get_repo_info
         == f"{property.bitbucket_host}/rest/api/latest/projects/{property.project}/repos?start=0&limit=10000"
@@ -38,8 +38,7 @@ def test_get_repo_info():
 
 
 def test_default_reviewers():
-    default_reviewers = api.default_reviewers(
-        property.bitbucket_host,
+    default_reviewers = bitbucket_api.default_reviewers(
         property.project,
         property.repo_id,
         property.from_branch,
@@ -62,7 +61,7 @@ def test_default_reviewers():
 
 
 def test_pull_request_body():
-    pull_request_body = api.pull_request_body(
+    pull_request_body = bitbucket_api.pull_request_body(
         property.title_and_description,
         property.from_branch,
         property.repository,
@@ -103,8 +102,8 @@ def test_pull_request_body():
 
 
 def test_pull_request_difference():
-    pull_request_difference = api.pull_request_difference(
-        property.bitbucket_host, property.project, property.repository, property.pr_no
+    pull_request_difference = bitbucket_api.pull_request_difference(
+        property.project, property.repository, property.pr_no
     )
 
     assert (
@@ -116,8 +115,8 @@ def test_pull_request_difference():
 
 
 def test_pull_request_info():
-    pull_request_info = api.pull_request_info(
-        property.bitbucket_host, property.project, property.repository, property.pr_no
+    pull_request_info = bitbucket_api.pull_request_info(
+        property.project, property.repository, property.pr_no
     )
 
     assert (
@@ -129,9 +128,7 @@ def test_pull_request_info():
 
 
 def test_pull_request_viewer():
-    pull_request_viewer = api.pull_request_viewer(
-        property.bitbucket_host, property.role
-    )
+    pull_request_viewer = bitbucket_api.pull_request_viewer(property.role)
 
     assert (
         pull_request_viewer
@@ -142,8 +139,8 @@ def test_pull_request_viewer():
 
 
 def test_current_pull_request():
-    current_pull_request = api.current_pull_request(
-        property.bitbucket_host, property.project, property.repository
+    current_pull_request = bitbucket_api.current_pull_request(
+        property.project, property.repository
     )
 
     assert (
@@ -155,15 +152,14 @@ def test_current_pull_request():
 
 
 def test_whoami():
-    whoami = api.whoami(property.bitbucket_host)
+    whoami = bitbucket_api.whoami()
 
     assert whoami == f"{property.bitbucket_host}/plugins/servlet/applinks/whoami"
     assert isinstance(whoami, str)
 
 
 def test_action_pull_request():
-    action_pull_request = api.action_pull_request(
-        property.bitbucket_host,
+    action_pull_request = bitbucket_api.action_pull_request(
         property.project,
         property.repository,
         property.target,
@@ -178,8 +174,7 @@ def test_action_pull_request():
 
 
 def test_pr_source_branch_delete_check():
-    pr_source_branch_delete_check = api.pr_source_branch_delete_check(
-        property.bitbucket_host,
+    pr_source_branch_delete_check = bitbucket_api.pr_source_branch_delete_check(
         property.project,
         property.repository,
         property.pr_no,
@@ -194,8 +189,8 @@ def test_pr_source_branch_delete_check():
 
 
 def test_validate_merge():
-    validate_merge = api.validate_merge(
-        property.bitbucket_host, property.project, property.repository, property.pr_no
+    validate_merge = bitbucket_api.validate_merge(
+        property.project, property.repository, property.pr_no
     )
     assert (
         validate_merge
@@ -205,9 +200,7 @@ def test_validate_merge():
 
 
 def test_merge_config():
-    merge_config = api.merge_config(
-        property.bitbucket_host, property.project, property.repository
-    )
+    merge_config = bitbucket_api.merge_config(property.project, property.repository)
 
     assert (
         merge_config
@@ -217,8 +210,8 @@ def test_merge_config():
 
 
 def test_get_merge_info():
-    get_merge_info = api.get_merge_info(
-        property.bitbucket_host, property.project, property.repository, property.target
+    get_merge_info = bitbucket_api.get_merge_info(
+        property.project, property.repository, property.target
     )
     assert (
         get_merge_info
@@ -228,7 +221,7 @@ def test_get_merge_info():
 
 
 def test_pr_merge_body():
-    pr_merge_body = api.pr_merge_body(
+    pr_merge_body = bitbucket_api.pr_merge_body(
         property.project,
         property.repository,
         property.pr_no,
@@ -247,8 +240,8 @@ def test_pr_merge_body():
 
 
 def test_pr_cleanup():
-    pr_cleanup = api.pr_cleanup(
-        property.bitbucket_host, property.project, property.repository, property.pr_no
+    pr_cleanup = bitbucket_api.pr_cleanup(
+        property.project, property.repository, property.pr_no
     )
     assert (
         pr_cleanup
@@ -259,17 +252,16 @@ def test_pr_cleanup():
 
 def test_pr_cleanup_body():
     for prop in property.delete_source_branch:
-        pr_cleanup_body = api.pr_cleanup_body(prop)
+        pr_cleanup_body = bitbucket_api.pr_cleanup_body(prop)
         assert isinstance(prop, bool)
         assert pr_cleanup_body == json.dumps(
-            {"deleteSourceRef": prop, "retargetDependents": True}
+            {"deleteSourceRef": prop, "retargetDependents": prop}
         )
         assert isinstance(pr_cleanup_body, str)
 
 
 def test_pr_rebase():
-    pr_rebase = api.pr_rebase(
-        property.bitbucket_host,
+    pr_rebase = bitbucket_api.pr_rebase(
         property.project,
         property.repository,
         property.pr_no,
@@ -284,8 +276,7 @@ def test_pr_rebase():
 
 
 def test_delete_branch():
-    delete_branch = api.delete_branch(
-        property.bitbucket_host,
+    delete_branch = bitbucket_api.delete_branch(
         property.project,
         property.repository,
         property.from_branch,

@@ -2,8 +2,7 @@
 
 import json
 
-from bb.utils.api import create_repo
-from bb.utils.ini import parse
+from bb.utils.api import bitbucket_api
 from bb.utils.request import post
 from bb.utils.richprint import console, live_progress
 
@@ -11,12 +10,9 @@ from bb.utils.richprint import console, live_progress
 def create_repository(
     project: str, repo: str, forkable: bool, default_branch: str
 ) -> None:
-    username, token, bitbucket_host = parse()
     with live_progress(f"Creating '{project}/{repo}' Repository ... ") as live:
         request = post(
-            create_repo(bitbucket_host, project, repo),
-            username,
-            token,
+            bitbucket_api.create_repo(project, repo),
             json.dumps(
                 {
                     "name": repo,

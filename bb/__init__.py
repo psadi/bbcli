@@ -5,21 +5,20 @@ bb: a cli for bitbucket.
 
 import typer
 
-from bb import __version__
+from bb.__version__ import __version__ as version
 from bb.auth import _auth
 from bb.pr import _pr
 from bb.repo import _repo
+from bb.utils.helper import state
 from bb.utils.richprint import console
-from bb.utils.validate import state
 
 
 def version_callback(value: bool) -> None:
     """
-    returns the docstring of the current module (`__doc__`)
-    and exits the program.
+    Prints the version of bb and exits the program.
     """
     if value:
-        console.print(f"bb version: {__version__.__version__}")
+        console.print(f"bb version: {version}")
         raise typer.Exit(code=0)
 
 
@@ -47,7 +46,7 @@ def callback(
     version: bool = typer.Option(None, "--version", callback=version_callback),
 ):
     """
-    Work seamlessly with Bitbucket from the command line.
+    Entry point for the bb CLI. Handles global flags like --verbose and --version.
     """
     if verbose:
         state["verbose"] = True

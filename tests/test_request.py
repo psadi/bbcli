@@ -28,18 +28,18 @@ def test_post_error():
     url = "https://example.com"
     data = {"key": "value"}
     with pytest.raises(ValueError):
-        post(url, "username", "password", data)
+        post(url, data)
 
 
 # def test_put_error():
 #     url = "https://example.com"
 #     data = {"key": "value"}
 #     with pytest.raises(ValueError):
-#         put(url, "username", "password", data)
+#         put(url, data)
 
 
 def test_delete_error():
     url = "https://example.com"
     data = {"key": "value"}
     with pytest.raises(ValueError):
-        delete(url, "username", "password", data)
+        delete(url, data)
