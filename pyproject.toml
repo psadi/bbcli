@@ -30,6 +30,7 @@ dev = [
     "tox-pdm>=0.6.1",
     "ruff>=0.0.257",
     "bandit>=1.7.5",
+    "pyyaml>=6.0.1",
 ]
 
 [tool.pdm.scripts]
