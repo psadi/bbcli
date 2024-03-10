@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True, order=True)
 class Api:
-    bitbucket_host: str = "http://localhost"
+    bitbucket_host: str = "http://picolo.box:7990"
     project: str = "test-project"
     repository: str = "test-repo"
     repo_id: str = "1234"
