@@ -34,9 +34,11 @@ def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
                 ("Title", pull_request_info[1]["title"]),
                 (
                     "Description",
-                    pull_request_info[1]["description"]
-                    if "description" in pull_request_info[1].keys()
-                    else "-",
+                    (
+                        pull_request_info[1]["description"]
+                        if "description" in pull_request_info[1].keys()
+                        else "-"
+                    ),
                 ),
             ],
             True,

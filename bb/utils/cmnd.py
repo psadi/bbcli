@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    bb.utils.cmnd - contains funcs to run native os command
-    can capture relavent details from local repository
+bb.utils.cmnd - contains funcs to run native os command
+can capture relavent details from local repository
 
 """
 
@@ -9,9 +9,8 @@ import platform
 import subprocess
 from typing import Dict, Optional
 
+from bb.utils.constants import vars
 from bb.utils.richprint import console, str_print
-
-dim_white: str = "dim white"
 
 
 def subprocess_run(command: str, text: Optional[str] = None) -> str:
@@ -97,7 +96,7 @@ def git_rebase(target_branch: str) -> None:
         if error_code in error_message:
             str_print(
                 error_message[error_code],
-                dim_white,
+                vars.dim_white,
             )
         raise ValueError(ex) from ex
 
@@ -148,9 +147,11 @@ def cp_to_clipboard(url: str) -> None:
     """
     platform_based_cp: Dict[str, str] = {
         "Windows": "clip.exe",
-        "Linux": "clip.exe"
-        if "microsoft" in platform.release().lower()
-        else "xclip -selection clipboard",
+        "Linux": (
+            "clip.exe"
+            if "microsoft" in platform.release().lower()
+            else "xclip -selection clipboard"
+        ),
         "Darwin": "pbcopy",
     }
 

@@ -1,5 +1,5 @@
 {
-  "python.autoComplete.extraPaths": ["__pypackages__/3.11/lib"],
-  "python.analysis.extraPaths": ["__pypackages__/3.11/lib"],
+  "python.autoComplete.extraPaths": ["__pypackages__/3.12/lib"],
+  "python.analysis.extraPaths": ["__pypackages__/3.12/lib"],
   "python.analysis.typeCheckingMode": "off"
 }

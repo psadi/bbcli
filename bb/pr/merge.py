@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """
-    bb.pr.merge - merges a pull request given a id.
-    validates automerge conditions & prompts for optional
-    rebase and source branch deletion
+bb.pr.merge - merges a pull request given a id.
+validates automerge conditions & prompts for optional
+rebase and source branch deletion
 """
 
 from rich import print_json
@@ -11,8 +11,7 @@ from typer import confirm
 
 from bb.utils import cmnd, request, richprint
 from bb.utils.api import bitbucket_api
-
-BOLD_RED = "bold red"
+from bb.utils.constants import vars
 
 
 def pr_source_branch_delete_check(
@@ -101,7 +100,7 @@ def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
         ]
 
         richprint.str_print(
-            f"> '{from_branch}' with merge to '{','.join(automerge_branches).replace(',',' and ')}'",
+            f"> '{from_branch}' with merge to '{','.join(automerge_branches).replace(',', ' and ')}'",
             "bold cyan",
         )
     else:
@@ -151,7 +150,7 @@ def merge_pr(
         richprint.console.print(
             pr_merge_response[1]["errors"][0]["message"],
             highlight=True,
-            style=BOLD_RED,
+            style=vars.bold_red,
         )
     return pr_merge_response[0]
 

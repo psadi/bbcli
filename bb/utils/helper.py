@@ -4,14 +4,12 @@
 utils.validate - consists of validation functions
 """
 
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 from typer import Exit, prompt
 
-from bb.utils import request, richprint
+from bb.utils import constants, request, richprint
 from bb.utils.api import bitbucket_api
-
-state: Dict[str, Any] = {"verbose": False}
 
 
 def validate_config() -> None:
@@ -65,8 +63,8 @@ def error_handler(func: Callable) -> Callable:
         try:
             func(*args, **kwargs)
         except Exception as err:
-            richprint.console.print(f"ERROR: {err}", style="bold red")
-            if state["verbose"]:
+            richprint.console.print(f"{err}", style="bold red")
+            if constants.vars.state["verbose"]:
                 richprint.traceback_to_console()
             else:
                 error_tip()

@@ -9,7 +9,7 @@ from bb.__version__ import __version__ as version
 from bb.auth import _auth
 from bb.pr import _pr
 from bb.repo import _repo
-from bb.utils.helper import state
+from bb.utils.constants import vars
 from bb.utils.richprint import console
 
 
@@ -49,4 +49,4 @@ def callback(
     Entry point for the bb CLI. Handles global flags like --verbose and --version.
     """
     if verbose:
-        state["verbose"] = True
+        vars.state["verbose"] = True

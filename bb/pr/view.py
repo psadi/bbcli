@@ -45,9 +45,11 @@ def view_pull_request(_id: str, web: bool) -> None:
                     ("Title", url[1]["title"]),
                     (
                         "Description",
-                        url[1]["description"]
-                        if "description" in url[1].keys()
-                        else "-",
+                        (
+                            url[1]["description"]
+                            if "description" in url[1].keys()
+                            else "-"
+                        ),
                     ),
                     ("State", url[1]["state"]),
                 ],

@@ -42,9 +42,11 @@ def outcome(_pr: dict) -> tuple:
     show the current status of the pr clean/conflicted
     """
     return (
-        "[bold green]CLEAN"
-        if "mergeResult" not in _pr["properties"]
-        else f"{state_check(_pr['properties']['mergeResult']['outcome'])}",
+        (
+            "[bold green]CLEAN"
+            if "mergeResult" not in _pr["properties"]
+            else f"{state_check(_pr['properties']['mergeResult']['outcome'])}"
+        ),
     )
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    bb.utils.richprint - uses py rich api to pretty print information to console
+bb.utils.richprint - uses py rich api to pretty print information to console
 """
 
 import sys
@@ -13,10 +13,10 @@ from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
 
+from bb.utils.constants import vars
+
 # Setting up the console.
 console = Console()
-
-bold_white: str = "bold white"
 
 
 def str_print(text: str, style: str) -> None:
@@ -63,7 +63,7 @@ def live_progress(message: str):
     is_utf8 = sys.stdout.encoding.lower() == "utf-8"
     spin_type = "dots" if is_utf8 else "simpleDots"
     return Live(
-        Columns([Spinner(spin_type, style=bold_white), message]),
+        Columns([Spinner(spin_type, style=vars.bold_white), message]),
         refresh_per_second=20,
     )
 
@@ -73,8 +73,10 @@ def render_tree(repo_name: str, status: str, data: dict[str, list[tuple]]) -> No
     utilised by bb show, catagorize pr's based on state and render a tree
     """
     tree = Tree("Root", highlight=True, hide_root=True)
-    tree_root = tree.add(f"[bold #2684FF]{repo_name}", guide_style=bold_white)
-    containers_node = tree_root.add(f"[bold #2684FF]{status}", guide_style=bold_white)
+    tree_root = tree.add(f"[bold #2684FF]{repo_name}", guide_style=vars.bold_white)
+    containers_node = tree_root.add(
+        f"[bold #2684FF]{status}", guide_style=vars.bold_white
+    )
     containers_node.expanded = True
     for _ in zip(data.keys(), data.values()):
         containers_node.add(Group(f"PR: #{_[0]}", table(_[1], _[1], False)))

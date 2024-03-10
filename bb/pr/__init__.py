@@ -17,19 +17,16 @@ from bb.pr.merge import merge_pull_request
 from bb.pr.review import review_pull_request
 from bb.pr.view import view_pull_request
 from bb.utils.cmnd import is_git_repo
+from bb.utils.constants import vars
 from bb.utils.helper import error_handler, validate_input
 
 _pr: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
-bold_red: str = "bold red"
-id_cannot_be_none: str = "id cannot be none"
-not_a_git_repo: str = "Not a git repository"
-skip_prompt: str = "skip confirmation prompt"
 
 
 @_pr.command()
 def create(
     target: str = typer.Option("", help="target branch name"),
-    yes: bool = typer.Option(False, help=skip_prompt),
+    yes: bool = typer.Option(False, help=vars.skip_prompt),
     diff: bool = typer.Option(False, help="show diff after raising pull request"),
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before creation"
@@ -40,7 +37,7 @@ def create(
     @error_handler
     def _create(target: str, yes: bool, diff: bool, rebase: bool) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
+            raise ValueError(vars.not_a_git_repo)
 
         target = validate_input(target, "Target branch", "Target branch cannot be none")
 
@@ -52,7 +49,7 @@ def create(
 @_pr.command()
 def delete(
     id: str = typer.Option("", help="pull request number(s) to delete"),
-    yes: bool = typer.Option(False, help=skip_prompt),
+    yes: bool = typer.Option(False, help=vars.skip_prompt),
     diff: bool = typer.Option(False, help="show diff before deleting pull request"),
 ) -> None:
     """Delete pull requests"""
@@ -60,7 +57,7 @@ def delete(
     @error_handler
     def _delete(id: str, yes: bool, diff: bool) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
+            raise ValueError(vars.not_a_git_repo)
 
         _id = validate_input(
             id,
@@ -95,7 +92,7 @@ def list(
     @error_handler
     def _list(role: str, all: bool) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
+            raise ValueError(vars.not_a_git_repo)
 
         list_pull_request(role, all)
 
@@ -121,9 +118,11 @@ def review(
     @error_handler
     def _review(id: str, action: Action) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
+            raise ValueError(vars.not_a_git_repo)
 
-        _id: str = validate_input(id, "Pull request id to review", id_cannot_be_none)
+        _id: str = validate_input(
+            id, "Pull request id to review", vars.id_cannot_be_none
+        )
         action_value: str = "none" if action == Action.NONE else action.value
         action: str = validate_input(
             action_value,
@@ -144,15 +143,17 @@ def merge(
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before merge"
     ),
-    yes: bool = typer.Option(False, help=skip_prompt),
+    yes: bool = typer.Option(False, help=vars.skip_prompt),
 ) -> None:
     """Merge a pull request"""
 
     @error_handler
     def _merge(id: str, delete_source_branch: bool, rebase: bool, yes: bool) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
-        _id: str = validate_input(id, "Pull request id to merge", id_cannot_be_none)
+            raise ValueError(vars.not_a_git_repo)
+        _id: str = validate_input(
+            id, "Pull request id to merge", vars.id_cannot_be_none
+        )
         merge_pull_request(_id, delete_source_branch, rebase, yes)
 
     _merge(id, delete_source_branch, rebase, yes)
@@ -167,9 +168,9 @@ def diff(
     @error_handler
     def _diff(id: str) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
+            raise ValueError(vars.not_a_git_repo)
         _id: str = validate_input(
-            id, "Pull request number to show diff", id_cannot_be_none
+            id, "Pull request number to show diff", vars.id_cannot_be_none
         )
         show_diff(_id)
 
@@ -183,9 +184,11 @@ def copy(id: str = typer.Option("", help="pull request number to copy")) -> None
     @error_handler
     def _copy(id: str) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
+            raise ValueError(vars.not_a_git_repo)
 
-        _id: str = validate_input(id, "Pull request number to copy", id_cannot_be_none)
+        _id: str = validate_input(
+            id, "Pull request number to copy", vars.id_cannot_be_none
+        )
         copy_pull_request(_id)
 
     _copy(id)
@@ -201,8 +204,8 @@ def view(
     @error_handler
     def _view(id: str, web: Optional[bool]) -> None:
         if not is_git_repo():
-            raise ValueError(not_a_git_repo)
-        _id = validate_input(id, "Pull request id to view", id_cannot_be_none)
+            raise ValueError(vars.not_a_git_repo)
+        _id = validate_input(id, "Pull request id to view", vars.id_cannot_be_none)
         view_pull_request(_id, web)
 
     _view(id, web)

@@ -11,7 +11,6 @@ from bb.utils.ini import BB_CONFIG_FILE, auth_setup, is_config_present, parse
 from bb.utils.richprint import console
 
 _auth: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
-bold_red: str = "bold red"
 
 
 @_auth.command()
