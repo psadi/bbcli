@@ -15,7 +15,7 @@ filelock==3.13.1
 h11==0.14.0
 httpcore==1.0.2
 httpx==0.27.0
-idna==3.4
+idna==3.7
 iniconfig==2.0.0
 markdown-it-py==2.2.0
 mdurl==0.1.2
