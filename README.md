@@ -15,6 +15,13 @@
 
 ---
 
+### **⚠️ NOTICE !!**
+#### **This tool is designed to work with [Bitbucket Server Edition](https://www.atlassian.com/enterprise/data-center/bitbucket) (Enterprise) and not with [Bitbucket Cloud / bitbucket.org](https://bitbucket.org/)**
+
+The API Endpoints and the way the tool interacts with the server is different from the cloud version, hence this tool will break if used with the cloud version.
+
+---
+
 ### DEMO
 [![asciicast](https://asciinema.org/a/DzNfEhcqhLNjHUMVcTP11lnrw.svg)](https://asciinema.org/a/DzNfEhcqhLNjHUMVcTP11lnrw)
 
