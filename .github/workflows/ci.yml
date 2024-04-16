@@ -3,10 +3,10 @@ name: Continuous Integration
 on:
   workflow_dispatch: {}
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-      types: [opened, synchronize, reopened]
-      branches: [ "main" ]
+    types: [opened, synchronize, reopened]
+    branches: ["main"]
 
 jobs:
   build:
@@ -20,14 +20,14 @@ jobs:
       matrix:
         python-version: ["3.12"]
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        language: [ 'python' ]
+        language: ["python"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up PDM
-        uses: pdm-project/setup-pdm@v2
+        uses: pdm-project/setup-pdm@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args:
+          args: |
             -Dsonar.projectKey=psadi_bbcli
             -Dsonar.organization=psadi
             -Dsonar.python.version=3
@@ -56,14 +56,27 @@ jobs:
             -Dsonar.exclusions=tests
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
+          paths-ignore: |
+            __pypackages__
+            __pycache__
+            .tox
+            .pdm-build
+            .ruff_cache
+            build
+            dist
+            .vscode
+            .github
