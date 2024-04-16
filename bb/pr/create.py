@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """
-    bb.pr.create - creates a pull request in bitbucket
-    while doing so it gathers all the facts required for a pr from the
-    remote and local repository
+bb.pr.create - creates a pull request in bitbucket
+while doing so it gathers all the facts required for a pr from the
+remote and local repository
 """
 
 from typing import Optional
@@ -11,7 +11,7 @@ from typing import Optional
 from typer import confirm
 
 from bb.pr.diff import show_diff
-from bb.utils import cmnd, ini, request, richprint
+from bb.utils import cmnd, request, richprint
 from bb.utils.api import bitbucket_api
 
 
@@ -66,7 +66,6 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
     """
 
     _id: Optional[str] = None
-    username, token, bitbucket_host = ini.parse()
     from_branch = cmnd.from_branch()
     if target == from_branch:
         raise ValueError("Source & target cannot be the same")
@@ -103,7 +102,8 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
 
         if pull_request[0] == 201:
             richprint.console.print(
-                f"Pull Request Created: {pull_request[1]['links']['self'][0]['href']}",
+                f"Pull Request Created: {
+                    pull_request[1]['links']['self'][0]['href']}",
                 highlight=True,
                 style="bold green",
             )
@@ -116,7 +116,8 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 style="bold red",
             )
             richprint.console.print(
-                f"Existing Pull Request: {pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href']}",
+                f"Existing Pull Request: {
+                    pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href']}",
                 highlight=True,
                 style="bold yellow",
             )
@@ -138,6 +139,6 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
 
     if _id and (
         diff
-        or confirm(f"Review diff from '{from_branch}' -> to '{target}' in PR #{_id}?")
+        or confirm(f"Review diff between '{from_branch}' -> '{target}' in PR #{_id}?")
     ):
         show_diff(_id)

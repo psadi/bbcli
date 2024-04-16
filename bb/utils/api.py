@@ -5,6 +5,8 @@ bb.utils.api - contains the API model for Bitbucket server
 
 import json
 
+from typer import Exit
+
 from bb.utils.ini import is_config_present, parse
 
 
@@ -31,9 +33,11 @@ class BitbucketAPI:
     def default_reviewers(
         self, project: str, repo_id: str, from_branch: str, target: str
     ) -> str:
-        reviewer_query = f"avatarSize=32&sourceRepoId={repo_id}&sourceRefId=refs%2Fheads%2F{from_branch.replace('/', '%2F')}&targetRepoId={repo_id}&targetRefId=refs%2Fheads%2F{target.replace('/', '%2F')}"
+        reviewer_query = f"avatarSize=32&sourceRepoId={repo_id}&sourceRefId=refs%2Fheads%2F{from_branch.replace(
+            '/', '%2F')}&targetRepoId={repo_id}&targetRefId=refs%2Fheads%2F{target.replace('/', '%2F')}"
         return self._api_url(
-            f"/rest/default-reviewers/latest/projects/{project}/repos/repository/reviewers?{reviewer_query}"
+            f"/rest/default-reviewers/latest/projects/{
+                project}/repos/repository/reviewers?{reviewer_query}"
         )
 
     def pull_request_body(
@@ -77,12 +81,14 @@ class BitbucketAPI:
         self, project: str, repository: str, pr_number: str
     ) -> str:
         return self._api_url(
-            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{pr_number}/changes?start=0&limit=1000&changeScope=unreviewed"
+            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{
+                pr_number}/changes?start=0&limit=1000&changeScope=unreviewed"
         )
 
     def pull_request_info(self, project: str, repository: str, _id: str) -> str:
         return self._api_url(
-            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{_id}"
+            f"/rest/api/latest/projects/{project}/repos/{
+                repository}/pull-requests/{_id}"
         )
 
     def pull_request_viewer(self, role: str) -> str:
@@ -92,7 +98,8 @@ class BitbucketAPI:
 
     def current_pull_request(self, project: str, repository: str) -> str:
         return self._api_url(
-            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests"
+            f"/rest/api/latest/projects/{project}/repos/{
+                repository}/pull-requests"
         )
 
     def whoami(self) -> str:
@@ -102,29 +109,34 @@ class BitbucketAPI:
         self, project: str, repository: str, target: int, user_id: str
     ) -> str:
         return self._api_url(
-            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{target}/participants/{user_id}?avatarSize=32"
+            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{
+                target}/participants/{user_id}?avatarSize=32"
         )
 
     def pr_source_branch_delete_check(
         self, project: str, repository: str, _id: str, delete_source_branch: str
     ) -> str:
         return self._api_url(
-            f"/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{_id}?deleteSourceRef={delete_source_branch}&retargetDependents={delete_source_branch}"
+            f"/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{
+                _id}?deleteSourceRef={delete_source_branch}&retargetDependents={delete_source_branch}"
         )
 
     def validate_merge(self, project: str, repository: str, _id: str) -> str:
         return self._api_url(
-            f"/rest/api/latest/projects/{project}/repos/{repository}/pull-requests/{_id}/merge"
+            f"/rest/api/latest/projects/{project}/repos/{
+                repository}/pull-requests/{_id}/merge"
         )
 
     def merge_config(self, project: str, repository: str) -> str:
         return self._api_url(
-            f"/rest/api/latest/projects/{project}/repos/{repository}/settings/pull-requests"
+            f"/rest/api/latest/projects/{project}/repos/{
+                repository}/settings/pull-requests"
         )
 
     def get_merge_info(self, project: str, repository: str, target_branch: str) -> str:
         return self._api_url(
-            f"/rest/branch-utils/latest/projects/{project}/repos/{repository}/automerge/path/refs/heads/{target_branch}"
+            f"/rest/branch-utils/latest/projects/{project}/repos/{
+                repository}/automerge/path/refs/heads/{target_branch}"
         )
 
     def pr_merge_body(
@@ -144,7 +156,8 @@ class BitbucketAPI:
 
     def pr_cleanup(self, project: str, repository: str, _id: str) -> str:
         return self._api_url(
-            f"/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{_id}"
+            f"/rest/pull-request-cleanup/latest/projects/{
+                project}/repos/{repository}/pull-requests/{_id}"
         )
 
     def pr_cleanup_body(self, delete_retarget: bool) -> str:
@@ -159,7 +172,8 @@ class BitbucketAPI:
         return [
             json.dumps({"version": version}),
             self._api_url(
-                f"/rest/git/latest/projects/{project}/repos/{repository}/pull-requests/{_id}/rebase"
+                f"/rest/git/latest/projects/{project}/repos/{
+                    repository}/pull-requests/{_id}/rebase"
             ),
         ]
 
@@ -167,26 +181,31 @@ class BitbucketAPI:
         return [
             json.dumps({"name": f"{source_branch}"}),
             self._api_url(
-                f"/rest/branch-utils/latest/projects/{project}/repos/{repository}/branches"
+                f"/rest/branch-utils/latest/projects/{
+                    project}/repos/{repository}/branches"
             ),
         ]
 
     def delete_repo(self, project: str, repo: str) -> str:
         return self._api_url(f"/rest/api/latest/projects/{project}/repos/{repo}")
 
-    def create_repo(self, project: str, repo: str) -> str:
+    def create_repo(self, project: str) -> str:
         return self._api_url(f"/rest/api/latest/projects/{project}/repos")
 
 
-def load_bitbucket_api():
+def load_bitbucket_api() -> BitbucketAPI:
     if not is_config_present():
-        raise ValueError("Configuration required, Try running 'bb auth setup'")
+        raise ValueError()
 
     config_data = parse()
     if len(config_data) != 3:
-        raise ValueError("Configuration Error, Try re-running 'bb auth setup'")
+        raise ValueError()
 
     return BitbucketAPI(config_data[2])
 
 
-bitbucket_api = load_bitbucket_api()
+try:
+    bitbucket_api = load_bitbucket_api()
+except ValueError:
+    bitbucket_api = None
+    Exit(code=1)

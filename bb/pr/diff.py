@@ -31,7 +31,7 @@ def show_diff(_id: str) -> None:
     ]
     value_args = [
         (
-            f"[bold red]{response['fromHash'][:11]}[/bold red] - [bold green]{response['toHash'][:11]}[/bold green]",
+            f"[bold red]{response['fromHash'][:11]}[/bold red] :arrow_right: [bold green]{response['toHash'][:11]}[/bold green]",
             i["path"]["toString"],
             f"{i['type']}",
         )

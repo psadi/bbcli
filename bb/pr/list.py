@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """
-    bb.pr.show lists all pr is current repo
-    can also show all pr's authored/revewing either in current repo
-    or all repos
+bb.pr.show lists all pr is current repo
+can also show all pr's authored/revewing either in current repo
+or all repos
 """
 
 from typing import Dict, List, Tuple
 
-from bb.utils import cmnd, ini, request, richprint
+from bb.utils import cmnd, request, richprint
 from bb.utils.api import bitbucket_api
 
 
@@ -94,7 +94,8 @@ def construct_repo_dict(role_info: list) -> dict:
             _list = [
                 (
                     "[bold]Status[/bold]",
-                    f"{_pr['fromRef']['displayId']} -> {_pr['toRef']['displayId']} | {outcome(_pr)[0]} | {review_status(_pr['reviewers'])}",
+                    f"{_pr['fromRef']['displayId']} -> {_pr['toRef']['displayId']
+                                                        } | {outcome(_pr)[0]} | {review_status(_pr['reviewers'])}",
                 ),
                 ("[bold]Tittle[/bold]", _pr["title"]),
                 (
@@ -103,7 +104,8 @@ def construct_repo_dict(role_info: list) -> dict:
                 ),
                 (
                     "[bold]Author[/bold]",
-                    f"{author['display_name']} [{author['name']}]({author['email_address']})",
+                    f"{author['display_name']} [{
+                        author['name']}]({author['email_address']})",
                 ),
                 ("[bold]Url[/bold]", f"[link={pr_url_id[1]}]Click Here[/link]"),
             ]
@@ -115,7 +117,6 @@ def list_pull_request(role: str, _all: bool) -> None:
     """
     Shows the list of pull requests authored and pull requests reviewing
     """
-    username, token, bitbucket_host = ini.parse()
     project, repository = cmnd.base_repo()
     request_url = bitbucket_api.current_pull_request(project, repository)
     if role != "current":

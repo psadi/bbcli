@@ -45,6 +45,8 @@ def test() -> None:
 
     @error_handler
     def _test() -> None:
+        if not is_config_present():
+            raise ValueError("Configuration missing, run 'bb auth setup'")
         validate_config()
 
     _test()

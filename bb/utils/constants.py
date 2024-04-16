@@ -12,6 +12,11 @@ class CommonVars:
     content_type: str = "application/json;charset=UTF-8"
     dim_white: str = "dim white"
     state: Dict[str, bool] = {"verbose": False}
+    repo_cant_be_none: str = "repository can't be none"
+    project_name_of_repo: str = "project name of the repository"
+    project_name: str = "Project name"
+    repository_name: str = "Repository Name"
+    project_cant_be_none: str = "project can't be none"
 
 
 vars = CommonVars()

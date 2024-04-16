@@ -18,7 +18,7 @@ def validate_config() -> None:
     prints exception and return non-zero exit code
     """
     try:
-        message = "Validating connection... "
+        message = f"Validating connection with '{bitbucket_api.bitbucket_host}' ... "
         with richprint.live_progress(message) as live:
             response = request.get(bitbucket_api.test())
             if response[0] == 200:
