@@ -22,9 +22,7 @@ def copy_pull_request(_id: str) -> None:
         username, token, bitbucket_host = ini.parse()
         project, repository = cmnd.base_repo()
         url: str = request.get(
-            bitbucket_api.pull_request_info(bitbucket_host, project, repository, _id),
-            username,
-            token,
+            bitbucket_api.pull_request_info(project, repository, _id),
         )[1]["links"]["self"][0]["href"]
         cmnd.cp_to_clipboard(url)
         live.update(richprint.console.print("COPIED", style="bold green"))

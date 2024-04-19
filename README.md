@@ -1,16 +1,9 @@
-<div id="texts" style="white-space:nowrap;">
-     <img height="100" width="100" src="./resources/bb.png"  align="left"/>
-     <h1>Bitbucket-CLI (bb) </h1>
-     <h3>Work seamlessly with Bitbucket from the command line</h3>
-     </br>
-</div>
+## Bitbucket CLI (bb)
+Work seamlessly with Bitbucket from the command line
 
 ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
 [![Continuous Integration](https://github.com/psadi/bbcli/actions/workflows/ci.yml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=psadi_bbcli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=psadi_bbcli)
-
-
-
 <a href="https://www.buymeacoffee.com/addy3494" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 22px !important;width: 100px !important;" ></a>
 
 ---

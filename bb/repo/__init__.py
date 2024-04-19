@@ -46,7 +46,7 @@ def delete(
     @error_handler
     def _delete(project, repo):
         project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repoitory_name, vars.repo_cant_be_none)
+        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
 
         delete_repository(project, repo)
 
@@ -63,7 +63,7 @@ def archive(
     @error_handler
     def _archive(project, repo):
         project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repoitory_name, vars.repo_cant_be_none)
+        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
 
         archive_repository(project, repo, True)
 
@@ -80,7 +80,7 @@ def unarchive(
     @error_handler
     def _unarchive(project, repo):
         project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repoitory_name, vars.repo_cant_be_none)
+        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
 
         archive_repository(project, repo, False)
 
@@ -99,7 +99,7 @@ def create(
     @error_handler
     def _create(project, repo, forkable, default_branch):
         project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repoitory_name, vars.repo_cant_be_none)
+        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
 
         create_repository(project, repo, forkable, default_branch)
 

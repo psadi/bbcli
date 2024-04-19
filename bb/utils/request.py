@@ -92,7 +92,7 @@ def put(url: str, body: dict) -> list[int, dict]:
             timeout=10.0,
         )
 
-    if request.status_code not in (200, 409):
+    if request.status_code not in (200, 403, 409):
         raise ValueError(
             f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"
         )

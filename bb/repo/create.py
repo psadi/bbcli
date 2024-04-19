@@ -12,7 +12,7 @@ def create_repository(
 ) -> None:
     with live_progress(f"Creating '{project}/{repo}' Repository ... ") as live:
         request = post(
-            bitbucket_api.create_repo(project, repo),
+            bitbucket_api.create_repo(project),
             json.dumps(
                 {
                     "name": repo,

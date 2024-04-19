@@ -29,7 +29,7 @@ def archive_repository(project: str, repo: str, archive: bool) -> None:
         if request[0] == 200:
             live.update(console.print("DONE", style="bold green"))
 
-        if request[0] == 409:
+        if request[0] in (403, 409):
             live.update(console.print("CONFLICT", style="bold yellow"))
             console.print(
                 f"Message: {request[1]['errors'][0]['message']}",
