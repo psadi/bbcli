@@ -174,6 +174,8 @@ A huge thanks to,
 
 * [tiangolo/typer](https://github.com/tiangolo/typer)
 * [Textualize/rich](https://github.com/Textualize/rich)
+* [encode/httpx](https://github.com/encode/httpx)
+* [pdm-project/pdm](https://github.com/pdm-project/pdm)
 
 
 ---
