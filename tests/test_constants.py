@@ -4,7 +4,7 @@ from bb.utils.constants import CommonVars
 
 
 def test_common_vars():
-    common_vars = CommonVars()
+    common_vars: CommonVars = CommonVars()
 
     # Test attribute values
     assert common_vars.bold_red == "bold red"
