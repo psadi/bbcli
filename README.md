@@ -177,9 +177,5 @@ A huge thanks to,
 * [encode/httpx](https://github.com/encode/httpx)
 * [pdm-project/pdm](https://github.com/pdm-project/pdm)
 
-
----
-
-<p align="left"><img height="150" width="200" src="./resources/thatsall.gif">
-
-Enjoy being more efficient 😊
+### LICENSE
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
