@@ -9,7 +9,7 @@ from json import JSONDecodeError
 
 import httpx
 
-from bb.utils.constants import vars
+from bb.utils.constants import common_vars
 from bb.utils.ini import is_config_present, parse
 from bb.utils.richprint import str_print
 
@@ -64,7 +64,7 @@ def post(url: str, body: dict) -> list[int, dict]:
             url,
             auth=(username, token),
             data=body,
-            headers={"content-type": vars.content_type},
+            headers={"content-type": common_vars.content_type},
             timeout=10.0,
         )
 
@@ -88,7 +88,7 @@ def put(url: str, body: dict) -> list[int, dict]:
             url,
             auth=(username, token),
             data=body,
-            headers={"content-type": vars.content_type},
+            headers={"content-type": common_vars.content_type},
             timeout=10.0,
         )
 
@@ -111,7 +111,7 @@ def delete(url: str, body: dict) -> int:
             url,
             auth=(username, token),
             data=body,
-            headers={"content-type": vars.content_type},
+            headers={"content-type": common_vars.content_type},
             timeout=10.0,
         )
     if request.status_code not in (202, 204):

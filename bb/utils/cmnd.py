@@ -9,7 +9,7 @@ import platform
 import subprocess
 from typing import Dict, Optional
 
-from bb.utils.constants import vars
+from bb.utils.constants import common_vars
 from bb.utils.richprint import console, str_print
 
 
@@ -96,7 +96,7 @@ def git_rebase(target_branch: str) -> None:
         if error_code in error_message:
             str_print(
                 error_message[error_code],
-                vars.dim_white,
+                common_vars.dim_white,
             )
         raise ValueError(ex) from ex
 

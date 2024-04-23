@@ -13,7 +13,7 @@ from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
 
-from bb.utils.constants import vars
+from bb.utils.constants import common_vars
 
 # Setting up the console.
 console = Console()
@@ -63,7 +63,7 @@ def live_progress(message: str):
     is_utf8 = sys.stdout.encoding.lower() == "utf-8"
     spin_type = "dots" if is_utf8 else "simpleDots"
     return Live(
-        Columns([Spinner(spin_type, style=vars.bold_white), message]),
+        Columns([Spinner(spin_type, style=common_vars.bold_white), message]),
         refresh_per_second=20,
     )
 
@@ -73,9 +73,11 @@ def render_tree(repo_name: str, status: str, data: dict[str, list[tuple]]) -> No
     utilised by bb show, catagorize pr's based on state and render a tree
     """
     tree = Tree("Root", highlight=True, hide_root=True)
-    tree_root = tree.add(f"[bold #2684FF]{repo_name}", guide_style=vars.bold_white)
+    tree_root = tree.add(
+        f"[bold #2684FF]{repo_name}", guide_style=common_vars.bold_white
+    )
     containers_node = tree_root.add(
-        f"[bold #2684FF]{status}", guide_style=vars.bold_white
+        f"[bold #2684FF]{status}", guide_style=common_vars.bold_white
     )
     containers_node.expanded = True
     for _ in zip(data.keys(), data.values()):

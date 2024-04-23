@@ -10,7 +10,7 @@ from bb.repo.archive import archive_repository
 from bb.repo.create import create_repository
 from bb.repo.delete import delete_repository
 from bb.utils.cmnd import clone_repo
-from bb.utils.constants import vars
+from bb.utils.constants import common_vars
 from bb.utils.helper import error_handler, validate_input
 from bb.utils.ini import parse
 from bb.utils.richprint import console
@@ -27,7 +27,7 @@ def clone(
     @error_handler
     def _clone(name):
         name = validate_input(
-            name, "project/repository to clone", vars.repo_cant_be_none
+            name, "project/repository to clone", common_vars.repo_cant_be_none
         )
 
         console.print(f"Cloning '{name}' into '{name.split('/')[1]}'...")
@@ -38,15 +38,19 @@ def clone(
 
 @_repo.command()
 def delete(
-    project: str = Option("", help=vars.project_name_of_repo),
+    project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to delete"),
 ) -> None:
     "Delete a Bitbucket repository"
 
     @error_handler
     def _delete(project, repo):
-        project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
+        project = validate_input(
+            project, common_vars.project_name, common_vars.project_cant_be_none
+        )
+        repo = validate_input(
+            repo, common_vars.repository_name, common_vars.repo_cant_be_none
+        )
 
         delete_repository(project, repo)
 
@@ -55,15 +59,19 @@ def delete(
 
 @_repo.command()
 def archive(
-    project: str = Option("", help=vars.project_name_of_repo),
+    project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to archive"),
 ) -> None:
     "Archive a Bitbucket repository"
 
     @error_handler
     def _archive(project, repo):
-        project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
+        project = validate_input(
+            project, common_vars.project_name, common_vars.project_cant_be_none
+        )
+        repo = validate_input(
+            repo, common_vars.repository_name, common_vars.repo_cant_be_none
+        )
 
         archive_repository(project, repo, True)
 
@@ -72,15 +80,19 @@ def archive(
 
 @_repo.command()
 def unarchive(
-    project: str = Option("", help=vars.project_name_of_repo),
+    project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to unarchive"),
 ) -> None:
     "Unarchive a Bitbucket repository"
 
     @error_handler
     def _unarchive(project, repo):
-        project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
+        project = validate_input(
+            project, common_vars.project_name, common_vars.project_cant_be_none
+        )
+        repo = validate_input(
+            repo, common_vars.repository_name, common_vars.repo_cant_be_none
+        )
 
         archive_repository(project, repo, False)
 
@@ -98,8 +110,12 @@ def create(
 
     @error_handler
     def _create(project, repo, forkable, default_branch):
-        project = validate_input(project, vars.project_name, vars.project_cant_be_none)
-        repo = validate_input(repo, vars.repository_name, vars.repo_cant_be_none)
+        project = validate_input(
+            project, common_vars.project_name, common_vars.project_cant_be_none
+        )
+        repo = validate_input(
+            repo, common_vars.repository_name, common_vars.repo_cant_be_none
+        )
 
         create_repository(project, repo, forkable, default_branch)
 

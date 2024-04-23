@@ -64,7 +64,7 @@ def error_handler(func: Callable) -> Callable:
             func(*args, **kwargs)
         except Exception as err:
             richprint.console.print(f"{err}", style="bold red")
-            if constants.vars.state["verbose"]:
+            if constants.common_vars.state["verbose"]:
                 richprint.traceback_to_console()
             else:
                 error_tip()

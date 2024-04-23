@@ -19,4 +19,4 @@ class CommonVars:
     project_cant_be_none: str = "project can't be none"
 
 
-vars = CommonVars()
+common_vars: CommonVars = CommonVars()

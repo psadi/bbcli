@@ -11,7 +11,7 @@ from typer import confirm
 
 from bb.utils import cmnd, request, richprint
 from bb.utils.api import bitbucket_api
-from bb.utils.constants import vars
+from bb.utils.constants import common_vars
 
 
 def pr_source_branch_delete_check(
@@ -150,7 +150,7 @@ def merge_pr(
         richprint.console.print(
             pr_merge_response[1]["errors"][0]["message"],
             highlight=True,
-            style=vars.bold_red,
+            style=common_vars.bold_red,
         )
     return pr_merge_response[0]
 
