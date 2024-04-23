@@ -40,9 +40,17 @@ class Cp:
     url: str = "https://test-url.com"
 
 
-@dataclass(frozen=True, order=True)
 class Ini:
     import os
+    from platform import system
+    from typing import Dict
 
-    _XDG_CONFIG_HOME: str = os.path.expanduser("~") + "/.config/bb"
-    BB_CONFIG_FILE: str = f"{_XDG_CONFIG_HOME}/config.ini"
+    _XDG_CONFIG_HOME: str = os.path.expanduser("~")
+
+    platform_config: Dict[str, dict] = {
+        "Windows": f"{_XDG_CONFIG_HOME}\\.config\\bb\\config.ini",
+        "Linux": f"{_XDG_CONFIG_HOME}/.config/bb/config.ini",
+        "Darwin": f"{_XDG_CONFIG_HOME}/.config/bb/config.ini",
+    }
+
+    BB_CONFIG_FILE: str = platform_config.get(system(), "n/a")
