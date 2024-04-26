@@ -32,7 +32,8 @@ The API Endpoints and the way the tool interacts with the server is different fr
 <b>From Source</b>
 
 ```sh
-git clone https://github.com/psadi/bbcli.git && cd bb
+git clone https://github.com/psadi/bbcli.git && cd bbcli
+python3 -m pip install build
 python3 -m build .
 pip3 install --user dist/bb-<version>.tar.gz
 ```
@@ -63,7 +64,7 @@ docker run -it --rm -v $HOME/.config/bb:$HOME/.config/bb -v $(pwd):/app/. --netw
 
 ###  CONFIGURATION
 
-1. Run the following command to perform initial setup, this will setup a `config.ini` under `$XDG_CONFIG_HOME/bb` respective to the OS
+1. Run the following command to perform initial setup, this will setup a `config.ini` under `$XDG_CONFIG_HOME/bb` respective to the OS, make sure to remove the '/` at the end of your bitbucket_host:
 
 ```sh
 bb auth setup
