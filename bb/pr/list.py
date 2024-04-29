@@ -94,8 +94,7 @@ def construct_repo_dict(role_info: list) -> dict:
             _list = [
                 (
                     "[bold]Status[/bold]",
-                    f"{_pr['fromRef']['displayId']} -> {_pr['toRef']['displayId']
-                                                        } | {outcome(_pr)[0]} | {review_status(_pr['reviewers'])}",
+                    f"{_pr['fromRef']['displayId']} -> {_pr['toRef']['displayId']} | {outcome(_pr)[0]} | {review_status(_pr['reviewers'])}",
                 ),
                 ("[bold]Tittle[/bold]", _pr["title"]),
                 (
@@ -104,8 +103,7 @@ def construct_repo_dict(role_info: list) -> dict:
                 ),
                 (
                     "[bold]Author[/bold]",
-                    f"{author['display_name']} [{
-                        author['name']}]({author['email_address']})",
+                    f"{author['display_name']} [{author['name']}]({author['email_address']})",
                 ),
                 ("[bold]Url[/bold]", f"[link={pr_url_id[1]}]Click Here[/link]"),
             ]
