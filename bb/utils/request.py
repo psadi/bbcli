@@ -40,17 +40,17 @@ def get(url: str) -> list[int, dict]:
             if "invalid" in error_message.lower():
                 str_print(
                     f"Invalid input: {error_message}",
-                    "dim white",
+                    common_vars.dim_white,
                 )
             else:
                 str_print(
                     f"Error: {error_message}",
-                    "dim white",
+                    common_vars.dim_white,
                 )
         else:
             str_print(
                 f"Unexpected error occurred. Status code: {request.status_code}, Message: {http_response_definitions(request.status_code)}",
-                "dim white",
+                common_vars.dim_white,
             )
 
         raise ValueError(
