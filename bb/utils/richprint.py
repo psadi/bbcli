@@ -64,7 +64,7 @@ def live_progress(message: str):
     spin_type = "dots" if is_utf8 else "simpleDots"
     return Live(
         Columns([Spinner(spin_type, style=common_vars.bold_white), message]),
-        refresh_per_second=20,
+        refresh_per_second=24,
     )
 
 

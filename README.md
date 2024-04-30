@@ -32,7 +32,9 @@ The API Endpoints and the way the tool interacts with the server is different fr
 <b>From Source</b>
 
 ```sh
-git clone https://github.com/psadi/bbcli.git && cd bb
+git clone https://github.com/psadi/bbcli.git
+cd bbcli
+pip3 install build
 python3 -m build .
 pip3 install --user dist/bb-<version>.tar.gz
 ```
@@ -63,7 +65,7 @@ docker run -it --rm -v $HOME/.config/bb:$HOME/.config/bb -v $(pwd):/app/. --netw
 
 ###  CONFIGURATION
 
-1. Run the following command to perform initial setup, this will setup a `config.ini` under `$XDG_CONFIG_HOME/bb` respective to the OS
+1. Run the following command to perform initial setup, this will setup a `config.ini` under `$XDG_CONFIG_HOME/bb` respective to the OS, make sure to remove the '/` at the end of your bitbucket_host:
 
 ```sh
 bb auth setup
@@ -159,7 +161,7 @@ bb auth setup
 
 ###  Points to Ponder
 
-* This utility is tested with bitbucket enterprise version 6.10.10
+* This utility is tested with bitbucket enterprise version 6.10.10 and 8.19
 * I have personally tested it in Linux, Windows(Powershell and Command Prompt), MacOS and GIT Bash and it works flawlessly
 * In case if your ID gets locked the token wont work, you may need to reset your ID (Token can remain the same)
 * At times if there are frequent account lockouts, Bitbucket will prompt you to enter CAPTCHA, you may need to relogin with CAPTCHA validation in your broswer once else connection will fail

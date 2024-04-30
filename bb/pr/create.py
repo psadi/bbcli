@@ -72,7 +72,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
 
     if rebase:
         with richprint.live_progress(
-            f"Rebasing {from_branch} with {target} ... "
+            f"Rebasing '{from_branch}' with '{target}' ... "
         ) as live:
             cmnd.git_rebase(target)
             live.update(richprint.console.print("REBASED", style="bold green"))
@@ -102,8 +102,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
 
         if pull_request[0] == 201:
             richprint.console.print(
-                f"Pull Request Created: {
-                    pull_request[1]['links']['self'][0]['href']}",
+                f"Pull Request Created: {pull_request[1]['links']['self'][0]['href']}",
                 highlight=True,
                 style="bold green",
             )
@@ -116,8 +115,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
                 style="bold red",
             )
             richprint.console.print(
-                f"Existing Pull Request: {
-                    pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href']}",
+                f"Existing Pull Request: {pull_request[1]['errors'][0]['existingPullRequest']['links']['self'][0]['href']}",
                 highlight=True,
                 style="bold yellow",
             )
