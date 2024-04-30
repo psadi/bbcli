@@ -36,8 +36,20 @@ def get(url: str) -> list[int, dict]:
 
     if request.status_code != 200:
         if request.status_code == 400:
+            error_message = request.json().get('errors', [{}])[0].get('message', '')
+            if 'invalid' in error_message.lower():
+                str_print(
+                    f"Invalid input: {error_message}",
+                    "dim white",
+                )
+            else:
+                str_print(
+                    f"Error: {error_message}",
+                    "dim white",
+                )
+        else:
             str_print(
-                f"Message: {request.json()['errors'][0]['message']}",
+                f"Unexpected error occurred. Status code: {request.status_code}, Message: {http_response_definitions(request.status_code)}",
                 "dim white",
             )
 
