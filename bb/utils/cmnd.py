@@ -9,8 +9,7 @@ import platform
 import subprocess
 from typing import Dict, Optional
 
-from bb.utils.constants import common_vars
-from bb.utils.richprint import console, str_print
+from bb.utils.richprint import console
 
 
 def subprocess_run(command: str, text: Optional[str] = None) -> str:
@@ -31,9 +30,8 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
 
     except subprocess.CalledProcessError as err:
         console.print("ERROR", style="bold red")
-        console.print(err)
         raise RuntimeError(
-            f"Command {command} failed with return code {err.returncode}: {err.stderr.decode().strip()}"
+            f"\nCommand '{command}' failed with return code {err.returncode}\n\n{err.stderr.decode().strip()}"
         ) from err
 
     return cmnd.stdout.decode().strip()
@@ -88,16 +86,6 @@ def git_rebase(target_branch: str) -> None:
         subprocess_run(f"git pull --rebase origin {target_branch}")
         subprocess_run("git push --force-with-lease")
     except Exception as ex:
-        error_code = int(str(ex).rsplit(" ", maxsplit=1)[-1].replace(".", ""))
-        error_message = {
-            128: "cannot pull with rebase, you have unstaged/uncommitted changes\nplease commit or stash them.",
-            1: "Try running `git diff --diff-filter=U --relative` to know more on local conflicts",
-        }
-        if error_code in error_message:
-            str_print(
-                error_message[error_code],
-                common_vars.dim_white,
-            )
         raise ValueError(ex) from ex
 
 

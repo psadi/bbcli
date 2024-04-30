@@ -72,7 +72,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
 
     if rebase:
         with richprint.live_progress(
-            f"Rebasing {from_branch} with {target} ... "
+            f"Rebasing '{from_branch}' with '{target}' ... "
         ) as live:
             cmnd.git_rebase(target)
             live.update(richprint.console.print("REBASED", style="bold green"))

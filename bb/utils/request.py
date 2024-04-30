@@ -36,8 +36,8 @@ def get(url: str) -> list[int, dict]:
 
     if request.status_code != 200:
         if request.status_code == 400:
-            error_message = request.json().get('errors', [{}])[0].get('message', '')
-            if 'invalid' in error_message.lower():
+            error_message = request.json().get("errors", [{}])[0].get("message", "")
+            if "invalid" in error_message.lower():
                 str_print(
                     f"Invalid input: {error_message}",
                     "dim white",
