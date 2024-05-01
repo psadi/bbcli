@@ -286,3 +286,23 @@ def test_delete_branch():
         f"{property.bitbucket_host}/rest/branch-utils/latest/projects/{property.project}/repos/{property.repository}/branches",
     ]
     assert isinstance(delete_branch, list)
+
+
+def test_delete_repo():
+    delete_repo = bitbucket_api.delete_repo(property.project, property.repository)
+    assert (
+        delete_repo
+        == f"{property.bitbucket_host}/rest/api/latest/projects/{property.project}/repos/{property.repository}"
+    )
+
+    assert isinstance(delete_repo, str)
+
+
+def test_create_repo():
+    create_repo = bitbucket_api.create_repo(property.project)
+    assert (
+        create_repo
+        == f"{property.bitbucket_host}/rest/api/latest/projects/{property.project}/repos"
+    )
+
+    assert isinstance(create_repo, str)
