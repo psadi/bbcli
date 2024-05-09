@@ -1,4 +1,4 @@
-FROM python:3.13.0a4-alpine
+FROM python:3.13.0b1-alpine
 
 COPY dist/bb-*.tar.gz bb.tar.gz
 
