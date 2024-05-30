@@ -2,7 +2,7 @@ name: Update dependencies
 
 on:
   schedule:
-    - cron: 0 0 * * 7
+    - cron: 0 0 * * 0
 
 jobs:
   update-dependencies:
@@ -23,3 +23,7 @@ jobs:
           unconstrained: false
           install-plugins: "false"
           sign-off-commit: "false"
+
+      - name: Regenerate requirements.txt
+        run: |
+          pdm export -o requirements.txt --without-hashes
