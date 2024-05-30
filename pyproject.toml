@@ -33,6 +33,10 @@ dev = [
     "pyyaml>=6.0.1",
 ]
 
+[[tool.pdm.autoexport]]
+filename = "requirements.txt"
+without-hashes = true
+
 [tool.pdm.scripts]
 bb = { call = "bb:_bb" }
 
