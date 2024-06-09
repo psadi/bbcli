@@ -21,9 +21,5 @@ jobs:
           update-strategy: reuse
           save-strategy: minimum
           unconstrained: false
-          install-plugins: "false"
+          install-plugins: "true"
           sign-off-commit: "false"
-
-      - name: Regenerate requirements.txt
-        run: |
-          pdm export -o requirements.txt --without-hashes
