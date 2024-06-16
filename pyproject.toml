@@ -17,6 +17,7 @@ build-backend = "pdm.pep517.api"
 
 [tool.pdm]
 version = { source = "file", path = "bb/__version__.py" }
+plugins = ["pdm-autoexport"]
 
 [tool.pdm.build]
 includes = ["bb"]
