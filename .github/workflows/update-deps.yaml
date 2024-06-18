@@ -18,7 +18,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: Update pdm.lock"
           pr-title: "auto: Update dependencies"
-          update-strategy: reuse
+          update-strategy: all
           save-strategy: minimum
           unconstrained: false
           install-plugins: "true"
