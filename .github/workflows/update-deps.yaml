@@ -1,8 +1,9 @@
 name: Update dependencies
 
 on:
-  schedule:
-    - cron: 0 7 * * 0
+  workflow_dispatch:
+  #schedule:
+    #  - cron: 0 5 * * *
 
 jobs:
   update-dependencies:
@@ -18,7 +19,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: Update pdm.lock"
           pr-title: "auto: Update dependencies"
-          update-strategy: reuse
+          update-strategy: all
           save-strategy: minimum
           unconstrained: false
           install-plugins: "true"
