@@ -1,4 +1,24 @@
 # -*- coding: utf-8 -*-
+
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb.utils.richprint - uses py rich api to pretty print information to console
 """
@@ -21,7 +41,14 @@ console = Console()
 
 def str_print(text: str, style: str) -> None:
     """
-    Sytlize text with rich Text lib and output to console
+    Prints the given text with the specified style.
+
+    Args:
+        text (str): The text to be printed.
+        style (str): The style to be applied to the text.
+
+    Returns:
+        None
     """
     _text = Text(text)
     _text.stylize(style)
@@ -30,12 +57,15 @@ def str_print(text: str, style: str) -> None:
 
 def table(header_args: list, value_args: list, show_header: bool) -> Table:
     """
-    Pretty print to console as a table
-    The function takes three arguments:
+    Generate a rich table using the provided header arguments and value arguments.
 
-    - `header_args`: a dictionary of header arguments
-    - `value_args`: a dictionary of value arguments
-    - `show_header`: a boolean to show the header
+    Args:
+        header_args (list): A list of tuples containing the column names and styles for the table header.
+        value_args (list): A list of tuples containing the row values for the table.
+        show_header (bool): A boolean value indicating whether to show the table header.
+
+    Returns:
+        Table: A rich Table object representing the generated table.
     """
     _table = Table(show_header=show_header, header_style="bold #2684FF", highlight=True)
 
@@ -51,14 +81,25 @@ def table(header_args: list, value_args: list, show_header: bool) -> Table:
 
 def traceback_to_console():
     """
-    It prints the traceback to the console
+    Prints the traceback to the console.
+
+    This function uses the `print_exception` method of the `console` object to print the traceback to the console.
+    The `show_locals` parameter is set to False to exclude local variables from the printed traceback.
+    An extra line is added after the traceback for better readability.
     """
     console.print_exception(show_locals=False, extra_lines=1)
 
 
 def live_progress(message: str):
     """
-    It takes a string and returns a Live object that displays a spinner and the string
+    Creates a live progress indicator with a given message.
+
+    Args:
+        message (str): The message to be displayed alongside the progress indicator.
+
+    Returns:
+        Live: A Live object representing the live progress indicator.
+
     """
     is_utf8 = sys.stdout.encoding.lower() == "utf-8"
     spin_type = "dots" if is_utf8 else "simpleDots"
@@ -70,7 +111,15 @@ def live_progress(message: str):
 
 def render_tree(repo_name: str, status: str, data: dict[str, list[tuple]]) -> None:
     """
-    utilised by bb show, catagorize pr's based on state and render a tree
+    Renders a tree structure representing the repository and its status.
+
+    Args:
+        repo_name (str): The name of the repository.
+        status (str): The status of the repository.
+        data (dict[str, list[tuple]]): A dictionary containing the data to be rendered.
+
+    Returns:
+        None
     """
     tree = Tree("Root", highlight=True, hide_root=True)
     tree_root = tree.add(

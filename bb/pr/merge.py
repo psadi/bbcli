@@ -1,5 +1,24 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb.pr.merge - merges a pull request given a id.
 validates automerge conditions & prompts for optional
@@ -21,8 +40,18 @@ def pr_source_branch_delete_check(
     delete_source_branch: bool,
 ) -> None:
     """
-    checks is the source branch is ok to be deleted if requested
+    Check if the source branch of a pull request can be deleted.
+
+    Args:
+        project (str): The project name.
+        repository (str): The repository name.
+        _id (str): The ID of the pull request.
+        delete_source_branch (bool): Flag indicating whether to delete the source branch.
+
+    Raises:
+        ValueError: If the source branch deletion validation fails.
     """
+
     if (
         len(
             request.get(
@@ -40,7 +69,18 @@ def validate_pr_source_branch_delete_check(
     project: str, repository: str, _id: str
 ) -> None:
     """
-    validates the pull request source branch and check for conflitcts or vetos
+    Validates the merge for a pull request by checking if the source branch can be deleted.
+
+    Args:
+        project (str): The project name.
+        repository (str): The repository name.
+        _id (str): The ID of the pull request.
+
+    Raises:
+        ValueError: If the merge validation fails.
+
+    Returns:
+        None
     """
     with richprint.live_progress(f"Validating Merge for '{_id}' ... ") as live:
         validation_response = request.get(
@@ -59,7 +99,19 @@ def validate_pr_source_branch_delete_check(
 
 
 def validate_automerge_conditions(project: str, repository: str, _id: str) -> tuple:
-    """validate all auto merge conitions before pr merge"""
+    """
+    Validates the auto-merge conditions for a pull request.
+
+    Args:
+        project (str): The project name.
+        repository (str): The repository name.
+        _id (str): The pull request ID.
+
+    Returns:
+        tuple: A tuple containing the pull request information, merge information,
+        from branch, target branch, and version.
+
+    """
     with richprint.live_progress(
         f"Checking for '{repository}' auto-merge conditions ... "
     ):
@@ -83,7 +135,20 @@ def validate_automerge_conditions(project: str, repository: str, _id: str) -> tu
 
 
 def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
-    """display all merge related statistics"""
+    """
+    Display merge statistics based on the given PR merge response, from branch, and target branch.
+
+    Args:
+        pr_merge_response (dict): The PR merge response containing merge status information.
+        from_branch (str): The name of the branch from which the merge is performed.
+        target_branch (str): The name of the target branch to which the merge is performed.
+
+    Raises:
+        ValueError: If the merge response status is not recognized.
+
+    Returns:
+        None
+    """
     if (
         pr_merge_response["status"]["id"] in ["AUTO_MERGE_DISABLED", "NO_PATH"]
         and pr_merge_response["status"]["available"] is False
@@ -108,7 +173,18 @@ def show_merge_stats(pr_merge_response, from_branch, target_branch) -> None:
 
 
 def rebase_pr(project: str, repository: str, _id: str, version: int):
-    """perform rebase in source branch on bitbucket"""
+    """
+    Rebase a pull request.
+
+    Args:
+        project (str): The project name.
+        repository (str): The repository name.
+        _id (str): The ID of the pull request.
+        version (int): The version of the pull request.
+
+    Returns:
+        None
+    """
     request.post(
         bitbucket_api.pr_rebase(project, repository, _id, version)[1],
         bitbucket_api.pr_rebase(project, repository, _id, version)[0],
@@ -116,7 +192,19 @@ def rebase_pr(project: str, repository: str, _id: str, version: int):
 
 
 def delete_branch(project, repository, _id, from_branch, target_branch):
-    """delete source branch in bitbucket and local git repository"""
+    """
+    Deletes the source branch and performs cleanup after merging a pull request.
+
+    Args:
+        project (str): The project name.
+        repository (str): The repository name.
+        _id (str): The ID of the pull request.
+        from_branch (str): The name of the source branch to be deleted.
+        target_branch (str): The name of the target branch.
+
+    Returns:
+        None
+    """
     with richprint.live_progress(f"Deleting Source Ref '{from_branch}'... ") as live:
         request.post(
             bitbucket_api.pr_cleanup(project, repository, _id),
@@ -135,7 +223,19 @@ def delete_branch(project, repository, _id, from_branch, target_branch):
 def merge_pr(
     live, project: str, repository: str, _id: str, branches_and_version: tuple
 ) -> None:
-    """perform pull request merge"""
+    """
+    Merges a pull request with the specified project, repository, and ID.
+
+    Args:
+        live: The live object.
+        project (str): The project name.
+        repository (str): The repository name.
+        _id (str): The ID of the pull request.
+        branches_and_version (tuple): A tuple containing the from_branch, target_branch, and version.
+
+    Returns:
+        int: The status code of the merge operation.
+    """
     from_branch, target_branch, version = branches_and_version
     pr_merge_response = request.post(
         f"{bitbucket_api.validate_merge(project, repository, _id)}?avatarSize=32&version={version}",
@@ -159,10 +259,17 @@ def merge_pull_request(
     _id: str, delete_source_branch: bool, rebase: bool, yes: bool
 ) -> None:
     """
-    It merges a pull request, Validates merge conditions and checks for automerge.
-    Merges the pull request upon confirmation and prompts for source branch deletion
-    """
+    Merges a pull request with the given ID.
 
+    Args:
+        _id (str): The ID of the pull request to merge.
+        delete_source_branch (bool): Whether to delete the source branch after merging.
+        rebase (bool): Whether to rebase the source branch onto the target branch before merging.
+        yes (bool): Whether to proceed with the merge without confirmation.
+
+    Returns:
+        None
+    """
     project, repository = cmnd.base_repo()
     pr_source_branch_delete_check(project, repository, _id, delete_source_branch)
     validate_pr_source_branch_delete_check(project, repository, _id)

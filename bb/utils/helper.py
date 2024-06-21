@@ -1,5 +1,24 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 utils.validate - consists of validation functions
 """
@@ -14,8 +33,14 @@ from bb.utils.api import bitbucket_api
 
 def validate_config() -> None:
     """
-    calls the `api.test` function, If the response code is not 200,
-    prints exception and return non-zero exit code
+    Validates the connection with the Bitbucket API.
+
+    This function sends a test request to the Bitbucket API to check if the connection is valid.
+    If the response status code is 200, it prints "OK" in bold green to indicate a successful connection.
+
+    Raises:
+        ValueError: If an error occurs during the validation process.
+
     """
     try:
         message = f"Validating connection with '{bitbucket_api.bitbucket_host}' ... "
@@ -29,7 +54,18 @@ def validate_config() -> None:
 
 def validate_input(_input: Any, expected: str, error: str) -> str:
     """
-    validates the input, raise the error if the value is not as expected
+    Validates the input value based on the expected type and error message.
+
+    Args:
+        _input (Any): The input value to be validated.
+        expected (str): The expected type of the input value.
+        error (str): The error message to be raised if the input value is invalid.
+
+    Raises:
+        ValueError: If the input value is not of the expected type or is None.
+
+    Returns:
+        str: The validated input value.
     """
 
     def checker():
@@ -50,7 +86,16 @@ def validate_input(_input: Any, expected: str, error: str) -> str:
 
 def error_tip() -> None:
     """
-    reusable error message across mainstream commands
+    Prints an error tip message.
+
+    This function prints a message with a suggestion to run a command with verbose mode
+    to help with debugging.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     richprint.console.print(
         "\n💻 Try running 'bb --verbose [OPTIONS] COMMAND [ARGS]' to debug",
@@ -59,6 +104,20 @@ def error_tip() -> None:
 
 
 def error_handler(func: Callable) -> Callable:
+    """
+    Decorator function that handles exceptions raised by the decorated function.
+
+    Args:
+        func (Callable): The function to be decorated.
+
+    Returns:
+        Callable: The decorated function.
+
+    Raises:
+        Exit: If an exception is raised by the decorated function.
+
+    """
+
     def wrapper(*args, **kwargs):
         try:
             func(*args, **kwargs)

@@ -1,5 +1,24 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb: repo - repository management
 """
@@ -22,7 +41,15 @@ _repo = Typer(add_completion=True, no_args_is_help=True)
 def clone(
     name: str = Argument(..., help="repository name, Format: project/repository"),
 ) -> None:
-    """Clone a BitBucket repository locally"""
+    """
+    Clone a repository from Bitbucket.
+
+    Args:
+        name (str): The name of the repository to clone. Format: project/repository.
+
+    Returns:
+        None
+    """
 
     @error_handler
     def _clone(name):
@@ -41,7 +68,16 @@ def delete(
     project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to delete"),
 ) -> None:
-    "Delete a Bitbucket repository"
+    """
+    Delete a repository.
+
+    Args:
+        project (str): The name of the project.
+        repo (str): The name of the repository to delete.
+
+    Returns:
+        None
+    """
 
     @error_handler
     def _delete(project, repo):
@@ -62,7 +98,16 @@ def archive(
     project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to archive"),
 ) -> None:
-    "Archive a Bitbucket repository"
+    """
+    Archives a repository in the specified project.
+
+    Args:
+        project (str): The name of the project where the repository is located.
+        repo (str): The name of the repository to archive.
+
+    Returns:
+        None
+    """
 
     @error_handler
     def _archive(project, repo):
@@ -83,7 +128,16 @@ def unarchive(
     project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to unarchive"),
 ) -> None:
-    "Unarchive a Bitbucket repository"
+    """
+    Unarchives a repository in the specified project.
+
+    Args:
+        project (str): The name of the project where the repository is located.
+        repo (str): The name of the repository to unarchive.
+
+    Returns:
+        None
+    """
 
     @error_handler
     def _unarchive(project, repo):
@@ -106,7 +160,18 @@ def create(
     forkable: bool = Option(False, help="Make repository forkable"),
     default_branch: str = Option("master", help="Set default branch "),
 ) -> None:
-    """Create a Bitbucket repository"""
+    """
+    Create a new repository.
+
+    Args:
+        project (str): Project name for the repository.
+        repo (str): Repository name to create.
+        forkable (bool): Flag to make the repository forkable.
+        default_branch (str): Default branch for the repository.
+
+    Returns:
+        None
+    """
 
     @error_handler
     def _create(project, repo, forkable, default_branch):
