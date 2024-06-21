@@ -180,6 +180,6 @@ A huge thanks to,
 * [pdm-project/pdm](https://github.com/pdm-project/pdm)
 
 ### LICENSE
-![](https://www.gnu.org/graphics/agplv3-155x51.png)
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/06/AGPLv3_Logo.svg" width="150" height="70" />
 
 This project is licensed under the GNU Affero General Public License v3.0 - see the [**LICENSE**](LICENSE) file for details.
