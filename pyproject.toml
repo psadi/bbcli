@@ -6,7 +6,7 @@ authors = [{ name = "psadi", email = "ps.adithya@icloud.com" }]
 dependencies = ["typer[all]>=0.7.0", "httpx>=0.24.0"]
 requires-python = ">=3.8"
 readme = "README.md"
-license = { text = "MIT" }
+license = { text = "AGPL" }
 
 [project.scripts]
 bb = "bb:_bb"
@@ -36,6 +36,7 @@ dev = [
 
 [[tool.pdm.autoexport]]
 filename = "requirements.txt"
+groups = ["default", "dev"]
 without-hashes = true
 
 [tool.pdm.scripts]

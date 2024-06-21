@@ -1,7 +1,29 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb.utils.request - makes http requests
+
+Defines functions for making HTTP requests (GET, POST, PUT, DELETE) with
+error handling and status code interpretation.
 """
 
 from http import HTTPStatus
@@ -19,7 +41,14 @@ if is_config_present():
 
 def http_response_definitions(status_code: int) -> str:
     """
-    HTTP response code validator
+    Returns the HTTP response phrase for a given status code.
+
+    Args:
+        status_code (int): The HTTP status code.
+
+    Returns:
+        str: The HTTP response phrase corresponding to the status code.
+             If the status code is not recognized, "Unknown Status Code" is returned.
     """
     try:
         return HTTPStatus(status_code).phrase
@@ -29,8 +58,18 @@ def http_response_definitions(status_code: int) -> str:
 
 def get(url: str) -> list[int, dict]:
     """
-    It makes a get request to the url, with the username and token as authentication.
+    Sends a GET request to the specified URL and returns the response status code and data.
+
+    Args:
+        url (str): The URL to send the GET request to.
+
+    Returns:
+        list[int, dict]: A list containing the response status code and data. The status code is an integer and the data is a dictionary.
+
+    Raises:
+        ValueError: If the request returns a non-200 status code.
     """
+
     with httpx.Client() as client:
         request = client.get(url, auth=(username, token), timeout=10.0)
 
@@ -67,9 +106,17 @@ def get(url: str) -> list[int, dict]:
 
 def post(url: str, body: dict) -> list[int, dict]:
     """
-    This function makes a POST request to the specified URL, using the specified username and token
-    for authentication, and the specified body as the request body
+    Send a POST request to the specified URL with the given body.
 
+    Args:
+        url (str): The URL to send the request to.
+        body (dict): The request body as a dictionary.
+
+    Returns:
+        list[int, dict]: A list containing the status code and the response data as a dictionary.
+
+    Raises:
+        ValueError: If the request returns a status code other than 200, 201, 204, or 409.
     """
     with httpx.Client() as client:
         request = client.post(
@@ -91,9 +138,18 @@ def post(url: str, body: dict) -> list[int, dict]:
 
 def put(url: str, body: dict) -> list[int, dict]:
     """
-    This function makes a PUT request to the specified URL
-    with the specified username and token and returns the status code
-    and response body as a list
+    Sends a PUT request to the specified URL with the given body.
+
+    Args:
+        url (str): The URL to send the request to.
+        body (dict): The request body as a dictionary.
+
+    Returns:
+        list[int, dict]: A list containing the status code and the response body as a dictionary.
+
+    Raises:
+        ValueError: If the request returns a status code other than 200, 403, or 409.
+
     """
     with httpx.Client() as client:
         request = client.put(
@@ -114,8 +170,18 @@ def put(url: str, body: dict) -> list[int, dict]:
 
 def delete(url: str, body: dict) -> int:
     """
-    This function sends a DELETE request to the specified URL with the specified username and token,
-    and returns the HTTP status code
+    Sends a DELETE request to the specified URL with the given request body.
+
+    Args:
+        url (str): The URL to send the DELETE request to.
+        body (dict): The request body to send along with the DELETE request.
+
+    Returns:
+        int: The status code of the DELETE request.
+
+    Raises:
+        ValueError: If the DELETE request returns a status code other than 202 or 204.
+
     """
     with httpx.Client() as client:
         request = client.request(

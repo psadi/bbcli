@@ -1,4 +1,24 @@
 # -*- coding: utf-8 -*-
+
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb.utils.cmnd - contains funcs to run native os command
 can capture relavent details from local repository
@@ -14,7 +34,18 @@ from bb.utils.richprint import console
 
 def subprocess_run(command: str, text: Optional[str] = None) -> str:
     """
-    Runs native os commands and pipes the stdout
+    Executes a command using the subprocess module and returns the output as a string.
+
+    Args:
+        command (str): The command to be executed.
+        text (Optional[str]): The input text to be passed to the command (default: None).
+
+    Returns:
+        str: The output of the command as a string.
+
+    Raises:
+        RuntimeError: If the command fails with a non-zero return code.
+
     """
     if text is not None:
         text = text.encode("utf-8")  # type: ignore
@@ -39,16 +70,24 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
 
 def is_git_repo() -> bool:
     """
-    It checks if the current directory is a git repository
+    Check if the current directory is a Git repository.
+
+    Returns:
+        bool: True if the current directory is a Git repository, False otherwise.
     """
     return subprocess_run("git rev-parse --is-inside-work-tree") == "true"
 
 
 def base_repo() -> list:
     """
-    It gets the local git repository name
-    """
+    Retrieves the base repository information.
 
+    Returns:
+        list: A list containing the base repository owner and name.
+
+    Raises:
+        ValueError: If no remote information is found.
+    """
     cmnd = subprocess_run("git remote -v")
 
     if cmnd is None:
@@ -64,7 +103,10 @@ def base_repo() -> list:
 
 def title_and_description() -> list:
     """
-    `Set the latest commit message as title for pull request`
+    Extracts the title and description from the latest git commit message.
+
+    Returns:
+        list: A list containing the title and description of the commit message.
     """
     commit_message = subprocess_run("git log --format=%B -n 1")
     tmp = commit_message.split("\n")
@@ -73,14 +115,26 @@ def title_and_description() -> list:
 
 def from_branch() -> str:
     """
-    `from_branch` returns the current working branch
+    Get the current branch name.
+
+    Returns:
+        str: The name of the current branch.
     """
     return subprocess_run("git rev-parse --abbrev-ref HEAD")
 
 
 def git_rebase(target_branch: str) -> None:
     """
-    rebase source branch with target
+    Rebase the current branch onto the specified target branch.
+
+    Args:
+        target_branch (str): The name of the target branch to rebase onto.
+
+    Raises:
+        ValueError: If an error occurs during the rebase process.
+
+    Returns:
+        None
     """
     try:
         subprocess_run(f"git pull --rebase origin {target_branch}")
@@ -91,7 +145,16 @@ def git_rebase(target_branch: str) -> None:
 
 def checkout_and_pull(branch_name: str) -> None:
     """
-    checkouts to a target branch and pulls the changes from remote
+    Checkout the specified branch and pull the latest changes from the remote repository.
+
+    Args:
+        branch_name (str): The name of the branch to checkout.
+
+    Raises:
+        ValueError: If there are modified files in the current workspace.
+
+    Returns:
+        None
     """
     modified_files = len(
         (list(filter(None, (subprocess_run("git ls-files -m")).split("\n"))))
@@ -108,7 +171,14 @@ def checkout_and_pull(branch_name: str) -> None:
 
 def delete_local_branch(branch_name: str):
     """
-    given a branch name, deletes its local reference if there are no files in staging area
+    Deletes a local branch.
+
+    Args:
+        branch_name (str): The name of the branch to be deleted.
+
+    Raises:
+        ValueError: If the branch to be deleted is the currently active branch.
+
     """
     if branch_name == from_branch():
         raise ValueError(f"Cannot delete active branch '{branch_name}'")
@@ -117,7 +187,16 @@ def delete_local_branch(branch_name: str):
 
 
 def clone_repo(repo: str, bitbucket_host: str) -> None:
-    "clones a given repostory to the local workspace"
+    """
+    Clone a repository from Bitbucket.
+
+    Args:
+        repo (str): The name of the repository to clone.
+        bitbucket_host (str): The Bitbucket host URL.
+
+    Returns:
+        None
+    """
     subprocess.check_call(
         ["git", "clone", f"{bitbucket_host}/scm/{repo}.git", repo.split("/")[1]]
     )
@@ -153,7 +232,17 @@ def cp_to_clipboard(url: str) -> None:
 
 def show_git_diff(from_branch: str, to_branch: str) -> None:
     """
-    shows the diff between two branches
+    Show the git diff between two branches.
+
+    Args:
+        from_branch (str): The name of the source branch.
+        to_branch (str): The name of the target branch.
+
+    Raises:
+        ValueError: If the git diff command fails.
+
+    Returns:
+        None
     """
     try:
         subprocess.check_call(["git", "diff", to_branch, from_branch])

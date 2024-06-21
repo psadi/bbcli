@@ -1,7 +1,26 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
-    bb.pr.view open the pull request in browser
+bb.pr.view open the pull request in browser
 """
 
 import webbrowser
@@ -13,7 +32,16 @@ from bb.utils.richprint import console, live_progress, table
 
 
 def view_pull_request(_id: str, web: bool) -> None:
-    """view a pull request in terminal or in a browser"""
+    """
+    Fetches information about a pull request and displays it.
+
+    Args:
+        _id (str): The ID of the pull request.
+        web (bool): Flag indicating whether to open the pull request in the default browser.
+
+    Returns:
+        None
+    """
     with live_progress(f"Fetching info on pr #{_id} ... ") as live:
         project, repository = base_repo()
         url = get(bitbucket_api.pull_request_info(project, repository, _id))

@@ -1,5 +1,24 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb.pr.create - creates a pull request in bitbucket
 while doing so it gathers all the facts required for a pr from the
@@ -25,6 +44,17 @@ def gather_facts(
     """
     It gathers facts for  the pull request from bitbucket and local git
     repository
+
+    Args:
+    -   target: str: The target branch
+    -   from_branch: str: The source branch
+    -   project: str: The project name
+    -   repository: str: The repository name
+    -   title_and_description: str: The title and description for the pull request
+    Returns:
+    -   list: The list of reviewers
+    Raises:
+    -   ValueError: If the source and target branches are the same
     """
 
     with richprint.live_progress(f"Gathering facts on '{repository}' ..."):
@@ -62,9 +92,19 @@ def gather_facts(
 
 def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> None:
     """
-    It creates a pull request.
-    """
+    Handles the process of creating a pull request with  options for rebasing,
+    confirmation prompts, and displaying the diff.
 
+    Args:
+    -   target: str: The target branch
+    -   yes: bool: The flag to proceed without confirmation
+    -   diff: bool: The flag to display the diff
+    -   rebase: bool: The flag to rebase the source branch with the target branch
+    Raises:
+    -   ValueError: If the source and target branches are the same
+    Returns:
+    -   None
+    """
     _id: Optional[str] = None
     from_branch = cmnd.from_branch()
     if target == from_branch:

@@ -1,8 +1,27 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
-    bb.utils.ini - parses .alt ini file
-    prompts for setup if not present
+bb.utils.ini - parses .alt ini file
+prompts for setup if not present
 """
 
 import configparser
@@ -13,10 +32,10 @@ from typing import List, Tuple
 
 def config_path() -> Tuple[str, str]:
     """
-    Returns the path to the directory and file where the application's config file should be located.
+    Returns the path to the configuration directory and the configuration file.
 
-    Returns:
-        Tuple containing the path to the configuration directory and the path to the configuration file.
+    :return: A tuple containing the path to the configuration directory and the configuration file.
+    :rtype: Tuple[str, str]
     """
     home: str = str(Path.home())
     config_dir: str = os.path.join(home, ".config", "bb")
@@ -28,15 +47,27 @@ _XDG_CONFIG_HOME, BB_CONFIG_FILE = config_path()
 
 
 def is_config_present() -> bool:
-    """checks if config.ini file is present"""
+    """
+    Check if the BB_CONFIG_FILE is present.
+
+    Returns:
+        bool: True if the BB_CONFIG_FILE is present, False otherwise.
+    """
     return os.path.isfile(BB_CONFIG_FILE)
 
 
 def auth_setup(bitbucket_host: str, username: str, token: str) -> None:
     """
-    It creates a config file with the given parameters.
-    """
+    Set up authentication for Bitbucket CLI.
 
+    Args:
+        bitbucket_host (str): The Bitbucket host URL.
+        username (str): The username for authentication.
+        token (str): The authentication token.
+
+    Returns:
+        None
+    """
     Path(_XDG_CONFIG_HOME).mkdir(parents=True, exist_ok=True)
     Path(BB_CONFIG_FILE).touch(exist_ok=True)
 
@@ -59,8 +90,15 @@ token=xxxxxxxxxxx"""
 
 def parse() -> List[str]:
     """
-    It returns the configuration present in .alt file in home directory
+    Parses the configuration file and retrieves the authentication details.
+
+    Returns:
+        A list containing the username, token, and Bitbucket host.
+
+    Raises:
+        ValueError: If the configuration file does not exist.
     """
+
     if not os.path.isfile(BB_CONFIG_FILE):
         raise ValueError("Configuration required, Try running 'bb auth setup'")
 

@@ -1,7 +1,7 @@
 ## Bitbucket CLI (bb)
 Work seamlessly with Bitbucket from the command line
 
-![](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Continuous Integration](https://github.com/psadi/bbcli/actions/workflows/ci.yml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=psadi_bbcli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=psadi_bbcli)
 <a href="https://www.buymeacoffee.com/addy3494" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 22px !important;width: 100px !important;" ></a>
@@ -180,4 +180,6 @@ A huge thanks to,
 * [pdm-project/pdm](https://github.com/pdm-project/pdm)
 
 ### LICENSE
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+![](https://www.gnu.org/graphics/agplv3-155x51.png)
+
+This project is licensed under the GNU Affero General Public License v3.0 - see the [**LICENSE**](LICENSE) file for details.

@@ -1,7 +1,29 @@
 # -*- coding: utf-8 -*-
 
+############################################################################
+# Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
+#
+# Copyright (C) 2022  P S, Adithya (psadi) (ps.adithya@icloud.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+############################################################################
+
 """
 bb: auth - validates and configures the auth details
+
+Defines commands to configure, test, and view the authentication status for
+a Bitbucket CLI tool.
 """
 
 import typer
@@ -13,9 +35,18 @@ from bb.utils.richprint import console
 _auth: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
 
 
-@_auth.command()
+@_auth.command(help="Configure bbcli to work with Bitbucket")
 def setup() -> None:
-    """Configure bbcli to work with bitbucket"""
+    """
+    The `setup` function checks for a configuration file and sets up authentication if not found.
+
+    Args:
+    -   :param: The `setup` function does not take any parameters
+    Raises:
+    -   :raises: This function does not raise any exceptions
+    Returns:
+    -   :rtype: None
+    """
 
     @error_handler
     def _setup() -> None:
@@ -39,9 +70,19 @@ def setup() -> None:
     _setup()
 
 
-@_auth.command()
+@_auth.command(help="Test configuration & connection")
 def test() -> None:
-    """Test configuration & connection"""
+    """
+    The function `test` contains an inner function `_test` that checks for the presence of configuration
+    and validates it.
+
+    Args:
+    -   :param: The `test` function does not take any parameters
+    Raises:
+    -   :raises: This function does not raise any exceptions
+    Returns:
+    -   :rtype: None
+    """
 
     @error_handler
     def _test() -> None:
@@ -52,9 +93,22 @@ def test() -> None:
     _test()
 
 
-@_auth.command()
+@_auth.command(help="View authentication config status")
 def status(token: bool = typer.Option(False, help="Display auth token")) -> None:
-    """View authentication config status"""
+    """
+    Displays the status of the authentication token and related configuration
+    information for a Bitbucket connection.
+
+    Args:
+    -   :param token: The `token` parameter in the `status` function is a boolean type with a default value
+        of `False`. It is used to determine whether the authentication token should be displayed or masked
+        when the function is called
+    -   :type token: bool
+    Raises:
+    -   :raises: This function does not raise any exceptions
+    Returns:
+    -   :rtype: None
+    """
 
     @error_handler
     def _status(token: bool) -> None:
