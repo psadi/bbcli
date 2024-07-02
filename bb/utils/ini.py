@@ -43,7 +43,7 @@ def config_path() -> Tuple[str, str]:
     return (config_dir, config_file)
 
 
-_XDG_CONFIG_HOME, BB_CONFIG_FILE = config_path()
+XDG_CONFIG_HOME, BB_CONFIG_FILE = config_path()
 
 
 def is_config_present() -> bool:
@@ -68,7 +68,7 @@ def auth_setup(bitbucket_host: str, username: str, token: str) -> None:
     Returns:
         None
     """
-    Path(_XDG_CONFIG_HOME).mkdir(parents=True, exist_ok=True)
+    Path(XDG_CONFIG_HOME).mkdir(parents=True, exist_ok=True)
     Path(BB_CONFIG_FILE).touch(exist_ok=True)
 
     defaut_config = """[auth]

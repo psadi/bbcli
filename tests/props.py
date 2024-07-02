@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True, order=True)
 class Api:
-    bitbucket_host: str = "http://picolo.box:7990"
+    bitbucket_host: str = "https://bb.picolo.co.in"
     project: str = "test-project"
     repository: str = "test-repo"
     repo_id: str = "1234"
@@ -64,12 +64,12 @@ class Ini:
     from platform import system
     from typing import Dict
 
-    _XDG_CONFIG_HOME: str = os.path.expanduser("~")
+    XDG_CONFIG_HOME: str = os.path.expanduser("~")
 
     platform_config: Dict[str, dict] = {
-        "Windows": f"{_XDG_CONFIG_HOME}\\.config\\bb\\config.ini",
-        "Linux": f"{_XDG_CONFIG_HOME}/.config/bb/config.ini",
-        "Darwin": f"{_XDG_CONFIG_HOME}/.config/bb/config.ini",
+        "Windows": f"{XDG_CONFIG_HOME}\\.config\\bb\\config.ini",
+        "Linux": f"{XDG_CONFIG_HOME}/.config/bb/config.ini",
+        "Darwin": f"{XDG_CONFIG_HOME}/.config/bb/config.ini",
     }
 
     BB_CONFIG_FILE: str = platform_config.get(system(), "n/a")

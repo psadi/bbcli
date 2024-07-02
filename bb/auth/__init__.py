@@ -29,7 +29,13 @@ a Bitbucket CLI tool.
 import typer
 
 from bb.utils.helper import error_handler, validate_config
-from bb.utils.ini import BB_CONFIG_FILE, auth_setup, is_config_present, parse
+from bb.utils.ini import (
+    BB_CONFIG_FILE,
+    XDG_CONFIG_HOME,
+    auth_setup,
+    is_config_present,
+    parse,
+)
 from bb.utils.richprint import console
 
 _auth: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
@@ -62,9 +68,8 @@ def setup() -> None:
                 typer.prompt("> username"),
                 typer.prompt("> token", hide_input=True),
             )
-            typer.echo(
-                f"Configuration written at '{BB_CONFIG_FILE}',"
-                + "Please re-run 'bb auth test' to validate"
+            console.print(
+                f"\nConfiguration written at [yellow]'{BB_CONFIG_FILE}'[/yellow]\nPlease re-run [yellow]`bb auth test`[/yellow] to validate\n"
             )
 
     _setup()
@@ -126,3 +131,42 @@ def status(token: bool = typer.Option(False, help="Display auth token")) -> None
         console.print(f"{hcm} Token: {_token if token else '*' * len(_token)}")
 
     _status(token)
+
+
+@_auth.command(help="Reset authentication configuration")
+def reset() -> None:
+    """
+    The function `reset` contains an inner function `_reset` that resets the configuration file.
+
+    Args:
+    -   :param: The `reset` function does not take any parameters
+    Raises:
+    -   :raises: This function does not raise any exceptions
+    Returns:
+    -   :rtype: None
+    """
+
+    @error_handler
+    def _reset() -> None:
+        console.print(
+            f"\nThis will delete,\n\n- File: [yellow]{BB_CONFIG_FILE}[/yellow]\n- Directory: [yellow]{XDG_CONFIG_HOME}[/yellow]\n"
+        )
+        if (
+            typer.prompt(
+                "Are you sure you want to reset the configuration? (y/n)", default="n"
+            )
+            == "y"
+        ):
+            import os
+
+            if os.path.exists(BB_CONFIG_FILE):
+                os.remove(BB_CONFIG_FILE)
+
+            if os.path.exists(XDG_CONFIG_HOME):
+                os.rmdir(XDG_CONFIG_HOME)
+
+            console.print(
+                "\nConfiguration reset successfully, please run [yellow]`bb auth setup`[/yellow] to configure again\n"
+            )
+
+    _reset()

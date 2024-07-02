@@ -24,7 +24,8 @@ bb.utils.api - contains the API model for Bitbucket server
 """
 
 import json
-import sys
+
+from typer import Exit
 
 from bb.utils.ini import is_config_present, parse
 
@@ -469,5 +470,5 @@ def load_bitbucket_api() -> BitbucketAPI:
 try:
     bitbucket_api = load_bitbucket_api()
 except ValueError:
-    print("Failed to load Bitbucket API", file=sys.stderr)
-    sys.exit(1)
+    bitbucket_api = None
+    Exit(code=1)
