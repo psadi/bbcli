@@ -23,6 +23,7 @@
 utils.validate - consists of validation functions
 """
 
+from functools import wraps
 from typing import Any, Callable
 
 from typer import Exit, prompt
@@ -118,6 +119,7 @@ def error_handler(func: Callable) -> Callable:
 
     """
 
+    @wraps(func)
     def wrapper(*args, **kwargs):
         try:
             func(*args, **kwargs)

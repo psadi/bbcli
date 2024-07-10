@@ -41,7 +41,8 @@ from bb.utils.richprint import console
 _auth: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
 
 
-@_auth.command(help="Configure bbcli to work with Bitbucket")
+@_auth.command(help="configure bbcli to work with bitbucket")
+@error_handler
 def setup() -> None:
     """
     The `setup` function checks for a configuration file and sets up authentication if not found.
@@ -54,28 +55,25 @@ def setup() -> None:
     -   :rtype: None
     """
 
-    @error_handler
-    def _setup() -> None:
-        if is_config_present():
-            console.print(
-                "Configuration file found, Run 'bb auth status' for more information"
-            )
-        else:
-            auth_setup(
-                typer.prompt(
-                    "> bitbucket_host",
-                ),
-                typer.prompt("> username"),
-                typer.prompt("> token", hide_input=True),
-            )
-            console.print(
-                f"\nConfiguration written at [yellow]'{BB_CONFIG_FILE}'[/yellow]\nPlease re-run [yellow]`bb auth test`[/yellow] to validate\n"
-            )
-
-    _setup()
+    if is_config_present():
+        console.print(
+            "Configuration file found, Run 'bb auth status' for more information"
+        )
+    else:
+        auth_setup(
+            typer.prompt(
+                "> bitbucket_host",
+            ),
+            typer.prompt("> username"),
+            typer.prompt("> token", hide_input=True),
+        )
+        console.print(
+            f"\nConfiguration written at [yellow]'{BB_CONFIG_FILE}'[/yellow]\nPlease re-run [yellow]`bb auth test`[/yellow] to validate\n"
+        )
 
 
-@_auth.command(help="Test configuration & connection")
+@_auth.command(help="test cli configuration & connection")
+@error_handler
 def test() -> None:
     """
     The function `test` contains an inner function `_test` that checks for the presence of configuration
@@ -89,16 +87,13 @@ def test() -> None:
     -   :rtype: None
     """
 
-    @error_handler
-    def _test() -> None:
-        if not is_config_present():
-            raise ValueError("Configuration missing, run 'bb auth setup'")
-        validate_config()
-
-    _test()
+    if not is_config_present():
+        raise ValueError("Configuration missing, run 'bb auth setup'")
+    validate_config()
 
 
-@_auth.command(help="View authentication config status")
+@_auth.command(help="view authentication config status")
+@error_handler
 def status(token: bool = typer.Option(False, help="Display auth token")) -> None:
     """
     Displays the status of the authentication token and related configuration
@@ -115,25 +110,22 @@ def status(token: bool = typer.Option(False, help="Display auth token")) -> None
     -   :rtype: None
     """
 
-    @error_handler
-    def _status(token: bool) -> None:
-        if not is_config_present():
-            raise ValueError("Configuration missing, run 'bb auth setup'")
+    if not is_config_present():
+        raise ValueError("vonfiguration missing, run 'bb auth setup'")
 
-        hcm: str = "[bold green]:heavy_check_mark:[/bold green]"
-        console.print(
-            f"{hcm} Configuration found at [bold cyan]{BB_CONFIG_FILE}[/bold cyan]"
-        )
-        username, _token, bitbucket_host = parse()
-        console.print(
-            f"{hcm} Will connect to [bold]{bitbucket_host}[/bold] as [bold]{username}[/bold]"
-        )
-        console.print(f"{hcm} Token: {_token if token else '*' * len(_token)}")
-
-    _status(token)
+    hcm: str = "[bold green]:heavy_check_mark:[/bold green]"
+    console.print(
+        f"{hcm} Configuration found at [bold cyan]{BB_CONFIG_FILE}[/bold cyan]"
+    )
+    username, _token, bitbucket_host = parse()
+    console.print(
+        f"{hcm} Will connect to [bold]{bitbucket_host}[/bold] as [bold]{username}[/bold]"
+    )
+    console.print(f"{hcm} Token: {_token if token else '*' * len(_token)}")
 
 
-@_auth.command(help="Reset authentication configuration")
+@_auth.command(help="reset authentication configuration")
+@error_handler
 def reset() -> None:
     """
     The function `reset` contains an inner function `_reset` that resets the configuration file.
@@ -146,27 +138,23 @@ def reset() -> None:
     -   :rtype: None
     """
 
-    @error_handler
-    def _reset() -> None:
-        console.print(
-            f"\nThis will delete,\n\n- File: [yellow]{BB_CONFIG_FILE}[/yellow]\n- Directory: [yellow]{XDG_CONFIG_HOME}[/yellow]\n"
+    console.print(
+        f"\nThis will delete,\n\n- File: [yellow]{BB_CONFIG_FILE}[/yellow]\n- Directory: [yellow]{XDG_CONFIG_HOME}[/yellow]\n"
+    )
+    if (
+        typer.prompt(
+            "Are you sure you want to reset the configuration? (y/n)", default="n"
         )
-        if (
-            typer.prompt(
-                "Are you sure you want to reset the configuration? (y/n)", default="n"
-            )
-            == "y"
-        ):
-            import os
+        == "y"
+    ):
+        import os
 
-            if os.path.exists(BB_CONFIG_FILE):
-                os.remove(BB_CONFIG_FILE)
+        if os.path.exists(BB_CONFIG_FILE):
+            os.remove(BB_CONFIG_FILE)
 
-            if os.path.exists(XDG_CONFIG_HOME):
-                os.rmdir(XDG_CONFIG_HOME)
+        if os.path.exists(XDG_CONFIG_HOME):
+            os.rmdir(XDG_CONFIG_HOME)
 
-            console.print(
-                "\nConfiguration reset successfully, please run [yellow]`bb auth setup`[/yellow] to configure again\n"
-            )
-
-    _reset()
+        console.print(
+            "\nConfiguration reset successfully, please run [yellow]`bb auth setup`[/yellow] to configure again\n"
+        )
