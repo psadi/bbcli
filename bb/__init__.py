@@ -51,14 +51,14 @@ def version_callback(value: bool) -> None:
 def setup() -> typer.Typer:
     _bb = typer.Typer(
         add_completion=False,
-        epilog="Source Code: https://github.com/psadi/bbcli",
-        help="Work seamlessly with Bitbucket from the command line.",
+        epilog="Author: P S, Adithya (psadi) <ps.adithya@icloud.com>\n\nProject URL: https://github.com/psadi/bbcli\n\n\nLicense: GNU Affero General Public License v3.0 (AGPLv3) <https://github.com/psadi/bbcli/blob/main/LICENSE>",
+        help="Work seamlessly with Bitbucket from the command line",
         no_args_is_help=True,
     )
 
-    _bb.add_typer(_pr, name="pr", help="Manage pull requests")
-    _bb.add_typer(_auth, name="auth", help="Authenticate bb and git with Bitbucket")
-    _bb.add_typer(_repo, name="repo", help="Work with BitBucket repositories")
+    _bb.add_typer(_pr, name="pr", help="manage pull requests")
+    _bb.add_typer(_auth, name="auth", help="authenticate bb and git with bitbucket")
+    _bb.add_typer(_repo, name="repo", help="work with bitBucket repositories")
 
     return _bb
 

@@ -44,6 +44,7 @@ _pr: typer.Typer = typer.Typer(add_completion=False, no_args_is_help=True)
 
 
 @_pr.command(help="Create a pull request")
+@error_handler
 def create(
     target: str = typer.Option("", help="target branch name"),
     yes: bool = typer.Option(False, help=common_vars.skip_prompt),
@@ -76,19 +77,16 @@ def create(
     -   None
     """
 
-    @error_handler
-    def _create(target: str, yes: bool, diff: bool, rebase: bool) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
 
-        target = validate_input(target, "Target branch", "Target branch cannot be none")
+    target = validate_input(target, "Target branch", "Target branch cannot be none")
 
-        create_pull_request(target, yes, diff, rebase)
-
-    _create(target, yes, diff, rebase)
+    create_pull_request(target, yes, diff, rebase)
 
 
 @_pr.command(help="Delete pull requests")
+@error_handler
 def delete(
     id: str = typer.Option("", help="pull request number(s) to delete"),
     yes: bool = typer.Option(False, help=common_vars.skip_prompt),
@@ -114,19 +112,15 @@ def delete(
     -   None
     """
 
-    @error_handler
-    def _delete(id: str, yes: bool, diff: bool) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
 
-        _id = validate_input(
-            id,
-            "Pull request id(s) to delete\n? ex: id (or) id1, id2",
-            "Id's cannot be empty",
-        ).split(",")
-        delete_pull_request(_id, yes, diff)
-
-    _delete(id, yes, diff)
+    _id = validate_input(
+        id,
+        "Pull request id(s) to delete\n? ex: id (or) id1, id2",
+        "Id's cannot be empty",
+    ).split(",")
+    delete_pull_request(_id, yes, diff)
 
 
 # The class Role defines an enumeration with three roles: AUTHOR, REVIEWER, and CURRENT.
@@ -137,6 +131,7 @@ class Role(str, Enum):
 
 
 @_pr.command(help="List pull requests in a repository")
+@error_handler
 def list(
     role: str = Role.CURRENT.value,
     all: bool = typer.Option(
@@ -157,14 +152,10 @@ def list(
         None
     """
 
-    @error_handler
-    def _list(role: str, all: bool) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
 
-        list_pull_request(role, all)
-
-    _list(role, all)
+    list_pull_request(role, all)
 
 
 # The class `Action` defines an enumeration of string values representing different actions.
@@ -176,6 +167,7 @@ class Action(str, Enum):
 
 
 @_pr.command(help="Add a review to a pull request")
+@error_handler
 def review(
     id: str = typer.Option("", help="pull request number to review"),
     action: Action = Action.NONE,
@@ -197,26 +189,23 @@ def review(
     -   None
     """
 
-    @error_handler
-    def _review(id: str, action: Action) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
 
-        _id: str = validate_input(
-            id, "Pull request id to review", common_vars.id_cannot_be_none
-        )
-        action_value: str = "none" if action == Action.NONE else action.value
-        action: str = validate_input(
-            action_value,
-            "Action [approve|unapprove|needs_work]",
-            "action cannot be none",
-        )
-        review_pull_request(_id, action)
-
-    _review(id, action)
+    _id: str = validate_input(
+        id, "Pull request id to review", common_vars.id_cannot_be_none
+    )
+    action_value: str = "none" if action == Action.NONE else action.value
+    action: str = validate_input(
+        action_value,
+        "Action [approve|unapprove|needs_work]",
+        "action cannot be none",
+    )
+    review_pull_request(_id, action)
 
 
 @_pr.command(help="Merge a pull request")
+@error_handler
 def merge(
     id: str = typer.Option("", help="pull request number to merge"),
     delete_source_branch: bool = typer.Option(
@@ -248,19 +237,16 @@ def merge(
     -   None
     """
 
-    @error_handler
-    def _merge(id: str, delete_source_branch: bool, rebase: bool, yes: bool) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
-        _id: str = validate_input(
-            id, "Pull request id to merge", common_vars.id_cannot_be_none
-        )
-        merge_pull_request(_id, delete_source_branch, rebase, yes)
-
-    _merge(id, delete_source_branch, rebase, yes)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
+    _id: str = validate_input(
+        id, "Pull request id to merge", common_vars.id_cannot_be_none
+    )
+    merge_pull_request(_id, delete_source_branch, rebase, yes)
 
 
 @_pr.command(help="View changes in a pull request")
+@error_handler
 def diff(
     id: str = typer.Option("", help="pull request number to show diff"),
 ) -> None:
@@ -277,19 +263,16 @@ def diff(
     -   None
     """
 
-    @error_handler
-    def _diff(id: str) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
-        _id: str = validate_input(
-            id, "Pull request number to show diff", common_vars.id_cannot_be_none
-        )
-        show_diff(_id)
-
-    _diff(id)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
+    _id: str = validate_input(
+        id, "Pull request number to show diff", common_vars.id_cannot_be_none
+    )
+    show_diff(_id)
 
 
 @_pr.command(help="Copy pull request url to clipboard")
+@error_handler
 def copy(id: str = typer.Option("", help="pull request number to copy")) -> None:
     """
     Copies a specified pull request in a Git repository.
@@ -304,20 +287,17 @@ def copy(id: str = typer.Option("", help="pull request number to copy")) -> None
     -   None
     """
 
-    @error_handler
-    def _copy(id: str) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
 
-        _id: str = validate_input(
-            id, "Pull request number to copy", common_vars.id_cannot_be_none
-        )
-        copy_pull_request(_id)
-
-    _copy(id)
+    _id: str = validate_input(
+        id, "Pull request number to copy", common_vars.id_cannot_be_none
+    )
+    copy_pull_request(_id)
 
 
 @_pr.command(help="View a pull request")
+@error_handler
 def view(
     id: str = typer.Option("", help="pull request id to view"),
     web: Optional[bool] = typer.Option(False, help="view pull request in browser"),
@@ -339,13 +319,7 @@ def view(
     -   None
     """
 
-    @error_handler
-    def _view(id: str, web: Optional[bool]) -> None:
-        if not is_git_repo():
-            raise ValueError(common_vars.not_a_git_repo)
-        _id = validate_input(
-            id, "Pull request id to view", common_vars.id_cannot_be_none
-        )
-        view_pull_request(_id, web)
-
-    _view(id, web)
+    if not is_git_repo():
+        raise ValueError(common_vars.not_a_git_repo)
+    _id = validate_input(id, "Pull request id to view", common_vars.id_cannot_be_none)
+    view_pull_request(_id, web)

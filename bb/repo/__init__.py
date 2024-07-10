@@ -37,13 +37,12 @@ from bb.utils.richprint import console
 _repo = Typer(add_completion=True, no_args_is_help=True)
 
 
-@_repo.command()
+@_repo.command(help="clone a repository from a project")
+@error_handler
 def clone(
     name: str = Argument(..., help="repository name, Format: project/repository"),
 ) -> None:
     """
-    Clone a repository from Bitbucket.
-
     Args:
         name (str): The name of the repository to clone. Format: project/repository.
 
@@ -51,26 +50,21 @@ def clone(
         None
     """
 
-    @error_handler
-    def _clone(name):
-        name = validate_input(
-            name, "project/repository to clone", common_vars.repo_cant_be_none
-        )
+    name = validate_input(
+        name, "project/repository to clone", common_vars.repo_cant_be_none
+    )
 
-        console.print(f"Cloning '{name}' into '{name.split('/')[1]}'...")
-        clone_repo(name, parse()[2])
-
-    _clone(name)
+    console.print(f"Cloning '{name}' into '{name.split('/')[1]}'...")
+    clone_repo(name, parse()[2])
 
 
-@_repo.command()
+@_repo.command(help="delete a repository the specified project")
+@error_handler
 def delete(
     project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to delete"),
 ) -> None:
     """
-    Delete a repository.
-
     Args:
         project (str): The name of the project.
         repo (str): The name of the repository to delete.
@@ -79,28 +73,23 @@ def delete(
         None
     """
 
-    @error_handler
-    def _delete(project, repo):
-        project = validate_input(
-            project, common_vars.project_name, common_vars.project_cant_be_none
-        )
-        repo = validate_input(
-            repo, common_vars.repository_name, common_vars.repo_cant_be_none
-        )
+    project = validate_input(
+        project, common_vars.project_name, common_vars.project_cant_be_none
+    )
+    repo = validate_input(
+        repo, common_vars.repository_name, common_vars.repo_cant_be_none
+    )
 
-        delete_repository(project, repo)
-
-    _delete(project, repo)
+    delete_repository(project, repo)
 
 
-@_repo.command()
+@_repo.command(help="archives a repository in the specified project")
+@error_handler
 def archive(
     project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to archive"),
 ) -> None:
     """
-    Archives a repository in the specified project.
-
     Args:
         project (str): The name of the project where the repository is located.
         repo (str): The name of the repository to archive.
@@ -109,28 +98,23 @@ def archive(
         None
     """
 
-    @error_handler
-    def _archive(project, repo):
-        project = validate_input(
-            project, common_vars.project_name, common_vars.project_cant_be_none
-        )
-        repo = validate_input(
-            repo, common_vars.repository_name, common_vars.repo_cant_be_none
-        )
+    project = validate_input(
+        project, common_vars.project_name, common_vars.project_cant_be_none
+    )
+    repo = validate_input(
+        repo, common_vars.repository_name, common_vars.repo_cant_be_none
+    )
 
-        archive_repository(project, repo, True)
-
-    _archive(project, repo)
+    archive_repository(project, repo, True)
 
 
-@_repo.command()
+@_repo.command(help="unarchives a repository in the specified project")
+@error_handler
 def unarchive(
     project: str = Option("", help=common_vars.project_name_of_repo),
     repo: str = Option("", help="repository name to unarchive"),
 ) -> None:
     """
-    Unarchives a repository in the specified project.
-
     Args:
         project (str): The name of the project where the repository is located.
         repo (str): The name of the repository to unarchive.
@@ -139,21 +123,18 @@ def unarchive(
         None
     """
 
-    @error_handler
-    def _unarchive(project, repo):
-        project = validate_input(
-            project, common_vars.project_name, common_vars.project_cant_be_none
-        )
-        repo = validate_input(
-            repo, common_vars.repository_name, common_vars.repo_cant_be_none
-        )
+    project = validate_input(
+        project, common_vars.project_name, common_vars.project_cant_be_none
+    )
+    repo = validate_input(
+        repo, common_vars.repository_name, common_vars.repo_cant_be_none
+    )
 
-        archive_repository(project, repo, False)
-
-    _unarchive(project, repo)
+    archive_repository(project, repo, False)
 
 
-@_repo.command()
+@_repo.command(help="create a new repository")
+@error_handler
 def create(
     project: str = Option("", help="project name for the repository"),
     repo: str = Option("", help="repository name to create"),
@@ -161,8 +142,6 @@ def create(
     default_branch: str = Option("master", help="Set default branch "),
 ) -> None:
     """
-    Create a new repository.
-
     Args:
         project (str): Project name for the repository.
         repo (str): Repository name to create.
@@ -173,15 +152,11 @@ def create(
         None
     """
 
-    @error_handler
-    def _create(project, repo, forkable, default_branch):
-        project = validate_input(
-            project, common_vars.project_name, common_vars.project_cant_be_none
-        )
-        repo = validate_input(
-            repo, common_vars.repository_name, common_vars.repo_cant_be_none
-        )
+    project = validate_input(
+        project, common_vars.project_name, common_vars.project_cant_be_none
+    )
+    repo = validate_input(
+        repo, common_vars.repository_name, common_vars.repo_cant_be_none
+    )
 
-        create_repository(project, repo, forkable, default_branch)
-
-    _create(project, repo, forkable, default_branch)
+    create_repository(project, repo, forkable, default_branch)
