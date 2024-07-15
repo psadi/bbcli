@@ -22,8 +22,8 @@ name = "bb"
 dynamic = ["version"]
 description = "Work seamlessly with BitBucket from the command line."
 authors = [{ name = "psadi", email = "ps.adithya@icloud.com" }]
-dependencies = ["typer[all]>=0.7.0", "httpx>=0.24.0"]
-requires-python = ">=3.8"
+dependencies = ["typer>=0.7.0", "httpx>=0.24.0"]
+requires-python = ">=3.9"
 readme = "README.md"
 license = { text = "AGPL" }
 

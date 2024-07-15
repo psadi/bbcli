@@ -24,12 +24,15 @@ utils.validate - consists of validation functions
 """
 
 from functools import wraps
-from typing import Any, Callable
+from typing import Any, Callable, ParamSpec, TypeVar
 
 from typer import Exit, prompt
 
 from bb.utils import constants, request, richprint
 from bb.utils.api import bitbucket_api
+
+P = ParamSpec("P")
+T = TypeVar("T")
 
 
 def validate_config() -> None:
@@ -104,7 +107,7 @@ def error_tip() -> None:
     )
 
 
-def error_handler(func: Callable) -> Callable:
+def error_handler(func: Callable[P, T]) -> Callable[P, T]:
     """
     Decorator function that handles exceptions raised by the decorated function.
 

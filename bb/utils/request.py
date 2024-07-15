@@ -28,6 +28,7 @@ error handling and status code interpretation.
 
 from http import HTTPStatus
 from json import JSONDecodeError
+from typing import Union
 
 import httpx
 
@@ -56,7 +57,7 @@ def http_response_definitions(status_code: int) -> str:
         return "Unknown Status Code"
 
 
-def get(url: str) -> list[int, dict]:
+def get(url: str) -> list:
     """
     Sends a GET request to the specified URL and returns the response status code and data.
 
@@ -97,14 +98,14 @@ def get(url: str) -> list[int, dict]:
         )
 
     try:
-        data: dict = request.json()
+        response_data: Union[dict, str] = request.json()
     except JSONDecodeError:
-        data: str = request.content.decode()
+        response_data: Union[dict, str] = request.content.decode()
 
-    return [request.status_code, data]
+    return [request.status_code, response_data]
 
 
-def post(url: str, body: dict) -> list[int, dict]:
+def post(url: str, body: dict) -> list:
     """
     Send a POST request to the specified URL with the given body.
 
@@ -136,7 +137,7 @@ def post(url: str, body: dict) -> list[int, dict]:
     return [request.status_code, json_data]
 
 
-def put(url: str, body: dict) -> list[int, dict]:
+def put(url: str, body: dict) -> list:
     """
     Sends a PUT request to the specified URL with the given body.
 
