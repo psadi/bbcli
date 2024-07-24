@@ -52,6 +52,7 @@ def create(
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before creation"
     ),
+    description: str = typer.Option("", help="PR description message"),
 ) -> None:
     """
     Takes in parameters for target branch name, a confirmation flag, diff
@@ -70,6 +71,8 @@ def create(
     -   :param rebase: A  boolean option that determines  whether the source branch should be
         rebased with the target branch before creating the pull request.
         :type rebase: bool
+    -   :param description: Optional 'title:description' for the pr. If not provided, the last commit message will be used
+        :type description: str
     Raises:
     -   ValueError: If the repository is not a Git repository
     -   ValueError: If the target branch is not provided
@@ -82,7 +85,7 @@ def create(
 
     target = validate_input(target, "Target branch", "Target branch cannot be none")
 
-    create_pull_request(target, yes, diff, rebase)
+    create_pull_request(target, yes, diff, rebase, description)
 
 
 @_pr.command(help="Delete pull requests")

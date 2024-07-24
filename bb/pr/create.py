@@ -32,7 +32,7 @@ from typer import confirm
 from bb.pr.diff import show_diff
 from bb.utils import cmnd, request, richprint
 from bb.utils.api import bitbucket_api
-
+import re
 
 def gather_facts(
     target: str,
@@ -90,7 +90,7 @@ def gather_facts(
     return reviewers
 
 
-def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> None:
+def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool, description: str) -> None:
     """
     Handles the process of creating a pull request with  options for rebasing,
     confirmation prompts, and displaying the diff.
@@ -100,6 +100,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
     -   yes: bool: The flag to proceed without confirmation
     -   diff: bool: The flag to display the diff
     -   rebase: bool: The flag to rebase the source branch with the target branch
+    -   description: str: Optional 'title:description' for the pull request. If not provided, it will be taken from the commit message
     Raises:
     -   ValueError: If the source and target branches are the same
     Returns:
@@ -117,8 +118,14 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
             cmnd.git_rebase(target)
             live.update(richprint.console.print("REBASED", style="bold green"))
 
+
+    if re.match(r".*:.*", description):
+        title_and_description = [description.split(":")[0], description.split(":")[1]]
+    else:
+        title_and_description = cmnd.title_and_description()
+
     project, repository = cmnd.base_repo()
-    title_and_description = cmnd.title_and_description()
+    
     reviewers = gather_facts(
         target,
         from_branch,
