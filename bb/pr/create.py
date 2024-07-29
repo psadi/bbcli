@@ -25,7 +25,6 @@ while doing so it gathers all the facts required for a pr from the
 remote and local repository
 """
 
-import re
 from typing import Optional
 
 from typer import confirm
