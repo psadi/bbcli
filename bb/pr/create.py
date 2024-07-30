@@ -120,11 +120,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool, title:
             cmnd.git_rebase(target)
             live.update(richprint.console.print("REBASED", style="bold green"))
 
-    defaultTitleAndDescription = cmnd.title_and_description()
-    if len(title) == 0:
-        title = defaultTitleAndDescription[0]
-    if len(description) == 0:
-        description = defaultTitleAndDescription[1]
+    title, description = title or cmnd.title_and_description()[0], description or cmnd.title_and_description()[1]
 
     project, repository = cmnd.base_repo()
     
