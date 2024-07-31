@@ -111,7 +111,8 @@ class BitbucketAPI:
 
     def pull_request_body(
         self,
-        title_and_description: str,
+        title: str,
+        description: str,
         from_branch: str,
         repository: str,
         project: str,
@@ -122,7 +123,8 @@ class BitbucketAPI:
         Generate the JSON body for creating a pull request.
 
         Args:
-            title_and_description (str): The title and description of the pull request.
+            title (str): The title of the pull request.
+            description (str): The description of the pull request.
             from_branch (str): The source branch of the pull request.
             repository (str): The name of the repository.
             project (str): The key of the project.
@@ -134,8 +136,8 @@ class BitbucketAPI:
         """
         return json.dumps(
             {
-                "title": title_and_description[0],
-                "description": title_and_description[1],
+                "title": title,
+                "description": description,
                 "state": "OPEN",
                 "open": "true",
                 "closed": "false",

@@ -50,9 +50,9 @@ def str_print(text: str, style: str) -> None:
     Returns:
         None
     """
-    _text = Text(text)
-    _text.stylize(style)
-    console.print(_text)
+    text = Text(text)
+    text.stylize(style)
+    console.print(text)
 
 
 def table(header_args: list, value_args: list, show_header: bool) -> Table:

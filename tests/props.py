@@ -30,12 +30,8 @@ class Api:
     repo_id: str = "1234"
     from_branch: str = "feature/test_branch"
     target: str = "master"
-    title_and_description: list[str, str] = field(
-        default_factory=lambda: [
-            "pull request title",
-            "pull request description",
-        ]
-    )
+    title: str = "pull request title"
+    description: str = "pull request description"
     reviewers: list[str] = field(default_factory=lambda: ["test"])
     pr_no: int = 1
     role: str = "author"

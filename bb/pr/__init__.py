@@ -36,7 +36,7 @@ from bb.pr.list import list_pull_request
 from bb.pr.merge import merge_pull_request
 from bb.pr.review import review_pull_request
 from bb.pr.view import view_pull_request
-from bb.utils.cmnd import is_git_repo
+from bb.utils.cmnd import is_git_repo, title_and_description
 from bb.utils.constants import common_vars
 from bb.utils.helper import error_handler, validate_input
 
@@ -52,6 +52,8 @@ def create(
     rebase: bool = typer.Option(
         False, help="rebase source branch with target before creation"
     ),
+    title: str = typer.Option("", help="pull request title"),
+    description: str = typer.Option("", help="pull request description"),
 ) -> None:
     """
     Takes in parameters for target branch name, a confirmation flag, diff
@@ -82,7 +84,18 @@ def create(
 
     target = validate_input(target, "Target branch", "Target branch cannot be none")
 
-    create_pull_request(target, yes, diff, rebase)
+    title = validate_input(
+        title, "Title", "", title if title else title_and_description()[0], True
+    )
+    description = validate_input(
+        description,
+        "Description",
+        "",
+        description if description else title_and_description()[1],
+        True,
+    )
+
+    create_pull_request(target, yes, diff, rebase, title, description)
 
 
 @_pr.command(help="Delete pull requests")
@@ -199,7 +212,7 @@ def review(
     action: str = validate_input(
         action_value,
         "Action [approve|unapprove|needs_work]",
-        "action cannot be none",
+        "'--action' is a mandatory argument, run 'bb pr review --help' for more info",
     )
     review_pull_request(_id, action)
 
