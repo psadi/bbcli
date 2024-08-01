@@ -33,6 +33,7 @@ from bb.pr.diff import show_diff
 from bb.utils import cmnd, request, richprint
 from bb.utils.api import bitbucket_api
 
+
 def gather_facts(
     target: str,
     from_branch: str,
@@ -123,7 +124,7 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool, title:
     title, description = title or cmnd.title_and_description()[0], description or cmnd.title_and_description()[1]
 
     project, repository = cmnd.base_repo()
-    
+
     reviewers = gather_facts(
         target,
         from_branch,
