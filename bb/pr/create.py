@@ -39,7 +39,8 @@ def gather_facts(
     from_branch: str,
     project: str,
     repository: str,
-    title_and_description: str,
+    title: str,
+    description: str,
 ) -> list:
     """
     It gathers facts for  the pull request from bitbucket and local git
@@ -50,7 +51,8 @@ def gather_facts(
     -   from_branch: str: The source branch
     -   project: str: The project name
     -   repository: str: The repository name
-    -   title_and_description: str: The title and description for the pull request
+    -   title: str: The title for the pull request
+    -   description: str: The description for the pull request
     Returns:
     -   list: The list of reviewers
     Raises:
@@ -81,8 +83,8 @@ def gather_facts(
             ("Repository ID", str(repo_id)),
             ("From Branch", from_branch),
             ("To Branch", target),
-            ("Title", title_and_description[0]),
-            ("Description", title_and_description[1]),
+            ("Title", title),
+            ("Description", description),
         ],
         True,
     )
@@ -90,7 +92,9 @@ def gather_facts(
     return reviewers
 
 
-def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> None:
+def create_pull_request(
+    target: str, yes: bool, diff: bool, rebase: bool, title: str, description: str
+) -> None:
     """
     Handles the process of creating a pull request with  options for rebasing,
     confirmation prompts, and displaying the diff.
@@ -100,6 +104,8 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
     -   yes: bool: The flag to proceed without confirmation
     -   diff: bool: The flag to display the diff
     -   rebase: bool: The flag to rebase the source branch with the target branch
+    -   title: str: Optional title for the pull request. If not provided, it will be taken from the commit message
+    -   description: str: Optional description for the pull request. If not provided, it will be taken from the commit message
     Raises:
     -   ValueError: If the source and target branches are the same
     Returns:
@@ -118,20 +124,17 @@ def create_pull_request(target: str, yes: bool, diff: bool, rebase: bool) -> Non
             live.update(richprint.console.print("REBASED", style="bold green"))
 
     project, repository = cmnd.base_repo()
-    title_and_description = cmnd.title_and_description()
+
     reviewers = gather_facts(
-        target,
-        from_branch,
-        project,
-        repository,
-        title_and_description,
+        target, from_branch, project, repository, title, description
     )
 
     if yes or confirm("Proceed"):
         with richprint.live_progress("Creating Pull Request ..."):
             url = bitbucket_api.pull_request_create(project, repository)
             body = bitbucket_api.pull_request_body(
-                title_and_description,
+                title,
+                description,
                 from_branch,
                 repository,
                 project,

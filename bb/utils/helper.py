@@ -56,7 +56,9 @@ def validate_config() -> None:
         raise ValueError(err) from err
 
 
-def validate_input(_input: Any, expected: str, error: str) -> str:
+def validate_input(
+    _input: Any, expected: str, error: str, default: str = "", optional: bool = False
+) -> str:
     """
     Validates the input value based on the expected type and error message.
 
@@ -72,17 +74,32 @@ def validate_input(_input: Any, expected: str, error: str) -> str:
         str: The validated input value.
     """
 
+    check = 0
+
     def checker():
         if not isinstance(_input, (str)):
             raise ValueError(error)
 
-        if _input is None or _input.lower() == "none":
+        if (
+            _input is None
+            or _input.lower() == "none"
+            or _input == ""
+            and check == 1
+            and not optional
+        ):
             raise ValueError(error)
 
     checker()
 
     if not _input:
-        _input: str = prompt(f"? {expected}")
+        _input: str = prompt(
+            f"? {expected}",
+            default=default,
+            show_default=default != "",
+        )
+
+        check += 1
+
         checker()
 
     return _input

@@ -81,7 +81,8 @@ def test_default_reviewers():
 
 def test_pull_request_body():
     pull_request_body = bitbucket_api.pull_request_body(
-        property.title_and_description,
+        property.title,
+        property.description,
         property.from_branch,
         property.repository,
         property.project,
@@ -91,8 +92,8 @@ def test_pull_request_body():
 
     assert pull_request_body == json.dumps(
         {
-            "title": property.title_and_description[0],
-            "description": property.title_and_description[1],
+            "title": property.title,
+            "description": property.description,
             "state": "OPEN",
             "open": "true",
             "closed": "false",
