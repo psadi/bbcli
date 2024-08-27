@@ -25,4 +25,4 @@ bb.__version__
   the utility and pyproject
 """
 
-__version__ = "0.6.2"
+__version__ = "0.6.3"
