@@ -85,13 +85,13 @@ def create(
     target = validate_input(target, "Target branch", "Target branch cannot be none")
 
     title = validate_input(
-        title, "Title", "", title if title else title_and_description()[0], True
+        title, "Title", "", title or title_and_description()[0], True
     )
     description = validate_input(
         description,
         "Description",
         "",
-        description if description else title_and_description()[1],
+        description or title_and_description()[1],
         True,
     )
 
