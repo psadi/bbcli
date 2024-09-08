@@ -13,8 +13,6 @@ Work seamlessly with Bitbucket from the command line
 
 **Notice:** This repository is no longer actively maintained. Atlassian has announced that support for Bitbucket Server, would end on Feb. 15, 2024. You can learn more about this [here](https://bitbucket.org/blog/cloud-migration-benefits).
 
-**If you have any questions or need assistance with migration, feel free to reach out.**
-
 ## 🚨 Compatability Notice 🚨
 
 #### **This tool is designed to work with [Bitbucket Server Edition](https://www.atlassian.com/enterprise/data-center/bitbucket) (Enterprise) and not with [Bitbucket Cloud / bitbucket.org](https://bitbucket.org/)**
