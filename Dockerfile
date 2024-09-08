@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ############################################################################
 
-FROM python:3.13.0b3-alpine
+FROM python:3.13.0rc1-alpine
 
 COPY dist/bb-*.tar.gz bb.tar.gz
 
