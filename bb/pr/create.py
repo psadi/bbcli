@@ -91,6 +91,11 @@ def gather_facts(
     richprint.console.print(table)
     return reviewers
 
+def analyze_pull_request() -> None:
+    message123: str = 'Analysis completed'
+    
+    richprint.console.print(message123)
+
 
 def create_pull_request(
     target: str, yes: bool, diff: bool, rebase: bool, title: str, description: str
