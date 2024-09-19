@@ -134,6 +134,8 @@ def create_pull_request(
         target, from_branch, project, repository, title, description
     )
 
+    analyze_pull_request()
+
     if yes or confirm("Proceed"):
         with richprint.live_progress("Creating Pull Request ..."):
             url = bitbucket_api.pull_request_create(project, repository)
