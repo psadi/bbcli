@@ -21,13 +21,21 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
       - id: check-docstring-first
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
       - id: check-merge-conflict
       - id: check-toml
       - id: check-yaml
       - id: fix-encoding-pragma
+      - id: no-commit-to-branch
+        args: ["-b", "main"]
       - id: requirements-txt-fixer
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
@@ -37,3 +45,7 @@ repos:
         args: [bb, --fix, --exit-non-zero-on-fix]
       - id: ruff-format
         args: [bb]
+  - repo: https://github.com/pypa/pip-audit
+    rev: v2.7.3
+    hooks:
+      - id: pip-audit
