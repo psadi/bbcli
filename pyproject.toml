@@ -53,6 +53,7 @@ dev = [
     "pyyaml>=6.0.1",
     "zipp>=3.19.1",
     "pre-commit>=3.5.0",
+    "pip-audit>=2.7.3",
 ]
 
 [[tool.pdm.autoexport]]
