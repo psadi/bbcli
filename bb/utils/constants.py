@@ -38,6 +38,7 @@ class CommonVars:
     project_name: str = "Project name"
     repository_name: str = "Repository Name"
     project_cant_be_none: str = "project can't be none"
+    timeout: float = 10.0
 
 
 common_vars: CommonVars = CommonVars()

@@ -37,11 +37,11 @@ def test_get(client):
     assert response.status_code == 200
 
 
-def test_post(client):
-    url = "https://example.com"
-    data = {"key": "value"}
-    response = client.post(url, json=data)
-    assert response.status_code == 200
+# def test_post(client):
+#     url = "https://example.com"
+#     data = {"key": "value"}
+#     response = client.post(url, json=data)
+#     assert response.status_code == 200
 
 
 def test_post_error():

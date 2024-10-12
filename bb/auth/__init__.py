@@ -111,7 +111,7 @@ def status(token: bool = typer.Option(False, help="Display auth token")) -> None
     """
 
     if not is_config_present():
-        raise ValueError("vonfiguration missing, run 'bb auth setup'")
+        raise ValueError("Configuration missing, run 'bb auth setup'")
 
     hcm: str = "[bold green]:heavy_check_mark:[/bold green]"
     console.print(

@@ -12,7 +12,6 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
@@ -71,8 +70,8 @@ def get(url: str) -> list:
         ValueError: If the request returns a non-200 status code.
     """
 
-    with httpx.Client() as client:
-        request = client.get(url, auth=(username, token), timeout=10.0)
+    with httpx.Client(timeout=common_vars.timeout) as client:
+        request = client.get(url, auth=(username, token))
 
     if request.status_code != 200:
         if request.status_code == 400:
@@ -119,13 +118,12 @@ def post(url: str, body: dict) -> list:
     Raises:
         ValueError: If the request returns a status code other than 200, 201, 204, or 409.
     """
-    with httpx.Client() as client:
+    with httpx.Client(timeout=common_vars.timeout) as client:
         request = client.post(
             url,
             auth=(username, token),
             data=body,
             headers={"content-type": common_vars.content_type},
-            timeout=10.0,
         )
 
     if request.status_code not in (200, 201, 204, 409):
@@ -152,13 +150,12 @@ def put(url: str, body: dict) -> list:
         ValueError: If the request returns a status code other than 200, 403, or 409.
 
     """
-    with httpx.Client() as client:
+    with httpx.Client(timeout=common_vars.timeout) as client:
         request = client.put(
             url,
             auth=(username, token),
             data=body,
             headers={"content-type": common_vars.content_type},
-            timeout=10.0,
         )
 
     if request.status_code not in (200, 403, 409):
@@ -184,14 +181,13 @@ def delete(url: str, body: dict) -> int:
         ValueError: If the DELETE request returns a status code other than 202 or 204.
 
     """
-    with httpx.Client() as client:
+    with httpx.Client(timeout=common_vars.timeout) as client:
         request = client.request(
             "DELETE",
             url,
             auth=(username, token),
             data=body,
             headers={"content-type": common_vars.content_type},
-            timeout=10.0,
         )
     if request.status_code not in (202, 204):
         raise ValueError(
