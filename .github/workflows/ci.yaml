@@ -138,12 +138,12 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t docker.io/psadi/bbcli:${{ steps.meta.outputs.tags || github.sha }} .
+          docker build -t docker.io/psadi/bbcli:${{ github.event.release.tag_name || github.sha }} .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: docker.io/psadi/bbcli:${{ steps.meta.outputs.tags || github.sha }}
+          image-ref: docker.io/psadi/bbcli:${{ github.event.release.tag_name || github.sha }}
           format: "sarif"
           output: "trivy-results.sarif"
           exit-code: "1"
@@ -159,4 +159,4 @@ jobs:
       - name: Push Docker Image
         if: ${{ github.event_name == 'release' }}
         run: |
-          docker push docker.io/psadi/bbcli:${{ steps.meta.outputs.tags || github.sha }}
+          docker push docker.io/psadi/bbcli:${{ github.event.release.tag_name }}
