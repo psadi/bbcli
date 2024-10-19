@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True, order=True)
 class Api:
-    bitbucket_host: str = "https://bb.picolo.co.in"
+    bitbucket_host: str = "https://bitbucket.org.com"
     project: str = "test-project"
     repository: str = "test-repo"
     repo_id: str = "1234"
