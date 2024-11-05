@@ -19,7 +19,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: check-executables-have-shebangs
       - id: check-merge-conflict
@@ -39,7 +39,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.11
+    rev: v0.7.2
     hooks:
       - id: ruff
         args: [bb, --fix, --exit-non-zero-on-fix]
@@ -50,12 +50,12 @@ repos:
     hooks:
       - id: pip-audit
   - repo: https://github.com/pdm-project/pdm
-    rev: 2.19.2
+    rev: 2.20.0.post1
     hooks:
       - id: pdm-export
         args: ["-o", "requirements.txt", "--without-hashes"]
         files: ^pdm.lock$
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.3
+    rev: v1.7.4
     hooks:
       - id: actionlint-system
