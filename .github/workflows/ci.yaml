@@ -74,34 +74,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-tox-
 
-      - name: Set up PDM
-        uses: pdm-project/setup-pdm@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
 
       - name: Prepare Environment, Sync Dependencies and Run Tox
         run: |
           mkdir -p ~/.config/bb
           cp config.ini ~/.config/bb
-          pdm fix
-          pdm sync
-          pdm run tox
+          uv sync
+          uv tool install tox --with tox-uv
+          tox
 
       - name: SonarCloud Scan
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: sonarsource/sonarcloud-github-action@v4.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: |
-            -Dsonar.projectKey=psadi_bbcli
+          args: >
             -Dsonar.organization=psadi
-            -Dsonar.python.version=3
-            -Dsonar.sources=bb
-            -Dsonar.tests=tests
+            -Dsonar.projectKey=psadi_bbcli
+            -Dsonar.sources=bb/
+            -Dsonar.tests=tests/
             -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.exclusions=tests
+            -Dsonar.test.exclusions=tests/**
+            -Dsonar.verbose=false
 
       - name: Initialize CodeQL
         if: ${{ matrix.os == 'ubuntu-latest' && github.event_name == 'release' }}
@@ -121,7 +119,7 @@ jobs:
 
       - name: Run build and generate artifacts
         run: |
-          pdm build
+          uv build
 
       - uses: actions/upload-artifact@v4
         if: ${{ matrix.os == 'ubuntu-latest' }}
