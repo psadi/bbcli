@@ -3,7 +3,7 @@
 Work seamlessly with Bitbucket from the command line
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Continuous Integration](https://github.com/psadi/bbcli/actions/workflows/ci.yml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/ci.yml)
+[![Continuous Integration](https://github.com/psadi/bbcli/actions/workflows/ci.yaml/badge.svg)](https://github.com/psadi/bbcli/actions/workflows/ci.yaml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=psadi_bbcli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=psadi_bbcli)
 <a href="https://www.buymeacoffee.com/addy3494" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 22px !important;width: 100px !important;" ></a>
 
