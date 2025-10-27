@@ -83,7 +83,7 @@ jobs:
           cp config.ini ~/.config/bb
           uv sync
           uv tool install tox --with tox-uv
-          tox r
+          tox -r
 
       - name: SonarCloud Scan
         if: ${{ matrix.os == 'ubuntu-latest' }}
