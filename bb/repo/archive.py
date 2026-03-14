@@ -23,8 +23,6 @@
 bb.repo.delete - deletes a bitbucket repository
 """
 
-import json
-
 from typer import Exit, confirm
 
 from bb.utils.api import bitbucket_api
@@ -54,18 +52,20 @@ def archive_repository(project: str, repo: str, archive: bool) -> None:
         raise Exit(code=1)
 
     with live_progress(
-        f"{'Archiving' if archive else 'Unarchiving' } Repository '{project}/{repo}' ... "
+        f"{'Archiving' if archive else 'Unarchiving'} Repository '{project}/{repo}' ... "
     ) as live:
         request = put(
             bitbucket_api.delete_repo(project, repo),
-            json.dumps({"archived": archive}),  # type: ignore
+            {"archived": archive},
         )
 
         if request[0] == 200:
-            live.update(console.print("DONE", style="bold green"))
+            live.update("DONE")
+            console.print("DONE", style="bold green")
 
         if request[0] in (403, 409):
-            live.update(console.print("CONFLICT", style="bold yellow"))
+            live.update("CONFLICT")
+            console.print("CONFLICT", style="bold yellow")
             console.print(
                 f"Message: {request[1]['errors'][0]['message']}",
                 highlight=True,

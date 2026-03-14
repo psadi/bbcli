@@ -27,7 +27,6 @@ error handling and status code interpretation.
 
 from http import HTTPStatus
 from json import JSONDecodeError
-from typing import Union
 
 import httpx
 
@@ -97,9 +96,9 @@ def get(url: str) -> list:
         )
 
     try:
-        response_data: Union[dict, str] = request.json()
+        response_data: dict | str = request.json()
     except JSONDecodeError:
-        response_data: Union[dict, str] = request.content.decode()
+        response_data: dict | str = request.content.decode()
 
     return [request.status_code, response_data]
 
@@ -122,8 +121,7 @@ def post(url: str, body: dict) -> list:
         request = client.post(
             url,
             auth=(username, token),
-            data=body,
-            headers={"content-type": common_vars.content_type},
+            json=body,
         )
 
     if request.status_code not in (200, 201, 204, 409):
@@ -154,8 +152,7 @@ def put(url: str, body: dict) -> list:
         request = client.put(
             url,
             auth=(username, token),
-            data=body,
-            headers={"content-type": common_vars.content_type},
+            json=body,
         )
 
     if request.status_code not in (200, 403, 409):
@@ -186,8 +183,7 @@ def delete(url: str, body: dict) -> int:
             "DELETE",
             url,
             auth=(username, token),
-            data=body,
-            headers={"content-type": common_vars.content_type},
+            json=body,
         )
     if request.status_code not in (202, 204):
         raise ValueError(

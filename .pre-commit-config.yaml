@@ -19,7 +19,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-executables-have-shebangs
       - id: check-merge-conflict
@@ -33,28 +33,33 @@ repos:
       - id: check-merge-conflict
       - id: check-toml
       - id: check-yaml
-      - id: fix-encoding-pragma
       - id: no-commit-to-branch
         args: ["-b", "main"]
-      - id: requirements-txt-fixer
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.7.2
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.0
     hooks:
       - id: ruff
         args: [bb, --fix, --exit-non-zero-on-fix]
       - id: ruff-format
         args: [bb]
   - repo: https://github.com/pypa/pip-audit
-    rev: v2.7.3
+    rev: v2.10.0
     hooks:
       - id: pip-audit
+        args: ["-r", "requirements.txt"]
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.5.9
+    rev: 0.10.10
     hooks:
       - id: uv-export
         args: ["--no-hashes", "--no-header", "--output-file=requirements.txt"]
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.4
+    rev: v1.7.11
     hooks:
-      - id: actionlint-system
+      - id: actionlint
+  # Temporarily disabled: zizmor reports informational findings that can't be suppressed
+  # - repo: https://github.com/woodruffw/zizmor
+  #   rev: v0.8.0
+  #   hooks:
+  #     - id: zizmor
+  #       files: ^\.github/workflows/.*\.ya?ml$

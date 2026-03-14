@@ -24,7 +24,6 @@ bb.pr.review marks a pull request as approved/unapproved or needs_work
 based on the pr id
 """
 
-import json
 from time import sleep
 
 from bb.utils.api import bitbucket_api
@@ -58,9 +57,13 @@ def review_pull_request(target: int, action: str) -> None:
         action_data = bitbucket_api.action_pull_request(
             project, repository, target, user_id[1]
         )
-        body = json.dumps({"status": action_mapper[action][0]})
-        put(action_data, body)
+        body = {"status": action_mapper[action][0]}
+        response = put(action_data, body)
         sleep(0.4)
+        if response[0] == 409:
+            raise ValueError(
+                "Cannot perform action on PR. Possibly due to outdated PR state."
+            )
         live.update(
             console.print(f"{action_mapper[action][0]}", style=action_mapper[action][2])
         )

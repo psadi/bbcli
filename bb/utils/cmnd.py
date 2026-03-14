@@ -61,8 +61,8 @@ def subprocess_run(command: str, text: Optional[str] = None) -> str:
 
     except subprocess.CalledProcessError as err:
         console.print("ERROR", style="bold red")
-        raise RuntimeError(
-            f"\nCommand '{command}' failed with return code {err.returncode}\n\n{err.stderr.decode().strip()}"
+        raise ValueError(
+            f"\nCommand '{command}' failed with return code {err.returncode}\n\n{err.stderr.decode().strip()}\n\nConsider running with git config --global --add safe.directory '*' to resolve this issue if it is a permissions problem."
         ) from err
 
     return cmnd.stdout.decode().strip()
