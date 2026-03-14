@@ -21,8 +21,9 @@
 
 """
 bb.__version__
-  Sets the packge version, picked dynamically by
-  the utility and pyproject
+  Dynamically reads version from the installed package metadata.
 """
 
-__version__ = "0.6.4"
+from importlib.metadata import version as get_version
+
+__version__ = get_version("bb")

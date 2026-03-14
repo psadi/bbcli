@@ -67,4 +67,5 @@ If you prefer, you can archive this repository instead via [blue]'bb repo archiv
         )
 
         if request == 202:
-            live.update(console.print("DONE", style="bold green"))
+            live.update("DONE")
+            console.print("DONE", style="bold green")

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ############################################################################
 # Bitbucket CLI (bb): Work seamlessly with Bitbucket from the command line
 #
@@ -17,47 +19,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ############################################################################
 
-[project]
-name = "bb"
-version = "0.6.5"
-description = "Work seamlessly with BitBucket from the command line."
-authors = [{ name = "psadi", email = "ps.adithya@icloud.com" }]
-dependencies = ["typer>=0.7.0", "httpx>=0.24.0"]
-requires-python = ">=3.9"
-readme = "README.md"
-license = "AGPL-3.0-or-later"
+from typer.testing import CliRunner
 
-[project.scripts]
-bb = "bb:_bb"
+from bb import _bb
 
-[tool.uv]
-package = true
-upgrade = true
+runner = CliRunner()
 
-[tool.uv.pip]
 
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
+def test_version():
+    result = runner.invoke(_bb, ["--version"])
+    assert result.exit_code == 0
+    assert "bb version:" in result.stdout
 
-[tool.ruff.lint]
-extend-select = ["I"]
-ignore = ["E501"]
 
-[tool.bandit]
-skips = ["B404", "B603", "B607"]
+def test_verbose():
+    from bb.utils.constants import common_vars
 
-[dependency-groups]
-dev = [
-    "pytest>=7.2.1",
-    "pytest-cov>=4.0.0",
-    "tox-pdm>=0.6.1",
-    "ruff>=0.0.257",
-    "bandit>=1.7.5",
-    "pyyaml>=6.0.1",
-    "zipp>=3.19.1",
-    "pre-commit>=3.5.0",
-    "pip-audit>=2.7.3",
-]
+    result = runner.invoke(_bb, ["--verbose", "pr", "--help"])
+    assert result.exit_code == 0
+    assert common_vars.state["verbose"] is True

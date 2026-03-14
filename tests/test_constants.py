@@ -25,6 +25,8 @@ from bb.utils.constants import CommonVars
 def test_common_vars():
     common_vars: CommonVars = CommonVars()
 
+    common_vars.state["verbose"] = False
+
     # Test attribute values
     assert common_vars.bold_red == "bold red"
     assert common_vars.bold_white == "bold white"

@@ -51,7 +51,8 @@ def validate_config() -> None:
         with richprint.live_progress(message) as live:
             response = request.get(bitbucket_api.test())
             if response[0] == 200:
-                live.update(richprint.console.print("OK", style="bold green"))
+                live.update("OK")
+                richprint.console.print("OK", style="bold green")
     except Exception as err:
         raise ValueError(err) from err
 
@@ -74,35 +75,21 @@ def validate_input(
         str: The validated input value.
     """
 
-    check = 0
+    checker_input = _input
+    if not isinstance(checker_input, str):
+        raise ValueError(error)
 
-    def checker():
-        if not isinstance(_input, (str)):
-            raise ValueError(error)
+    if not checker_input and optional:
+        return default
 
-        if (
-            _input is None
-            or _input.lower() == "none"
-            or _input == ""
-            and check == 1
-            and not optional
-        ):
-            raise ValueError(error)
-
-    checker()
-
-    if not _input:
-        _input: str = prompt(
+    if not checker_input:
+        checker_input = prompt(
             f"? {expected}",
             default=default,
             show_default=default != "",
         )
 
-        check += 1
-
-        checker()
-
-    return _input
+    return checker_input
 
 
 def error_tip() -> None:
@@ -142,13 +129,21 @@ def error_handler(func: Callable[P, T]) -> Callable[P, T]:
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            func(*args, **kwargs)
+            result = func(*args, **kwargs)
+            return result
+        except (ValueError, Exit) as err:
+            richprint.console.print(f"{err}", style="bold red")
+            if constants.common_vars.state["verbose"]:
+                richprint.traceback_to_console()
+            else:
+                error_tip()
+            raise Exit(code=1)
         except Exception as err:
             richprint.console.print(f"{err}", style="bold red")
             if constants.common_vars.state["verbose"]:
                 richprint.traceback_to_console()
             else:
                 error_tip()
-            Exit(code=1)
+            raise Exit(code=1)
 
     return wrapper

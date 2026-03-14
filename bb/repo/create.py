@@ -19,8 +19,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ############################################################################
 
-import json
-
 from bb.utils.api import bitbucket_api
 from bb.utils.request import post
 from bb.utils.richprint import console, live_progress
@@ -45,23 +43,23 @@ def create_repository(
     with live_progress(f"Creating '{project}/{repo}' Repository ... ") as live:
         request = post(
             bitbucket_api.create_repo(project),
-            json.dumps(
-                {
-                    "name": repo,
-                    "slug": repo,
-                    "scmId": "git",
-                    "forkable": forkable,
-                    "project": {"key": project},
-                    "defaultBranch": f"refs/heads/{default_branch}",
-                }
-            ),  # type: ignore
+            {
+                "name": repo,
+                "slug": repo,
+                "scmId": "git",
+                "forkable": forkable,
+                "project": {"key": project},
+                "defaultBranch": f"refs/heads/{default_branch}",
+            },
         )
 
         if request[0] == 200:
-            live.update(console.print("DONE", style="bold green"))
+            live.update("DONE")
+            console.print("DONE", style="bold green")
 
         if request[0] == 409:
-            live.update(console.print("CONFLICT", style="bold yellow"))
+            live.update("CONFLICT")
+            console.print("CONFLICT", style="bold yellow")
             console.print(
                 f"Message: {request[1]['errors'][0]['message']}",
                 highlight=True,

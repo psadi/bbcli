@@ -23,10 +23,6 @@
 bb.utils.api - contains the API model for Bitbucket server
 """
 
-import json
-
-from typer import Exit
-
 from bb.utils.ini import is_config_present, parse
 
 
@@ -118,7 +114,7 @@ class BitbucketAPI:
         project: str,
         target: str,
         reviewers: list,
-    ) -> str:
+    ) -> dict:
         """
         Generate the JSON body for creating a pull request.
 
@@ -132,35 +128,33 @@ class BitbucketAPI:
             reviewers (list): A list of reviewers for the pull request.
 
         Returns:
-            str: The JSON body for creating a pull request.
+            dict: The JSON body for creating a pull request.
         """
-        return json.dumps(
-            {
-                "title": title,
-                "description": description,
-                "state": "OPEN",
-                "open": "true",
-                "closed": "false",
-                "fromRef": {
-                    "id": f"refs/heads/{from_branch}",
-                    "repository": {
-                        "slug": repository,
-                        "name": repository,
-                        "project": {"key": project},
-                    },
+        return {
+            "title": title,
+            "description": description,
+            "state": "OPEN",
+            "open": "true",
+            "closed": "false",
+            "fromRef": {
+                "id": f"refs/heads/{from_branch}",
+                "repository": {
+                    "slug": repository,
+                    "name": repository,
+                    "project": {"key": project},
                 },
-                "toRef": {
-                    "id": f"refs/heads/{target}",
-                    "repository": {
-                        "slug": repository,
-                        "name": repository,
-                        "project": {"key": project},
-                    },
+            },
+            "toRef": {
+                "id": f"refs/heads/{target}",
+                "repository": {
+                    "slug": repository,
+                    "name": repository,
+                    "project": {"key": project},
                 },
-                "locked": "false",
-                "reviewers": reviewers,
-            }
-        )
+            },
+            "locked": "false",
+            "reviewers": reviewers,
+        }
 
     def pull_request_difference(
         self, project: str, repository: str, pr_number: str
@@ -328,7 +322,7 @@ class BitbucketAPI:
         _id: str,
         from_branch: str,
         target_branch: str,
-    ) -> str:
+    ) -> dict:
         """
         Generate the merge body for a pull request.
 
@@ -340,14 +334,12 @@ class BitbucketAPI:
             target_branch (str): The name of the target branch.
 
         Returns:
-            str: The merge body as a JSON string.
+            dict: The merge body as a dictionary.
         """
-        return json.dumps(
-            {
-                "autoSubject": False,
-                "message": f"Merge pull request #{_id} in {project}/{repository} from {from_branch} to {target_branch}",
-            }
-        )
+        return {
+            "autoSubject": False,
+            "message": f"Merge pull request #{_id} in {project}/{repository} from {from_branch} to {target_branch}",
+        }
 
     def pr_cleanup(self, project: str, repository: str, _id: str) -> str:
         """
@@ -365,7 +357,7 @@ class BitbucketAPI:
             f"/rest/pull-request-cleanup/latest/projects/{project}/repos/{repository}/pull-requests/{_id}"
         )
 
-    def pr_cleanup_body(self, delete_retarget: bool) -> str:
+    def pr_cleanup_body(self, delete_retarget: bool) -> dict:
         """
         Generates the JSON body for cleaning up a pull request.
 
@@ -373,14 +365,12 @@ class BitbucketAPI:
             delete_retarget (bool): Indicates whether to delete the source reference and retarget dependents.
 
         Returns:
-            str: The JSON body for cleaning up a pull request.
+            dict: The JSON body for cleaning up a pull request.
         """
-        return json.dumps(
-            {
-                "deleteSourceRef": delete_retarget,
-                "retargetDependents": delete_retarget,
-            }
-        )
+        return {
+            "deleteSourceRef": delete_retarget,
+            "retargetDependents": delete_retarget,
+        }
 
     def pr_rebase(self, project: str, repository: str, _id: str, version: int) -> list:
         """
@@ -396,7 +386,7 @@ class BitbucketAPI:
             list: A list containing the JSON representation of the version and the API URL for the rebase.
         """
         return [
-            json.dumps({"version": version}),
+            {"version": version},
             self.api_project_url(
                 f"/rest/git/latest/projects/{project}/repos/{repository}/pull-requests/{_id}/rebase"
             ),
@@ -404,7 +394,7 @@ class BitbucketAPI:
 
     def delete_branch(self, project: str, repository: str, source_branch: str) -> list:
         """
-        Deletes a branch in a Bitbucket repository.
+        Delete a branch from the repository.
 
         Args:
             project (str): The project key or ID.
@@ -412,11 +402,11 @@ class BitbucketAPI:
             source_branch (str): The name of the branch to delete.
 
         Returns:
-            list: A list containing the JSON representation of the branch to delete and the API URL for deleting the branch.
+            list: A list containing the body dict and the API URL for deleting the branch.
 
         """
         return [
-            json.dumps({"name": f"{source_branch}"}),
+            {"name": f"{source_branch}"},
             self.api_project_url(
                 f"/rest/branch-utils/latest/projects/{project}/repos/{repository}/branches"
             ),
@@ -463,9 +453,6 @@ def load_bitbucket_api() -> BitbucketAPI:
         raise ValueError("Configuration not present")
 
     config_data = parse()
-    if len(config_data) != 3:
-        raise ValueError(f"Expected 3 configuration items, got {len(config_data)}")
-
     return BitbucketAPI(config_data[2])
 
 
@@ -473,4 +460,3 @@ try:
     bitbucket_api = load_bitbucket_api()
 except ValueError:
     bitbucket_api = None
-    Exit(code=1)

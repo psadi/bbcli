@@ -23,8 +23,6 @@
 bb.pr.delete - deletes a pull request(s) given for the given id(s)
 """
 
-import json
-
 from typer import confirm
 
 from bb.pr.diff import show_diff
@@ -80,7 +78,7 @@ def delete_pull_request(_id: list, yes: bool, diff: bool) -> None:
 
         if yes or confirm("Proceed"):
             with richprint.live_progress("Deleting Pull Request ..."):
-                body = json.dumps({"version": int(pull_request_info[1]["version"])})
+                body = {"version": int(pull_request_info[1]["version"])}
                 pull_request = request.delete(url, body)
 
             if pull_request != 204:

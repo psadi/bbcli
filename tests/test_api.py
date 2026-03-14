@@ -19,8 +19,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ############################################################################
 
-import json
-
 from props import Api
 
 from bb.utils.api import bitbucket_api
@@ -63,7 +61,7 @@ def test_default_reviewers():
         property.from_branch,
         property.target,
     )
-    reviewer_query = f"avatarSize=32&sourceRepoId={property.repo_id}&sourceRefId=refs%2Fheads%2F{property.from_branch.replace('/','%2F')}&targetRepoId={property.repo_id}&targetRefId=refs%2Fheads%2F{property.target.replace('/','%2F')}"
+    reviewer_query = f"avatarSize=32&sourceRepoId={property.repo_id}&sourceRefId=refs%2Fheads%2F{property.from_branch.replace('/', '%2F')}&targetRepoId={property.repo_id}&targetRefId=refs%2Fheads%2F{property.target.replace('/', '%2F')}"
     assert (
         reviewer_query
         == "avatarSize=32&sourceRepoId=1234&sourceRefId=refs%2Fheads%2Ffeature%2Ftest_branch&targetRepoId=1234&targetRefId=refs%2Fheads%2Fmaster"
@@ -90,35 +88,33 @@ def test_pull_request_body():
         property.reviewers,
     )
 
-    assert pull_request_body == json.dumps(
-        {
-            "title": property.title,
-            "description": property.description,
-            "state": "OPEN",
-            "open": "true",
-            "closed": "false",
-            "fromRef": {
-                "id": "refs/heads/" + property.from_branch,
-                "repository": {
-                    "slug": property.repository,
-                    "name": property.repository,
-                    "project": {"key": property.project},
-                },
+    assert pull_request_body == {
+        "title": property.title,
+        "description": property.description,
+        "state": "OPEN",
+        "open": "true",
+        "closed": "false",
+        "fromRef": {
+            "id": "refs/heads/" + property.from_branch,
+            "repository": {
+                "slug": property.repository,
+                "name": property.repository,
+                "project": {"key": property.project},
             },
-            "toRef": {
-                "id": "refs/heads/" + property.target,
-                "repository": {
-                    "slug": property.repository,
-                    "name": property.repository,
-                    "project": {"key": property.project},
-                },
+        },
+        "toRef": {
+            "id": "refs/heads/" + property.target,
+            "repository": {
+                "slug": property.repository,
+                "name": property.repository,
+                "project": {"key": property.project},
             },
-            "locked": "false",
-            "reviewers": property.reviewers,
-        }
-    )
+        },
+        "locked": "false",
+        "reviewers": property.reviewers,
+    }
 
-    assert isinstance(pull_request_body, str)
+    assert isinstance(pull_request_body, dict)
 
 
 def test_pull_request_difference():
@@ -249,14 +245,12 @@ def test_pr_merge_body():
         property.target,
     )
 
-    assert pr_merge_body == json.dumps(
-        {
-            "autoSubject": False,
-            "message": f"Merge pull request #{property.pr_no} in {property.project}/{property.repository} from {property.from_branch} to {property.target}",
-        }
-    )
+    assert pr_merge_body == {
+        "autoSubject": False,
+        "message": f"Merge pull request #{property.pr_no} in {property.project}/{property.repository} from {property.from_branch} to {property.target}",
+    }
 
-    assert isinstance(pr_merge_body, str)
+    assert isinstance(pr_merge_body, dict)
 
 
 def test_pr_cleanup():
@@ -274,10 +268,8 @@ def test_pr_cleanup_body():
     for prop in property.delete_source_branch:
         pr_cleanup_body = bitbucket_api.pr_cleanup_body(prop)
         assert isinstance(prop, bool)
-        assert pr_cleanup_body == json.dumps(
-            {"deleteSourceRef": prop, "retargetDependents": prop}
-        )
-        assert isinstance(pr_cleanup_body, str)
+        assert pr_cleanup_body == {"deleteSourceRef": prop, "retargetDependents": prop}
+        assert isinstance(pr_cleanup_body, dict)
 
 
 def test_pr_rebase():
@@ -289,7 +281,7 @@ def test_pr_rebase():
     )
 
     assert pr_rebase == [
-        json.dumps({"version": property.version}),
+        {"version": property.version},
         f"{property.bitbucket_host}/rest/git/latest/projects/{property.project}/repos/{property.repository}/pull-requests/{property.pr_no}/rebase",
     ]
     assert isinstance(pr_rebase, list)
@@ -302,7 +294,7 @@ def test_delete_branch():
         property.from_branch,
     )
     assert delete_branch == [
-        json.dumps({"name": f"{property.from_branch}"}),
+        {"name": f"{property.from_branch}"},
         f"{property.bitbucket_host}/rest/branch-utils/latest/projects/{property.project}/repos/{property.repository}/branches",
     ]
     assert isinstance(delete_branch, list)
