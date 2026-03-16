@@ -210,3 +210,61 @@ def test_delete_error(mock_get_auth, mock_get_client):
 
     with pytest.raises(ValueError):
         delete("https://example.com", {"key": "value"})
+
+
+@patch("bb.utils.request._get_auth")
+def test_get_no_auth(mock_get_auth):
+    import bb.utils.request as request_module
+
+    mock_get_auth.return_value = None
+    mock_client = MagicMock()
+    request_module._client = mock_client
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"success": True}
+    mock_client.get.return_value = mock_response
+
+    status, data = get("https://example.com")
+    assert status == 200
+    assert data == {"success": True}
+
+
+def test_get_client_reuse():
+    import bb.utils.request as request_module
+
+    client1 = request_module._get_client()
+    client2 = request_module._get_client()
+    assert client1 is client2
+
+
+def test_get_client_creates_new():
+    import bb.utils.request as request_module
+
+    request_module._client = None
+    client = request_module._get_client()
+    assert client is not None
+
+
+@patch("bb.utils.ini.is_config_present")
+@patch("bb.utils.ini.parse")
+def test_get_auth_no_config(mock_parse, mock_is_present):
+    import bb.utils.ini as ini_module
+    import bb.utils.request as request_module
+
+    ini_module._config_cache = None
+    mock_is_present.return_value = False
+    auth = request_module._get_auth()
+    assert auth is None
+
+
+@patch("bb.utils.ini.is_config_present")
+@patch("bb.utils.ini.parse")
+def test_get_auth_with_config(mock_parse, mock_is_present):
+    import bb.utils.ini as ini_module
+    import bb.utils.request as request_module
+
+    ini_module._config_cache = None
+    mock_is_present.return_value = True
+    mock_parse.return_value = ["user", "token", "host"]
+    auth = request_module._get_auth()
+    assert auth == ("user", "token")
