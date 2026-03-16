@@ -75,6 +75,16 @@ def test_delete_repository_cancelled():
             delete_repository("proj", "repo")
 
 
+def test_delete_repository_non_202():
+    with patch("bb.repo.delete.prompt", return_value="proj/repo"):
+        with patch("bb.repo.delete.confirm", return_value=True):
+            with patch("bb.repo.delete.delete_request", return_value=204):
+                with patch("bb.repo.delete.live_progress") as mock_live:
+                    mock_live.return_value.__enter__ = mock_live
+                    mock_live.return_value.__exit__ = lambda *args: None
+                    delete_repository("proj", "repo")
+
+
 @patch("bb.utils.helper.prompt", return_value="test")
 @patch("bb.repo.archive_repository")
 def test_archive(mock_archive, mock_prompt):

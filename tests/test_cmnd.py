@@ -114,3 +114,42 @@ def test_checkout_and_pull(mock_subprocess_run, mock_check_call):
 def test_checkout_and_pull_modified(mock_subprocess_run):
     with pytest.raises(ValueError, match="modified files"):
         cmnd.checkout_and_pull("main")
+
+
+@patch("bb.utils.cmnd.subprocess_run")
+def test_base_repo_no_remote(mock_subprocess_run):
+    mock_subprocess_run.return_value = None
+    with pytest.raises(ValueError, match="no remote information is found"):
+        cmnd.base_repo()
+
+
+@patch("bb.utils.cmnd.subprocess.run")
+def test_subprocess_run_with_input(mock_run):
+    mock_process = MagicMock()
+    mock_process.stdout = b"output\n"
+    mock_run.return_value = mock_process
+    result = cmnd.subprocess_run("ls", text="input")
+    assert result == "output"
+    mock_run.assert_called_once()
+    mock_run.call_args.kwargs["input"] == "input"
+
+
+@patch("bb.utils.cmnd.subprocess_run")
+def test_git_rebase_exception(mock_subprocess_run):
+    mock_subprocess_run.side_effect = Exception("rebase failed")
+    with pytest.raises(ValueError, match="rebase failed"):
+        cmnd.git_rebase("main")
+
+
+@patch("bb.utils.cmnd.platform.system")
+def test_cp_to_clipboard_unsupported(mock_system):
+    mock_system.return_value = "UnsupportedOS"
+    with pytest.raises(ValueError, match="Clipboard copy not supported"):
+        cmnd.cp_to_clipboard("test")
+
+
+@patch("bb.utils.cmnd.subprocess.check_call")
+def test_show_git_diff_error(mock_check_call):
+    mock_check_call.side_effect = subprocess.CalledProcessError(1, "git diff")
+    with pytest.raises(ValueError):
+        cmnd.show_git_diff("source", "target")

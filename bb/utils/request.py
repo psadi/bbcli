@@ -31,11 +31,29 @@ from json import JSONDecodeError
 import httpx
 
 from bb.utils.constants import common_vars
-from bb.utils.ini import is_config_present, parse
-from bb.utils.richprint import str_print
 
-if is_config_present():
-    username, token, _ = parse()
+_client: httpx.Client | None = None
+
+
+def _get_client() -> httpx.Client:
+    """Get or create a reusable HTTP client with connection pooling."""
+    global _client
+    if _client is None:
+        _client = httpx.Client(
+            timeout=common_vars.timeout,
+            limits=httpx.Limits(max_keepalive_connections=10, max_connections=20),
+        )
+    return _client
+
+
+def _get_auth() -> tuple[str, str] | None:
+    """Lazy load authentication credentials."""
+    from bb.utils.ini import is_config_present, parse
+
+    if is_config_present():
+        creds = parse()
+        return (creds[0], creds[1])  # username, token
+    return None
 
 
 def http_response_definitions(status_code: int) -> str:
@@ -68,9 +86,11 @@ def get(url: str) -> list:
     Raises:
         ValueError: If the request returns a non-200 status code.
     """
+    from bb.utils.richprint import str_print
 
-    with httpx.Client(timeout=common_vars.timeout) as client:
-        request = client.get(url, auth=(username, token))
+    auth = _get_auth()
+    client = _get_client()
+    request = client.get(url, auth=auth) if auth else client.get(url)
 
     if request.status_code != 200:
         if request.status_code == 400:
@@ -117,12 +137,11 @@ def post(url: str, body: dict) -> list:
     Raises:
         ValueError: If the request returns a status code other than 200, 201, 204, or 409.
     """
-    with httpx.Client(timeout=common_vars.timeout) as client:
-        request = client.post(
-            url,
-            auth=(username, token),
-            json=body,
-        )
+    auth = _get_auth()
+    client = _get_client()
+    request = (
+        client.post(url, auth=auth, json=body) if auth else client.post(url, json=body)
+    )
 
     if request.status_code not in (200, 201, 204, 409):
         raise ValueError(
@@ -148,12 +167,11 @@ def put(url: str, body: dict) -> list:
         ValueError: If the request returns a status code other than 200, 403, or 409.
 
     """
-    with httpx.Client(timeout=common_vars.timeout) as client:
-        request = client.put(
-            url,
-            auth=(username, token),
-            json=body,
-        )
+    auth = _get_auth()
+    client = _get_client()
+    request = (
+        client.put(url, auth=auth, json=body) if auth else client.put(url, json=body)
+    )
 
     if request.status_code not in (200, 403, 409):
         raise ValueError(
@@ -178,13 +196,13 @@ def delete(url: str, body: dict) -> int:
         ValueError: If the DELETE request returns a status code other than 202 or 204.
 
     """
-    with httpx.Client(timeout=common_vars.timeout) as client:
-        request = client.request(
-            "DELETE",
-            url,
-            auth=(username, token),
-            json=body,
-        )
+    auth = _get_auth()
+    client = _get_client()
+    request = (
+        client.request("DELETE", url, auth=auth, json=body)
+        if auth
+        else client.request("DELETE", url, json=body)
+    )
     if request.status_code not in (202, 204):
         raise ValueError(
             f"\n[{request.status_code}] {http_response_definitions(request.status_code)}"

@@ -53,6 +53,15 @@ def test_validate_config_success(mock_print, mock_get):
 
 
 @patch("bb.utils.helper.request.get")
+@patch("bb.utils.helper.richprint.live_progress")
+def test_validate_config_non_200(mock_live, mock_get):
+    mock_get.return_value = [404, "Not Found"]
+    mock_live.return_value.__enter__ = mock_live
+    mock_live.return_value.__exit__ = lambda *args: None
+    validate_config()
+
+
+@patch("bb.utils.helper.request.get")
 def test_validate_config_error(mock_get):
     mock_get.side_effect = Exception("API error")
     with pytest.raises(ValueError, match="API error"):

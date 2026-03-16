@@ -70,3 +70,33 @@ def test_invalid_test():
 def test_invalid_reset():
     result = runner.invoke(_auth, ["reset", "--token"])
     assert result.exit_code != 0
+
+
+@patch("bb.auth.is_config_present", return_value=False)
+def test_test_no_config(mock_is_config):
+    result = runner.invoke(_auth, ["test"])
+    assert result.exit_code == 1
+    assert "Configuration missing" in result.stdout
+
+
+@patch("bb.auth.is_config_present", return_value=False)
+def test_status_no_config(mock_is_config):
+    result = runner.invoke(_auth, ["status"])
+    assert result.exit_code == 1
+    assert "Configuration missing" in result.stdout
+
+
+@patch("bb.auth.is_config_present", return_value=True)
+@patch("bb.auth.console.print")
+def test_setup_config_present(mock_print, mock_is_config):
+    result = runner.invoke(_auth, ["setup"])
+    assert result.exit_code == 0
+    mock_print.assert_called_once()
+
+
+@patch("bb.auth.is_config_present", return_value=True)
+@patch("os.path.exists", return_value=False)
+@patch("bb.auth.typer.prompt", return_value="n")
+def test_reset_user_says_no(mock_prompt, mock_exists, mock_is_config):
+    result = runner.invoke(_auth, ["reset"])
+    assert result.exit_code == 0

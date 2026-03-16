@@ -68,6 +68,8 @@ def auth_setup(bitbucket_host: str, username: str, token: str) -> None:
     Returns:
         None
     """
+    global _config_cache
+
     Path(XDG_CONFIG_HOME).mkdir(parents=True, exist_ok=True)
     Path(BB_CONFIG_FILE).touch(exist_ok=True)
 
@@ -87,6 +89,12 @@ token=xxxxxxxxxxx"""
     ini.set("auth", "token", token)
     ini.write(w_alt.open("w", encoding="utf-8"))
 
+    _config_cache = None
+
+
+_config_cache: List[str] | None = None
+_config_mtime: float | None = None
+
 
 def parse() -> List[str]:
     """
@@ -98,6 +106,14 @@ def parse() -> List[str]:
     Raises:
         ValueError: If the configuration file does not exist.
     """
+    global _config_cache, _config_mtime
+
+    current_mtime = (
+        os.path.getmtime(BB_CONFIG_FILE) if os.path.isfile(BB_CONFIG_FILE) else None
+    )
+
+    if _config_cache is not None and _config_mtime == current_mtime:
+        return _config_cache
 
     if not os.path.isfile(BB_CONFIG_FILE):
         raise ValueError("Configuration required, Try running 'bb auth setup'")
@@ -107,4 +123,12 @@ def parse() -> List[str]:
     token = ini.get("auth", "token")
     username = ini.get("auth", "username")
     bitbucket_host = ini.get("auth", "bitbucket_host")
-    return [username, token, bitbucket_host]
+    _config_cache = [username, token, bitbucket_host]
+    _config_mtime = current_mtime
+    return _config_cache
+
+
+def clear_cache() -> None:
+    """Clear the cached config to force re-read from file."""
+    global _config_cache
+    _config_cache = None

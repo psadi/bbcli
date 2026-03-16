@@ -222,7 +222,7 @@ def delete_branch(project, repository, _id, from_branch, target_branch):
 
 def merge_pr(
     live, project: str, repository: str, _id: str, branches_and_version: tuple
-) -> None:
+) -> int:
     """
     Merges a pull request with the specified project, repository, and ID.
 

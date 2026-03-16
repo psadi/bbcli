@@ -36,3 +36,10 @@ def test_table():
     ]
     richprint.table(header_args, value_args, True)
     # The output should be a table with the given header and values.
+
+
+def test_traceback_to_console():
+    try:
+        raise ValueError("test error")
+    except ValueError:
+        richprint.traceback_to_console()
