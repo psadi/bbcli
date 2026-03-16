@@ -85,3 +85,10 @@ def test_auth_setup():
             import bb.utils.api as api_module
 
             importlib.reload(api_module)
+
+
+def test_clear_cache():
+    from bb.utils.ini import clear_cache
+
+    clear_cache()
+    clear_cache()
