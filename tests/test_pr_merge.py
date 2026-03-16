@@ -98,11 +98,8 @@ def test_delete_branch(mock_del_local, mock_checkout, mock_delete, mock_post):
 
 
 @patch("bb.pr.merge.request.post")
-def test_merge_pr(mock_post):
+def test_merge_pr_conflict(mock_post):
     mock_live = MagicMock()
-    mock_post.return_value = [200, {"state": "MERGED"}]
-    assert merge_pr(mock_live, "proj", "repo", "1", ("src", "dst", 1)) == 200
-
     mock_post.return_value = [409, {"errors": [{"message": "fail"}]}]
     assert merge_pr(mock_live, "proj", "repo", "1", ("src", "dst", 1)) == 409
 

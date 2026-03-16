@@ -54,3 +54,85 @@ def test_list_pull_request_all(mock_base_repo, mock_get):
     list_pull_request("author", True)
 
     mock_get.assert_called_once()
+
+
+@patch("bb.pr.list.request.get")
+@patch("bb.pr.list.cmnd.base_repo", return_value=("project", "repo_name"))
+def test_list_pull_request_no_prs(mock_base_repo, mock_get):
+    mock_get.return_value = [200, {"values": []}]
+
+    list_pull_request("current", False)
+
+    mock_get.assert_called_once()
+
+
+@patch("bb.pr.list.request.get")
+@patch("bb.pr.list.cmnd.base_repo", return_value=("project", "repo_name"))
+def test_list_pull_request_no_reviewers(mock_base_repo, mock_get):
+    mock_get.return_value = [
+        200,
+        {
+            "values": [
+                {
+                    "title": "PR Title",
+                    "links": {"self": [{"href": "http://example.com"}]},
+                    "state": "OPEN",
+                    "fromRef": {"repository": {"slug": "repo"}, "displayId": "src"},
+                    "toRef": {"displayId": "dst"},
+                    "author": {"user": {"displayName": "User"}},
+                    "reviewers": [],
+                    "description": "test desc",
+                    "properties": {},
+                }
+            ]
+        },
+    ]
+
+    list_pull_request("current", False)
+
+    mock_get.assert_called_once()
+
+
+@patch("bb.pr.list.request.get")
+@patch("bb.pr.list.cmnd.base_repo", return_value=("project", "repo_name"))
+def test_list_pull_request_no_prs_all(mock_base_repo, mock_get):
+    mock_get.return_value = [200, {"values": []}]
+
+    list_pull_request("current", True)
+
+    mock_get.assert_called_once()
+
+
+@patch("bb.pr.list.request.get")
+@patch("bb.pr.list.cmnd.base_repo", return_value=("project", "repo_name"))
+def test_list_pull_request_with_reviewers(mock_base_repo, mock_get):
+    mock_get.return_value = [
+        200,
+        {
+            "values": [
+                {
+                    "title": "PR Title",
+                    "links": {"self": [{"href": "http://example.com"}]},
+                    "state": "OPEN",
+                    "fromRef": {"repository": {"slug": "repo"}, "displayId": "src"},
+                    "toRef": {"displayId": "dst"},
+                    "author": {"user": {"displayName": "User"}},
+                    "reviewers": [
+                        {
+                            "user": {"displayName": "Reviewer1", "active": True},
+                            "status": "approved",
+                        },
+                        {
+                            "user": {"displayName": "Reviewer2", "active": True},
+                            "status": "needs_work",
+                        },
+                    ],
+                    "properties": {},
+                }
+            ]
+        },
+    ]
+
+    list_pull_request("current", False)
+
+    mock_get.assert_called_once()

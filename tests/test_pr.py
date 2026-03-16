@@ -107,3 +107,51 @@ def test_view(mock_is_git, mock_view_pr, mock_prompt):
     result = runner.invoke(_pr, ["view", "--id", "1"])
     assert result.exit_code == 0
     mock_view_pr.assert_called_once_with("1", False)
+
+
+def test_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["list"])
+        assert result.exit_code == 1
+
+
+def test_create_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["create", "--target", "main"])
+        assert result.exit_code == 1
+
+
+def test_delete_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["delete", "--id", "1"])
+        assert result.exit_code == 1
+
+
+def test_review_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["review", "--id", "1", "--action", "approve"])
+        assert result.exit_code == 1
+
+
+def test_merge_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["merge", "--id", "1"])
+        assert result.exit_code == 1
+
+
+def test_diff_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["diff", "--id", "1"])
+        assert result.exit_code == 1
+
+
+def test_view_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["view", "--id", "1"])
+        assert result.exit_code == 1
+
+
+def test_copy_not_git_repo():
+    with patch("bb.pr.is_git_repo", return_value=False):
+        result = runner.invoke(_pr, ["copy", "--id", "1"])
+        assert result.exit_code == 1

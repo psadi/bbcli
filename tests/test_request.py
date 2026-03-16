@@ -32,9 +32,12 @@ def test_http_response_definitions():
     assert http_response_definitions(999) == "Unknown Status Code"
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_get_success(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_get_success(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {"success": True}
@@ -45,9 +48,12 @@ def test_get_success(mock_client_class):
     assert data == {"success": True}
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_get_success_content(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_get_success_content(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.side_effect = json.JSONDecodeError("msg", "doc", 0)
@@ -59,9 +65,12 @@ def test_get_success_content(mock_client_class):
     assert data == "some string content"
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_get_400_invalid(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_get_400_invalid(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 400
     mock_response.json.return_value = {"errors": [{"message": "invalid input"}]}
@@ -71,9 +80,12 @@ def test_get_400_invalid(mock_client_class):
         get("https://example.com")
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_get_400_other(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_get_400_other(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 400
     mock_response.json.return_value = {"errors": [{"message": "some other error"}]}
@@ -83,9 +95,12 @@ def test_get_400_other(mock_client_class):
         get("https://example.com")
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_get_500(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_get_500(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 500
     mock_client.get.return_value = mock_response
@@ -94,9 +109,12 @@ def test_get_500(mock_client_class):
         get("https://example.com")
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_post_success(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_post_success(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 201
     mock_response.json.return_value = {"id": 1}
@@ -107,9 +125,12 @@ def test_post_success(mock_client_class):
     assert data == {"id": 1}
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_post_success_204(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_post_success_204(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 204
     mock_client.post.return_value = mock_response
@@ -119,9 +140,12 @@ def test_post_success_204(mock_client_class):
     assert data == {}
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_post_error(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_post_error(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 500
     mock_client.post.return_value = mock_response
@@ -130,9 +154,12 @@ def test_post_error(mock_client_class):
         post("https://example.com", {"key": "value"})
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_put_success(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_put_success(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {"updated": True}
@@ -143,9 +170,12 @@ def test_put_success(mock_client_class):
     assert data == {"updated": True}
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_put_error(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_put_error(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 500
     mock_client.put.return_value = mock_response
@@ -154,9 +184,12 @@ def test_put_error(mock_client_class):
         put("https://example.com", {"key": "value"})
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_delete_success(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_delete_success(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 204
     mock_client.request.return_value = mock_response
@@ -165,9 +198,12 @@ def test_delete_success(mock_client_class):
     assert status == 204
 
 
-@patch("bb.utils.request.httpx.Client")
-def test_delete_error(mock_client_class):
-    mock_client = mock_client_class.return_value.__enter__.return_value
+@patch("bb.utils.request._get_client")
+@patch("bb.utils.request._get_auth")
+def test_delete_error(mock_get_auth, mock_get_client):
+    mock_get_auth.return_value = ("user", "token")
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
     mock_response = MagicMock()
     mock_response.status_code = 500
     mock_client.request.return_value = mock_response

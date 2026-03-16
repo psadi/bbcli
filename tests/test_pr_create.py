@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch
 
+import pytest
+
 from bb.pr.create import create_pull_request, gather_facts
 
 
@@ -118,3 +120,29 @@ def test_create_pull_request_rebase(
 
     create_pull_request("target_branch", True, False, True, "Title", "Desc")
     mock_rebase.assert_called_once_with("target_branch")
+
+
+def test_create_pull_request_same_branch():
+    with pytest.raises(ValueError, match="Source & target cannot be the same"):
+        create_pull_request("main", True, False, False, "Title", "Desc")
+
+
+@patch("bb.pr.create.request.get")
+@patch("bb.pr.create.richprint.table")
+@patch("bb.pr.create.richprint.console.print")
+def test_gather_facts_no_repo(mock_print, mock_table, mock_get):
+    mock_get.side_effect = [
+        [200, {"values": []}],
+    ]
+
+    reviewers = gather_facts(
+        "target_branch",
+        "source_branch",
+        "project",
+        "repo_name",
+        "Test Title",
+        "Test Description",
+    )
+
+    assert reviewers == []
+    mock_table.assert_called_once()
