@@ -122,7 +122,8 @@ def test_create_pull_request_rebase(
     mock_rebase.assert_called_once_with("target_branch")
 
 
-def test_create_pull_request_same_branch():
+@patch("bb.pr.create.cmnd.from_branch", return_value="main")
+def test_create_pull_request_same_branch(mock_from_branch):
     with pytest.raises(ValueError, match="Source & target cannot be the same"):
         create_pull_request("main", True, False, False, "Title", "Desc")
 
